@@ -7,8 +7,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 
 
-@Path("/hello")
-public class HelloWorldEndpoint {
+@Path("/tokens")
+public class TokensEndpoint {
 
 	@GET
 	@Produces("text/plain")
