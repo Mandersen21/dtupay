@@ -1,6 +1,13 @@
 # Compiled class file
 *.class
 
+*target
+
+token-service/tokens/*.png
+
+token-service/target
+customer-service/target
+
 # Log file
 *.log
 
