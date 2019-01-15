@@ -50,5 +50,12 @@ public class CustomerRepository implements ICustomerRepository {
 		}
 		return false;
 	}
+	
+	public List<String> getTokens(Customer customer) {
+		for (Customer c : customerList) {
+			return c.getTokens();
+        }
+        return null;
+    }
     
 }

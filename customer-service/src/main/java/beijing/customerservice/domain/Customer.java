@@ -2,22 +2,24 @@ package beijing.customerservice.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import beijing.customerservice.repository.CustomerRepository;
 
 public class Customer {
 
 	// Attributes of user
 	public String name;
-	List<Token> tokenList;
+	List<String> tokenList;
+	CustomerRepository customerRepository;
 
 	String cpr;
 	String id;
 	
 	// Constructor
-	public Customer(String customerId, String cpr, String name, List<Token> tokenList) {
+	public Customer(String customerId, String cpr, String name, List<String> tokenList) {
 		this.name = name;
 		this.setCpr(cpr);
 		this.setId(customerId);
-		tokenList = new ArrayList<Token>();
+		tokenList = new ArrayList<String>();
 	}
 
 	// First name
@@ -47,4 +49,14 @@ public class Customer {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	// Tokens
+	public List<String> getTokens() {
+		return tokenList;
+	}
+        
+	public void setTokens(List<String> tokenList) {
+		this.tokenList = tokenList;
+	}    
+	
 }

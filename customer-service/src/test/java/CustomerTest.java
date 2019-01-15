@@ -18,5 +18,8 @@ public class CustomerTest {
 		Stephen.setId("123");
 		assertEquals(Stephen.getId(), "123");
 		
+		Stephen.setTokens(null);
+		assertEquals(Stephen.getTokens(), null);
+		
 	}
 }
