@@ -7,6 +7,8 @@ token-service/tokens/*.png
 
 token-service/target
 customer-service/target
+merchant-service/target
+payment-service/target
 
 # Log file
 *.log
