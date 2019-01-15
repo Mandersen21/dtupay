@@ -1,51 +1,34 @@
 package beijing.customerservice.domain;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Customer implements Comparable<Customer>, Serializable {
-	private static final long serialVersionUID = 1693295470116937316L;
+public class Customer {
 
 	// Attributes of user
-	public String firstName;
-	public String lastName;
+	public String name;
+	List<Token> tokenList;
 
-	String email;
 	String cpr;
-	String address;
-	String birthdate;
-	public String password;
-	int phoneNumber;
+	String id;
 	
 	// Constructor
-	public Customer(String firstName, String lastName, String cpr) {
-		this.firstName = firstName;
-		this.lastName = lastName;
+	public Customer(String customerId, String cpr, String name, List<Token> tokenList) {
+		this.name = name;
 		this.setCpr(cpr);
-//		setPassword();
+		this.setId(customerId);
+		tokenList = new ArrayList<Token>();
 	}
 
 	// First name
-	public String getFirstName() {
-		return firstName;
+	public String getName() {
+		return name;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	// Last name
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	// Email
-	public String getEmail() {
-		return email;
-	}
 
 	// Cpr
 	public String getCpr() {
@@ -54,45 +37,14 @@ public class Customer implements Comparable<Customer>, Serializable {
 
 	public void setCpr(String cpr) {
 		this.cpr = cpr;
-//		cprToBirthdate();
+	}
+	
+	// Id
+	public String getId() {
+		return id;
 	}
 
-	// Phone no
-	public int getPhonenumber() {
-		return (phoneNumber);
+	public void setId(String id) {
+		this.id = id;
 	}
-
-	public void setPhonenumber(int phoneNo) {
-		this.phoneNumber = phoneNo;
-	}
-
-//	// Password
-//	public String getPassword() {
-//		return password;
-//	}
-//
-//	public void setPassword() {
-//		this.password = firstName;
-//	}
-//
-//	// Birthdate
-//	public void cprToBirthdate() {
-//		int decade = Character.getNumericValue(cpr.charAt(4));
-//		if (decade > 3) {
-//			this.birthdate = cpr.substring(0, 2) + "." + cpr.substring(2, 4) + ".19" + cpr.substring(4, 6);
-//		} else {
-//			this.birthdate = cpr.substring(0, 2) + "." + cpr.substring(2, 4) + ".20" + cpr.substring(4, 6);
-//		}
-//	}
-//
-//	public String getBirthdate() {
-//		return birthdate;
-//	}
-
-	// Overwriting compareable
-	@Override
-	public int compareTo(Customer otherUser) {
-		return cpr.compareTo(otherUser.cpr);
-	}
-
 }

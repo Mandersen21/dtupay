@@ -4,13 +4,19 @@ import org.junit.Test;
 import beijing.customerservice.domain.Customer;
 
 public class CustomerTest {
-	Customer Stephen = new Customer("Stephen", "Hawking", "1231027895");
+	Customer Stephen = new Customer("123", "Stephen", "123102", null);
 	
 	@Test
 	public void getSetUserDetails() {
 		
-		Stephen.setPhonenumber(1234);
-		assertEquals(Stephen.getPhonenumber(), 1234);
+		Stephen.setName("Stephan");
+		assertEquals(Stephen.getName(), "Stephan");
+		
+		Stephen.setCpr("123102");
+		assertEquals(Stephen.getCpr(), "123102");
+		
+		Stephen.setId("123");
+		assertEquals(Stephen.getId(), "123");
 		
 	}
 }
