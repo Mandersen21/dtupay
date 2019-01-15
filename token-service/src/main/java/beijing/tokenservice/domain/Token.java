@@ -5,24 +5,37 @@ public class Token {
 	private String tokenId;
 	private String customerId;
 	private boolean isValid;
+	private Status status;
 	
-	public Token(String tokenId, String custId, boolean isValid) {
+	public Token(String tokenId, String custId, boolean isValid, Status status) {
 		this.tokenId = tokenId;
 		this.customerId = custId;
 		this.isValid = isValid;
+		this.status = status;
 	}
 	
-	public String getTokenid() {
+	public String getTokenId() {
 		return tokenId;
 	}
-	public String getCustId() {
+
+	public String getCustomerId() {
 		return customerId;
 	}
-	public boolean isValid() {
+
+	public boolean getValidationStatus() {
 		return isValid;
 	}
-	public void setValid(boolean b) {
-		isValid = b;
+
+	public void setValidtionStatus(boolean s) {
+		isValid = s;
 	}
-	
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 }
