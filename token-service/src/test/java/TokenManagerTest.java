@@ -67,14 +67,14 @@ public class TokenManagerTest {
 
 	@Test()
 	public void isTokenValidTest() throws TokenNotFoundException {
-		token = new Token("123456789", UUID.randomUUID().toString(), true, Status.ACTIVE);
+		token = new Token("123456", UUID.randomUUID().toString(), true, Status.ACTIVE);
 		repository.createToken(token);
 		assertEquals(tokenManager.isTokenValid(token.getTokenId()), true);
 	}
 
 	@Test()
 	public void isTokenInValidTest() throws TokenNotFoundException {
-		token = new Token("123456789", UUID.randomUUID().toString(), true, Status.ACTIVE);
+		token = new Token("123456", UUID.randomUUID().toString(), true, Status.ACTIVE);
 		repository.createToken(token);
 		token.setValidtionStatus(false);
 		token.setStatus(Status.PAID);
