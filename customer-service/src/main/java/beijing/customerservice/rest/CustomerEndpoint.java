@@ -33,7 +33,7 @@ public class CustomerEndpoint {
 
 	public CustomerEndpoint() {
 		customerManager = new CustomerManager(customerRepository);
-		listToken.add("123");
+		listToken.add("12345");
 		customerRepository.createCustomer(new Customer("123", "123102", "Stephen", listToken));
 	}
 	
