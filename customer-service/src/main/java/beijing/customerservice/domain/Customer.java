@@ -1,15 +1,14 @@
 package beijing.customerservice.domain;
 
 import java.util.ArrayList;
+
 import java.util.List;
-import beijing.customerservice.repository.CustomerRepository;
 
 public class Customer {
 
 	// Attributes of user
 	public String name;
 	List<String> tokenList;
-	CustomerRepository customerRepository;
 
 	String cpr;
 	String id;

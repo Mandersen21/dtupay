@@ -20,7 +20,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 
 
 @Path("/customer")
@@ -61,20 +60,6 @@ public class CustomerEndpoint {
 			return Response.status(404).entity("Customer was not found").build();
 		} 
 		return Response.ok(tokens, "application/json").build();
-	}
-	
-	@PUT
-	@Path("/{customerToken}/{cpr}/{name}/{tokenList}")
-	@Produces("application/json")
-	public Response putCustomer(@PathParam("customerId") String customerId, @PathParam("cpr") String cpr, 
-								@PathParam("name") String name, @PathParam("tokenList") List<String> tokenList) {
-		boolean customer;
-		try {
-			customer = customerManager.addCustomer(customerId, cpr, name, tokenList);
-		} catch (Exception e) {
-			return Response.status(404).entity("Customer was not found").build();
-		} 
-		return Response.ok(customer, "application/json").build();
 	}
 	
 }
