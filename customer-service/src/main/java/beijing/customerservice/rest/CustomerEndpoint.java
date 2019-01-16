@@ -31,7 +31,7 @@ public class CustomerEndpoint {
 
 	public CustomerEndpoint() {
 		customerManager = new CustomerManager(customerRepository);
-		customerRepository.createCustomer(new Customer("123", "Stephen", "123102", null));
+		customerRepository.createCustomer(new Customer("123", "123102", "Stephen", null));
 	}
 	
 	@GET
