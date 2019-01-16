@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import beijing.customerservice.domain.Customer;
+import beijing.customerservice.exception.CustomerNotFoundException;
 import beijing.customerservice.exception.RequestRejected;
 import beijing.customerservice.repository.ICustomerRepository;
 
@@ -59,10 +60,10 @@ public class CustomerManager {
 	}
 	
 	// Get customer by id
-	public Customer getCustomerId(String customerId) throws Exception {
+	public Customer getCustomerId(String customerId) throws CustomerNotFoundException {
     	Customer customer = customerRepository.getCustomerById(customerId);
     	if (customer == null) {
-    		throw new RequestRejected("Token not found");
+    		throw new CustomerNotFoundException("Customer not found");
     	}
 		return customer;
 	}
