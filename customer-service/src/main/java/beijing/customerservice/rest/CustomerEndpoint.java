@@ -64,9 +64,10 @@ public class CustomerEndpoint {
 	}
 	
 	@PUT
+	@Path("/{customerToken}/{cpr}/{name}/{tokenList}")
 	@Produces("application/json")
-	public Response putCustomer(@PathParam("customerId") String customerId, @PathParam("customerId") String cpr, 
-								@PathParam("customerId") String name, @PathParam("customerId") List<String> tokenList) {
+	public Response putCustomer(@PathParam("customerId") String customerId, @PathParam("cpr") String cpr, 
+								@PathParam("name") String name, @PathParam("tokenList") List<String> tokenList) {
 		boolean customer;
 		try {
 			customer = customerManager.addCustomer(customerId, cpr, name, tokenList);
