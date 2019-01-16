@@ -1,6 +1,7 @@
 package beijing.merchantservice.rest;
 
 
+import beijing.merchantservice.domain.Merchant;
 import beijing.merchantservice.domain.MerchantController;
 import beijing.merchantservice.domain.TransactionObject;
 import beijing.merchantservice.exception.DataAccessException;
@@ -19,27 +20,29 @@ public class MerchantsEndpoint {
 	MerchantController controller = new MerchantController();
 
 	@GET
-	@Produces("text/plain")
+	@Produces("application/json")
 	public Response doGet() {
-		return Response.ok("Hello from Thorntail!").build();
+		Merchant m = new Merchant("123","74875858","ThornTail");
+		String s = "Hello from thorntail";
+		return Response.ok(m, "application/json").build();
 	}
-//
-//
-//	@POST
-//	@Produces("application/json")
-//	public Response requestTransaction(String merchantId, String tokenId, String amount) {
-//		TransactionObject to;
-//		try {
-//			to = controller.requestTransaction(merchantId, tokenId, amount);
-//		} catch (RequestRejected requestRejected) {
-//			requestRejected.printStackTrace();
-//			return Response.status(500).build();
-//
-//		} catch (DataAccessException e) {
-//			e.printStackTrace();
-//			return Response.status(503).build();
-//		}
-//
-//		return Response.ok(to, "application/json").build();
-//	}
+
+
+	@POST
+	@Produces("application/json")
+	public Response requestTransaction(String merchantId, String tokenId, String amount) {
+		TransactionObject to;
+		try {
+			to = controller.requestTransaction(merchantId, tokenId, amount);
+		} catch (RequestRejected requestRejected) {
+			requestRejected.printStackTrace();
+			return Response.status(500).build();
+
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			return Response.status(503).build();
+		}
+
+		return Response.ok(to, "application/json").build();
+	}
 }

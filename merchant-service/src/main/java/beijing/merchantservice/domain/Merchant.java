@@ -19,23 +19,23 @@ public class Merchant implements Comparable<Merchant>, Serializable {
 		return merchantID;
 	}
 
-	private void setMerchantID(String merchantID) {
+	public void setMerchantID(String merchantID) {
 		this.merchantID = merchantID;
 	}
 
-	private String getCvrNumber() {
+	public String getCvrNumber() {
 		return CvrNumber;
 	}
 
-	private void setCvrNumber(String cvrNumber) {
+	public void setCvrNumber(String cvrNumber) {
 		CvrNumber = cvrNumber;
 	}
 
-	private String getName() {
+	public String getName() {
 		return Name;
 	}
 
-	private void setName(String name) {
+	public void setName(String name) {
 		Name = name;
 	}
 
