@@ -13,13 +13,13 @@ import beijing.customerservice.exception.CustomerNotFoundException;
 import beijing.customerservice.repository.CustomerRepository;
 import beijing.customerservice.repository.ICustomerRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 
 
 @Path("/customer")
@@ -28,10 +28,12 @@ public class CustomerEndpoint {
 	private static ICustomerRepository customerRepository = new CustomerRepository();
 	private CustomerManager customerManager;
 	ObjectMapper mapper = new ObjectMapper();
+	List<String> listToken = new ArrayList<String>();
 
 	public CustomerEndpoint() {
 		customerManager = new CustomerManager(customerRepository);
-		customerRepository.createCustomer(new Customer("123", "Stephen", "123102", null));
+		listToken.add("12345");
+		customerRepository.createCustomer(new Customer("123", "123102", "Stephen", listToken));
 	}
 	
 	@GET
