@@ -2,8 +2,7 @@ package beijing.merchantservice.domain;
 
 import java.io.Serializable;
 
-public class Merchant implements Comparable<Merchant>, Serializable {
-	private static final long serialVersionUID = 1693295470116937316L;
+public class Merchant {
 
 	private String merchantID;
 	private String CvrNumber;
@@ -37,11 +36,6 @@ public class Merchant implements Comparable<Merchant>, Serializable {
 
 	private void setName(String name) {
 		Name = name;
-	}
-
-	@Override
-	public int compareTo(Merchant otherUser) {
-		return CvrNumber.compareTo(otherUser.CvrNumber);
 	}
 
 }
