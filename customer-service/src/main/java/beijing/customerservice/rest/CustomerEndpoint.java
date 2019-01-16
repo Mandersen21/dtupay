@@ -38,7 +38,7 @@ public class CustomerEndpoint {
 	}
 	
 	@GET
-	@Path("/{customerId}") 
+	@Path("/{customerName}") 
 	@Produces("application/json")
 	public Response getCustomerByName(@PathParam("customerName") String customerName) throws Exception {
 		Customer customer = customerManager.getCustomerName(customerName);
