@@ -2,6 +2,7 @@ package beijing.customerservice.domain;
 
 import java.util.List;
 
+
 import beijing.customerservice.domain.Customer;
 import beijing.customerservice.exception.RequestRejected;
 import beijing.customerservice.repository.ICustomerRepository;
@@ -44,4 +45,35 @@ public class CustomerManager {
 			}
 		}
 	}
+	
+	// Remove customer
+	public boolean removeCustomer(String customerId, String cpr, String name, List<String> tokenList) throws Exception {
+		if (customerRepository.customerExists(new Customer(customerId, name, cpr, tokenList))) {
+			customerRepository.removeCustomer(customer);
+			return true;
+		} else {
+	
+			throw new RequestRejected("The customer " + name + " is not in the system!");
+	
+		}
+	}
+	
+	// Get customer by id
+	public Customer getCustomerId(String customerId) throws Exception {
+    	Customer customer = customerRepository.getCustomerById(customerId);
+    	if (customer == null) {
+    		throw new RequestRejected("Token not found");
+    	}
+		return customer;
+	}
+	
+	// Get customer by name
+	public Customer getCustomerName(String customerName) throws Exception {
+    	Customer customer = customerRepository.getCustomerById(customerName);
+    	if (customer == null) {
+    		throw new RequestRejected("Token not found");
+    	}
+		return customer;
+	}
+	
 }
