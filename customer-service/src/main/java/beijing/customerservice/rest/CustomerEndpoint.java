@@ -53,7 +53,7 @@ public class CustomerEndpoint {
 	public Response getCustomerName(@PathParam("customerName") String customerName) {
 		Customer customer = null;
 		try {
-			customer = customerManager.getCustomerId(customerName);
+			customer = customerManager.getCustomerName(customerName);
 		} catch (CustomerNotFoundException e) {
 			return Response.status(404).entity("Customer was not found").build();
 		} 
