@@ -168,4 +168,8 @@ public class TokenManager {
         }
     }
 
+	public Token getToken(String tokenId) {
+		return repository.getToken(tokenId);
+	}
+
 }
