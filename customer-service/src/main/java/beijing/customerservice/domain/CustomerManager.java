@@ -69,10 +69,10 @@ public class CustomerManager {
 	}
 	
 	// Get customer by name
-	public Customer getCustomerName(String customerName) throws Exception {
+	public Customer getCustomerName(String customerName) throws CustomerNotFoundException {
     	Customer customer = customerRepository.getCustomerById(customerName);
     	if (customer == null) {
-    		throw new RequestRejected("Token not found");
+    		throw new CustomerNotFoundException("Customer not found");
     	}
 		return customer;
 	}
