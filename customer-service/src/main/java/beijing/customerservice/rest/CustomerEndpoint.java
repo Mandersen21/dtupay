@@ -17,7 +17,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 
 
-@Path("/cutomer")
+@Path("/customer")
 public class CustomerEndpoint {
 	
 	private static ICustomerRepository customerRepository = new CustomerRepository();
