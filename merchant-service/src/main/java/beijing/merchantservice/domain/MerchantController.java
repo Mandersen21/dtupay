@@ -1,9 +1,12 @@
 package beijing.merchantservice.domain;
 
+import beijing.merchantservice.exception.CorruptedTokenException;
 import beijing.merchantservice.exception.DataAccessException;
 import beijing.merchantservice.exception.RequestRejected;
 import beijing.merchantservice.repository.IMerchantRepositry;
 import beijing.merchantservice.repository.MerchantRepositry;
+
+import java.util.List;
 
 public class MerchantController {
 
@@ -11,6 +14,8 @@ public class MerchantController {
 
 	public MerchantController() {
 		repositry = new MerchantRepositry();
+		//TODO: set up a message queue listener for new tokens.. use storeNewToken
+
 	}
 
 	public TransactionObject requestTransaction(String merchantid, String tokenid, String amount) throws RequestRejected, DataAccessException {
@@ -35,10 +40,19 @@ public class MerchantController {
 	}
 
 
+	private void storeNewToken(List<TokenValidation> newTokens){
+		for(TokenValidation t : newTokens){
+			try {
+				repositry.addToken(t);
+			} catch (CorruptedTokenException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 
 	private TokenValidation getTokenValidation(String tokenId){
-		//TODO: send request to tokenService through rabbitMQ
+		//TODO: check in repository
 		return null;
 	}
 
@@ -48,7 +62,7 @@ public class MerchantController {
 
 
 	private TransactionObject requestPayment(String merchantId, String customerId, String amount){
-		//TODO: send request to paymentService through rabbitMQ
+		//TODO: send request to paymentService through rabbitMQ RPC
 		return null;
 	}
 
