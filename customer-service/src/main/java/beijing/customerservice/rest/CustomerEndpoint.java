@@ -6,13 +6,14 @@ import javax.ws.rs.core.Response;
 
 import beijing.customerservice.domain.Customer;
 import beijing.customerservice.repository.CustomerRepository;
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 
 
-@Path("/customer")
+@Path("/hello")
 public class CustomerEndpoint {
 
 	CustomerRepository customerRepository = new CustomerRepository();
@@ -21,6 +22,7 @@ public class CustomerEndpoint {
 	@GET
 	@Produces("text/plain")
 	public Response doGetName() {
+		customerRepository = (CustomerRepository) customerRepository.createCustomer(customer);
 		return Response.ok(customerRepository.getCustomerByName(customer.getName())).build();
 	}
 	
