@@ -40,15 +40,25 @@ public class TokensEndpoint {
 	@GET
 	@Path("/{tokenId}") 
 	@Produces("application/json")
-	public Response getToken(@PathParam("tokenId") String tokenId) throws RequestRejected, TokenNotFoundException, DataAccessException {
-		Token token = tokenManager.getToken(tokenId);
+	public Response getToken(@PathParam("tokenId") String tokenId) {
+		Token token = null;
+		try {
+			token = tokenManager.getToken(tokenId);
+		} catch (TokenNotFoundException e) {
+			return Response.status(404).entity("Token was not found").build();
+		}
 		return Response.ok(token, "application/json").build();
 	}
 	
 	@GET
 	@Produces("application/json")
-	public Response getTokens(@QueryParam("customerId") String customerId, @QueryParam("tokenAmount") int tokenAmount) throws RequestRejected, TokenNotFoundException, DataAccessException {
-		List<Token> tokens = tokenManager.requestToken(customerId, tokenAmount);
+	public Response getTokens(@QueryParam("customerId") String customerId, @QueryParam("tokenAmount") int tokenAmount) {
+		List<Token> tokens = null;
+		try {
+			tokens = tokenManager.requestToken(customerId, tokenAmount);
+		} catch (RequestRejected | TokenNotFoundException | DataAccessException e) {
+			return Response.status(406).entity("Request has been rejected").build();
+		}
 		return Response.ok(tokens, "application/json").build();
 	}
 }
