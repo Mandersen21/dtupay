@@ -48,13 +48,13 @@ public class CustomerManager {
 	}
 	
 	// Remove customer
-	public boolean removeCustomer(String customerId, String cpr, String name, List<String> tokenList) throws Exception {
+	public boolean removeCustomer(String customerId, String cpr, String name, List<String> tokenList) throws CustomerNotFoundException {
 		if (customerRepository.customerExists(new Customer(customerId, name, cpr, tokenList))) {
 			customerRepository.removeCustomer(customer);
 			return true;
 		} else {
 	
-			throw new RequestRejected("The customer " + name + " is not in the system!");
+			throw new CustomerNotFoundException("The customer " + name + " is not in the system!");
 	
 		}
 	}
@@ -75,6 +75,15 @@ public class CustomerManager {
     		throw new CustomerNotFoundException("Customer not found");
     	}
 		return customer;
+	}
+	
+	// Get customer by name
+	public List<String>  getCustomerToken(String customerToken) throws CustomerNotFoundException {
+    	List<String> tokens = customerRepository.getTokens(customer);
+    	if (customer == null) {
+    		throw new CustomerNotFoundException("Customer not found");
+    	}
+		return tokens;
 	}
 	
 }
