@@ -37,13 +37,13 @@ public class CustomerEndpoint {
 	@GET
 	@Path("/{customerId}") 
 	@Produces("application/json")
-	public Response getCustomer(@PathParam("customerId") String customerId) throws Exception {
+	public Response getCustomer(@PathParam("customerId") String customerId) {
 		Customer customer = null;
 		try {
 			customer = customerManager.getCustomerId(customerId);
 		} catch (CustomerNotFoundException e) {
-			return Response.status(404).entity("Token was not found").build();
-		}
+			return Response.status(404).entity("Customer was not found").build();
+		} 
 		return Response.ok(customer, "application/json").build();
 	}
 	
