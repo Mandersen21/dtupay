@@ -33,7 +33,7 @@ public class CustomerEndpoint {
 	@Path("/{customerId}") 
 	@Produces("application/json")
 	public Response getCustomerById(@PathParam("customerId") String customerId) throws Exception {
-		Customer customer = customerRepository.getCustomerById(customerId);
+		Customer customer = customerManager.getCustomerId(customerId);
 		return Response.ok(customer, "application/json").build();
 	}
 	
@@ -41,7 +41,7 @@ public class CustomerEndpoint {
 	@Path("/{customerId}") 
 	@Produces("application/json")
 	public Response getCustomerByName(@PathParam("customerName") String customerName) throws Exception {
-		Customer customer = customerRepository.getCustomerByName(customerName);
+		Customer customer = customerManager.getCustomerName(customerName);
 		return Response.ok(customer, "application/json").build();
 	}
 	
