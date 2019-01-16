@@ -9,12 +9,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beijing.customerservice.domain.Customer;
 import beijing.customerservice.domain.CustomerManager;
+import beijing.customerservice.exception.CustomerNotFoundException;
 import beijing.customerservice.repository.CustomerRepository;
 import beijing.customerservice.repository.ICustomerRepository;
+
+import java.util.List;
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 
 @Path("/customer")
@@ -32,16 +37,13 @@ public class CustomerEndpoint {
 	@GET
 	@Path("/{customerId}") 
 	@Produces("application/json")
-	public Response getCustomerById(@PathParam("customerId") String customerId) throws Exception {
-		Customer customer = customerManager.getCustomerId(customerId);
-		return Response.ok(customer, "application/json").build();
-	}
-	
-	@GET
-	@Path("/{customerName}") 
-	@Produces("application/json")
-	public Response getCustomerByName(@PathParam("customerName") String customerName) throws Exception {
-		Customer customer = customerManager.getCustomerName(customerName);
+	public Response getToken(@PathParam("customerId") String customerId) throws Exception {
+		Customer customer = null;
+		try {
+			customer = customerManager.getCustomerId(customerId);
+		} catch (CustomerNotFoundException e) {
+			return Response.status(404).entity("Token was not found").build();
+		}
 		return Response.ok(customer, "application/json").build();
 	}
 	
