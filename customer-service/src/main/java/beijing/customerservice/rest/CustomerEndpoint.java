@@ -13,6 +13,7 @@ import beijing.customerservice.exception.CustomerNotFoundException;
 import beijing.customerservice.repository.CustomerRepository;
 import beijing.customerservice.repository.ICustomerRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.DELETE;
@@ -28,10 +29,12 @@ public class CustomerEndpoint {
 	private static ICustomerRepository customerRepository = new CustomerRepository();
 	private CustomerManager customerManager;
 	ObjectMapper mapper = new ObjectMapper();
+	List<String> listToken = new ArrayList<String>();
 
 	public CustomerEndpoint() {
 		customerManager = new CustomerManager(customerRepository);
-		customerRepository.createCustomer(new Customer("123", "123102", "Stephen", null));
+		listToken.add("123");
+		customerRepository.createCustomer(new Customer("123", "123102", "Stephen", listToken));
 	}
 	
 	@GET
@@ -47,7 +50,6 @@ public class CustomerEndpoint {
 		return Response.ok(customer, "application/json").build();
 	}
 	
-	
 	@GET
 	@Path("/{customerToken}")
 	@Produces("application/json")
@@ -59,6 +61,19 @@ public class CustomerEndpoint {
 			return Response.status(404).entity("Customer was not found").build();
 		} 
 		return Response.ok(tokens, "application/json").build();
+	}
+	
+	@PUT
+	@Produces("application/json")
+	public Response putCustomer(@PathParam("customerId") String customerId, @PathParam("customerId") String cpr, 
+								@PathParam("customerId") String name, @PathParam("customerId") List<String> tokenList) {
+		boolean customer;
+		try {
+			customer = customerManager.addCustomer(customerId, cpr, name, tokenList);
+		} catch (Exception e) {
+			return Response.status(404).entity("Customer was not found").build();
+		} 
+		return Response.ok(customer, "application/json").build();
 	}
 	
 }
