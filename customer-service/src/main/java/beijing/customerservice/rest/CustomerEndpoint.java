@@ -47,18 +47,6 @@ public class CustomerEndpoint {
 		return Response.ok(customer, "application/json").build();
 	}
 	
-	@GET
-	@Path("/{customerName}")
-	@Produces("application/json")
-	public Response getCustomerName(@PathParam("customerName") String customerName) {
-		Customer customer = null;
-		try {
-			customer = customerManager.getCustomerName(customerName);
-		} catch (CustomerNotFoundException e) {
-			return Response.status(404).entity("Customer was not found").build();
-		} 
-		return Response.ok(customer, "application/json").build();
-	}
 	
 	@GET
 	@Path("/{customerToken}")
