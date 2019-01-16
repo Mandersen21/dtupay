@@ -20,6 +20,7 @@ import beijing.tokenservice.repository.TokenRepository;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
@@ -32,7 +33,7 @@ public class TokensEndpoint {
 	private TokenManager tokenManager;
 	ObjectMapper mapper = new ObjectMapper();
 
-	public TokensEndpoint() {
+	public TokensEndpoint() throws IOException, TimeoutException {
 		tokenManager = new TokenManager(repository);
 		repository.createToken(new Token("123456", "1234", true, Status.ACTIVE));
 	}

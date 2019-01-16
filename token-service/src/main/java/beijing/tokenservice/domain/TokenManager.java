@@ -10,170 +10,220 @@ import org.krysalis.barcode4j.impl.code39.Code39Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.krysalis.barcode4j.tools.UnitConv;
 
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.Consumer;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
+
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeoutException;
 
 public class TokenManager {
 
-    public static ITokenRepository repository;
-    private final int tokenLength = 6;
-    private final String tokenPath = "tokens/";
-    private Token token;
+	private final static String CUSTOMER_TO_TOKEN_QUEUE = "customer_to_token";
+	private final static String TOKEN_TO_CUSTOMER_QUEUE = "token_to_customer";
 
-    private List<Token> tokens;
+	public static ITokenRepository repository;
+	private final int tokenLength = 6;
+	private final String tokenPath = "tokens/";
+	private Token token;
 
-    public TokenManager(ITokenRepository _repository) {
-        repository = _repository;
-    }
+	private ConnectionFactory factory;
+	private Connection connection;
+	private Channel channel;
 
-    public List<Token> requestToken(String customerId, int tokenAmount) throws RequestRejected, TokenNotFoundException, DataAccessException {
-        tokens = new ArrayList<Token>();
+	private List<Token> tokens;
 
-        if (tokenAmount >= 1 && tokenAmount <= 5) {
-            try {
-                //call customer service to verify customerId
-            } catch (Exception e) {
-                throw new RequestRejected("RENAME");
-            }
-            tokens = repository.getTokensForCustomerId(customerId);
-        } else {
-            throw new RequestRejected("Your request was rejected due to requesting less than 1 or more than 5 tokens");
-        }
+	public TokenManager(ITokenRepository _repository) throws IOException, TimeoutException {
+		repository = _repository;
 
-        if (tokens.size() > 1) {
-            throw new RequestRejected("Your request was rejected due to having more than one valid token left");
-        }
+		factory = new ConnectionFactory();
+		factory.setHost("localhost");
+		connection = factory.newConnection();
+		channel = connection.createChannel();
 
-        // Generate tokens
-        for (int i = 0; i < tokenAmount; i++) {
-            boolean unique = false;
+		channel.queueDeclare(TOKEN_TO_CUSTOMER_QUEUE, false, false, false, null);
+		
+		Consumer consumer = new DefaultConsumer(channel) {
+			@Override
+			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
+					byte[] body) throws IOException {
+				
+				// Get customer using id received from token service
+				
+				
+				
+				// Create message with approval or not and send back to token service
+				
+				String message = new String(body, "UTF-8");
+				System.out.println(" [x] Received '" + message + "'");		
+			}
+		};
+		channel.basicConsume(TOKEN_TO_CUSTOMER_QUEUE, true, consumer);
+	}
 
-            String tokenId = "";
-            Token checkToken;
+	public List<Token> requestToken(String customerId, int tokenAmount)
+			throws RequestRejected, TokenNotFoundException, DataAccessException {
+		tokens = new ArrayList<Token>();
+		
+		System.out.println(channel);
+		
+		if (tokenAmount >= 1 && tokenAmount <= 5) {
+			try {
+				String message = "customer details: " + customerId;
+				System.out.println(message);
+				channel.basicPublish("", TOKEN_TO_CUSTOMER_QUEUE, null, message.getBytes());
+				System.out.println(" [x] Sent '" + message + "'");
 
-            while (!unique) {
-                tokenId = generateRandomTokenNumber(tokenLength);
-                checkToken = repository.getToken(tokenId);
-                if (checkToken == null) {
-                    unique = true;
-                }
-            }
-            Token token = new Token(tokenId, customerId, true, Status.ACTIVE);
+				channel.close();
+				connection.close();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			tokens = repository.getTokensForCustomerId(customerId);
+		} else {
+			throw new RequestRejected("Your request was rejected due to requesting less than 1 or more than 5 tokens");
+		}
 
-            try {
-                repository.createToken(token);
-                tokens.add(token);
-            } catch (Exception e) {
-                throw new DataAccessException("Could not add Token to Database");
-            }
-        }
-        return tokens;
-    }
+		if (tokens.size() > 1) {
+			throw new RequestRejected("Your request was rejected due to having more than one valid token left");
+		}
 
-    public boolean isTokenValid(String tokenId) throws TokenNotFoundException {
-        token = repository.getToken(tokenId);
-        if (token == null) {
-            throw new TokenNotFoundException("Could not find the token in the database");
-        }
-        return token.getValidationStatus() == true;
-    }
+		// Generate tokens
+		for (int i = 0; i < tokenAmount; i++) {
+			boolean unique = false;
 
-    public boolean isTokenInvalid(String tokenId) {
-        token = repository.getToken(tokenId);
+			String tokenId = "";
+			Token checkToken;
 
-        return token.getValidationStatus() == false;
-    }
+			while (!unique) {
+				tokenId = generateRandomTokenNumber(tokenLength);
+				checkToken = repository.getToken(tokenId);
+				if (checkToken == null) {
+					unique = true;
+				}
+			}
+			Token token = new Token(tokenId, customerId, true, Status.ACTIVE);
 
-    public Token getToken(String tokenId) throws TokenNotFoundException {
-    	Token token = repository.getToken(tokenId);
-    	if (token == null) {
-    		throw new TokenNotFoundException("Token not found");
-    	}
+			try {
+				repository.createToken(token);
+				tokens.add(token);
+			} catch (Exception e) {
+				throw new DataAccessException("Could not add Token to Database");
+			}
+		}
+		return tokens;
+	}
+
+	public boolean isTokenValid(String tokenId) throws TokenNotFoundException {
+		token = repository.getToken(tokenId);
+		if (token == null) {
+			throw new TokenNotFoundException("Could not find the token in the database");
+		}
+		return token.getValidationStatus() == true;
+	}
+
+	public boolean isTokenInvalid(String tokenId) {
+		token = repository.getToken(tokenId);
+
+		return token.getValidationStatus() == false;
+	}
+
+	public Token getToken(String tokenId) throws TokenNotFoundException {
+		Token token = repository.getToken(tokenId);
+		if (token == null) {
+			throw new TokenNotFoundException("Token not found");
+		}
 		return token;
 	}
-    
-    public boolean updateToken(String tokenId, Boolean validationStatus, Status status) throws TokenNotFoundException {
-        boolean response;
-        try {
-            // Get token
-            token = repository.getToken(tokenId);
 
-            if (token != null) {
-                token.setStatus(status);
-                token.setValidtionStatus(validationStatus);
+	public boolean updateToken(String tokenId, Boolean validationStatus, Status status) throws TokenNotFoundException {
+		boolean response;
+		try {
+			// Get token
+			token = repository.getToken(tokenId);
 
-                response = repository.updateToken(token);
-            } else {
-                throw new TokenNotFoundException("Could not find a token with that tokenId");
-            }
+			if (token != null) {
+				token.setStatus(status);
+				token.setValidtionStatus(validationStatus);
 
-            if (response == true) {
-                return true;
-            }
-        } catch (Exception e) {
-            throw new TokenNotFoundException("Could not find the token in the database");
-        }
+				response = repository.updateToken(token);
+			} else {
+				throw new TokenNotFoundException("Could not find a token with that tokenId");
+			}
 
-        return false;
-    }
+			if (response == true) {
+				return true;
+			}
+		} catch (Exception e) {
+			throw new TokenNotFoundException("Could not find the token in the database");
+		}
 
-    public String generateRandomTokenNumber(int length) {
-        int m = (int) Math.pow(10, length - 1);
-        return Integer.toString(m + new Random().nextInt(9 * m));
-    }
+		return false;
+	}
 
-    public File generateToken(String msg, String path) {
-        File file = new File(path);
-        try {
-            generate(msg, new FileOutputStream(file));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return file;
-    }
+	public String generateRandomTokenNumber(int length) {
+		int m = (int) Math.pow(10, length - 1);
+		return Integer.toString(m + new Random().nextInt(9 * m));
+	}
 
-    public byte[] generate(String msg) {
-        ByteArrayOutputStream ous = new ByteArrayOutputStream();
-        generate(msg, ous);
-        return ous.toByteArray();
-    }
+	public File generateToken(String msg, String path) {
+		File file = new File(path);
+		try {
+			generate(msg, new FileOutputStream(file));
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		return file;
+	}
 
-    public void generate(String msg, OutputStream ous) {
-        if (StringUtils.isEmpty(msg) || ous == null) {
-            return;
-        }
+	public byte[] generate(String msg) {
+		ByteArrayOutputStream ous = new ByteArrayOutputStream();
+		generate(msg, ous);
+		return ous.toByteArray();
+	}
 
-        Code39Bean bean = new Code39Bean();
+	public void generate(String msg, OutputStream ous) {
+		if (StringUtils.isEmpty(msg) || ous == null) {
+			return;
+		}
 
-        // accuracy
-        final int dpi = 150;
-        // module width
-        final double moduleWidth = UnitConv.in2mm(1.0f / dpi);
+		Code39Bean bean = new Code39Bean();
 
-        // configuration object
-        bean.setModuleWidth(moduleWidth);
-        bean.setWideFactor(3);
-        bean.doQuietZone(false);
+		// accuracy
+		final int dpi = 150;
+		// module width
+		final double moduleWidth = UnitConv.in2mm(1.0f / dpi);
 
-        String format = "image/png";
+		// configuration object
+		bean.setModuleWidth(moduleWidth);
+		bean.setWideFactor(3);
+		bean.doQuietZone(false);
 
-        try {
+		String format = "image/png";
 
-            // output to the stream
-            BitmapCanvasProvider canvas = new BitmapCanvasProvider(ous, format, dpi, BufferedImage.TYPE_BYTE_BINARY,
-                    false, 0);
+		try {
 
-            // Generate a bar-code
-            bean.generateBarcode(canvas, msg);
+			// output to the stream
+			BitmapCanvasProvider canvas = new BitmapCanvasProvider(ous, format, dpi, BufferedImage.TYPE_BYTE_BINARY,
+					false, 0);
 
-            // end drawing
-            canvas.finish();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+			// Generate a bar-code
+			bean.generateBarcode(canvas, msg);
+
+			// end drawing
+			canvas.finish();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }
