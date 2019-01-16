@@ -87,6 +87,14 @@ public class TokenManager {
         return token.getValidationStatus() == false;
     }
 
+    public Token getToken(String tokenId) throws TokenNotFoundException {
+    	Token token = repository.getToken(tokenId);
+    	if (token == null) {
+    		throw new TokenNotFoundException("Token not found");
+    	}
+		return token;
+	}
+    
     public boolean updateToken(String tokenId, Boolean validationStatus, Status status) throws TokenNotFoundException {
         boolean response;
         try {
