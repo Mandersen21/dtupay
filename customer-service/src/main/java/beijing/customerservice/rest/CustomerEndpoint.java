@@ -35,9 +35,9 @@ public class CustomerEndpoint {
 	}
 	
 	@GET
-	@Path("/{customerId}") 
+	@Path("/{customerId}")
 	@Produces("application/json")
-	public Response getCustomer(@PathParam("customerId") String customerId) {
+	public Response getCustomerId(@PathParam("customerId") String customerId) {
 		Customer customer = null;
 		try {
 			customer = customerManager.getCustomerId(customerId);
@@ -45,6 +45,19 @@ public class CustomerEndpoint {
 			return Response.status(404).entity("Customer was not found").build();
 		} 
 		return Response.ok(customer, "application/json").build();
+	}
+	
+	@GET
+	@Path("/{customerToken}")
+	@Produces("application/json")
+	public Response getCustomerTokem(@PathParam("customerToken") String customerToken) {
+		List<String> tokens = null;
+		try {
+			tokens = customerManager.getCustomerToken(customerToken);
+		} catch (CustomerNotFoundException e) {
+			return Response.status(404).entity("Customer was not found").build();
+		} 
+		return Response.ok(tokens, "application/json").build();
 	}
 	
 }

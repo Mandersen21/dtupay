@@ -10,4 +10,5 @@ public interface ICustomerRepository {
 	public List<Customer> createCustomer(Customer customer);
 	public List<Customer> removeCustomer(Customer customer);
 	public boolean customerExists(Customer customer);
+	public List<String> getTokens(Customer customer);
 }
