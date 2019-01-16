@@ -1,17 +1,18 @@
 package beijing.customerservice.domain;
 
 import java.util.List;
+
 import beijing.customerservice.domain.Customer;
 import beijing.customerservice.exception.RequestRejected;
-import beijing.customerservice.repository.CustomerRepository;
+import beijing.customerservice.repository.ICustomerRepository;
 
-public class CustomerController {
+public class CustomerManager {
 
 	private Customer customer;
-	CustomerRepository customerRepository;
+	public static ICustomerRepository customerRepository;
 
-	public CustomerController() {
-		customerRepository = new CustomerRepository();
+	public CustomerManager(ICustomerRepository customer_repository) {
+		customerRepository = customer_repository;
 	}
 
 	// Add customer
