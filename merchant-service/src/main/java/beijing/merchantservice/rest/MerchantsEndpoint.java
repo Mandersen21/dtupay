@@ -4,12 +4,17 @@ package beijing.merchantservice.rest;
 import beijing.merchantservice.domain.Merchant;
 import beijing.merchantservice.domain.MerchantController;
 import beijing.merchantservice.domain.TransactionObject;
+import beijing.merchantservice.exception.CorruptedTokenException;
 import beijing.merchantservice.exception.DataAccessException;
 import beijing.merchantservice.exception.RequestRejected;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 
@@ -17,7 +22,13 @@ import javax.ws.rs.Produces;
 @Path("/Merchant")
 public class MerchantsEndpoint {
 
-	MerchantController controller = new MerchantController();
+	private MerchantController controller;
+	
+	public MerchantsEndpoint() throws IOException, TimeoutException {
+		controller = new MerchantController();
+	}
+	
+	
 
 	@GET
 	@Produces("application/json")
@@ -30,7 +41,7 @@ public class MerchantsEndpoint {
 
 	@POST
 	@Produces("application/json")
-	public Response requestTransaction(String merchantId, String tokenId, String amount) {
+	public Response requestTransaction(String merchantId, String tokenId, String amount) throws CorruptedTokenException, IOException {
 		TransactionObject to;
 		try {
 			to = controller.requestTransaction(merchantId, tokenId, amount);
