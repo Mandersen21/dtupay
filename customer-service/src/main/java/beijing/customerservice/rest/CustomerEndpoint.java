@@ -55,13 +55,13 @@ public class CustomerEndpoint {
    @Path("/customers")
    @Produces("application/json")
    @Consumes("application/json")
-   public Response createCustomer(@FormParam("customerId") String customerId,
+   public Response createCustomer(@FormParam("name") String name,
       @FormParam("cpr") String cpr,
-      @FormParam("name") String name,
-      @FormParam("tokenList") List<String> tokenList) throws IOException{
+      @FormParam("id") String id,
+      @FormParam("tokens") List<String> tokens) throws IOException{
       List<Customer> result = null;
 	  try {
-		  result = customerManager.addCustomer(customerId, cpr, name, tokenList);
+		  result = customerManager.addCustomer(id, cpr, name, tokens);
 	  } catch (Exception e) {
 		  return Response.status(404).entity(FAILURE_RESULT).build();
 		}
