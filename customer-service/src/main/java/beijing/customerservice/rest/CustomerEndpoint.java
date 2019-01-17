@@ -35,7 +35,10 @@ public class CustomerEndpoint {
    public CustomerEndpoint() {
 		customerManager = new CustomerManager(customerRepository);
 		listToken.add("32434");
-		customerRepository.createCustomer(new Customer("12345", "123102", "Stephen", listToken));
+		Customer customer1 = new Customer("12345", "123102", "Stephen", listToken);
+		Customer customer2 = new Customer("12123", "412342", "Hello", listToken);
+		customerRepository.createCustomer(customer1);
+		customerRepository.createCustomer(customer2);
 	}
    
    @GET
