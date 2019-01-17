@@ -58,8 +58,8 @@ public class CustomerEndpoint {
    public Response createCustomer(@FormParam("name") String name,
       @FormParam("cpr") String cpr,
       @FormParam("id") String id,
-      @FormParam("tokens") List<String> tokens) throws IOException{
-      List<Customer> result = null;
+      @FormParam("tokens") List<String> tokens) {
+      List<Customer> result;
 	  try {
 		  result = customerManager.addCustomer(id, cpr, name, tokens);
 	  } catch (Exception e) {
