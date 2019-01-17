@@ -18,7 +18,7 @@ public class CustomerManager {
 	}
 
 	// Add customer
-	public boolean addCustomer(String customerId, String cpr, String name, List<String> tokenList) throws Exception {
+	public List<Customer> addCustomer(String customerId, String cpr, String name, List<String> tokenList) throws Exception {
 
 		if (name.matches(".*\\d+.*")) {
 			throw new RequestRejected("Invalid name!");
@@ -38,25 +38,17 @@ public class CustomerManager {
 					}
 					customerRepository.createCustomer(customer);
 					System.out.println("The customer" + customer.getCpr() + " is added to the system!");
-
-					return true;
 				}
 			} catch (NumberFormatException e) {
 				throw new RequestRejected("Invalid format for CPR!");
 			}
 		}
+		return null;
 	}
 	
 	// Remove customer
-	public boolean removeCustomer(String customerId, String cpr, String name, List<String> tokenList) throws CustomerNotFoundException {
-		if (customerRepository.customerExists(new Customer(customerId, name, cpr, tokenList))) {
-			customerRepository.removeCustomer(customer);
-			return true;
-		} else {
-	
-			throw new CustomerNotFoundException("The customer " + name + " is not in the system!");
-	
-		}
+	public List<Customer> removeCustomer(Customer customer) {
+		return customerRepository.removeCustomer(customer);
 	}
 	
 	// Get customer by id
@@ -70,7 +62,7 @@ public class CustomerManager {
 	
 	// Get customer by name
 	public Customer getCustomerName(String customerName) throws CustomerNotFoundException {
-    	Customer customer = customerRepository.getCustomerById(customerName);
+    	Customer customer = customerRepository.getCustomerByName(customerName);
     	if (customer == null) {
     		throw new CustomerNotFoundException("Customer not found");
     	}

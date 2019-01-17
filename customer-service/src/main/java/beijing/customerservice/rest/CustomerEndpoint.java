@@ -1,11 +1,21 @@
 package beijing.customerservice.rest;
 
+import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beijing.customerservice.domain.Customer;
 import beijing.customerservice.domain.CustomerManager;
@@ -13,53 +23,74 @@ import beijing.customerservice.exception.CustomerNotFoundException;
 import beijing.customerservice.repository.CustomerRepository;
 import beijing.customerservice.repository.ICustomerRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Produces;
-
-
-@Path("/customer")
+@Path("/CustomerService")
 public class CustomerEndpoint {
-	
-	private static ICustomerRepository customerRepository = new CustomerRepository();
-	private CustomerManager customerManager;
-	ObjectMapper mapper = new ObjectMapper();
-	List<String> listToken = new ArrayList<String>();
 
-	public CustomerEndpoint() {
+   private static final String FAILURE_RESULT="<result>failure</result>";
+
+   private static ICustomerRepository customerRepository = new CustomerRepository();
+   private CustomerManager customerManager;
+   List<String> listToken = new ArrayList<String>();
+   
+   public CustomerEndpoint() {
 		customerManager = new CustomerManager(customerRepository);
-		listToken.add("12345");
-		customerRepository.createCustomer(new Customer("123", "123102", "Stephen", listToken));
+		listToken.add("32434");
+		customerRepository.createCustomer(new Customer("12345", "123102", "Stephen", listToken));
 	}
-	
-	@GET
-	@Path("/{customerId}")
-	@Produces("application/json")
-	public Response getCustomerId(@PathParam("customerId") String customerId) {
-		Customer customer = null;
+   
+   @GET
+   @Path("/customers/{customerId}")
+   @Produces("application/json")
+   public Response getCustomer(@PathParam("customerId") String customerId){
+	   Customer customer = null;
 		try {
 			customer = customerManager.getCustomerId(customerId);
 		} catch (CustomerNotFoundException e) {
-			return Response.status(404).entity("Customer was not found").build();
-		} 
-		return Response.ok(customer, "application/json").build();
-	}
-	
-	@GET
-	@Path("/{customerToken}")
-	@Produces("application/json")
-	public Response getCustomerTokem(@PathParam("customerToken") String customerToken) {
-		List<String> tokens = null;
-		try {
-			tokens = customerManager.getCustomerToken(customerToken);
-		} catch (CustomerNotFoundException e) {
-			return Response.status(404).entity("Customer was not found").build();
-		} 
-		return Response.ok(tokens, "application/json").build();
-	}
-	
+			return Response.status(404).entity(FAILURE_RESULT).build();
+		}
+		return Response.ok(customer).build();
+   }
+
+   @POST
+   @Path("/customers")
+   @Produces("application/json")
+   @Consumes("application/json")
+   public Response createCustomer(@FormParam("customerId") String customerId,
+      @FormParam("cpr") String cpr,
+      @FormParam("name") String name,
+      @FormParam("tokenList") List<String> tokenList) throws IOException{
+      List<Customer> result = null;
+	  try {
+		  result = customerManager.addCustomer(customerId, cpr, name, tokenList);
+	  } catch (Exception e) {
+		  return Response.status(404).entity(FAILURE_RESULT).build();
+		}
+      if(result != null){
+         return Response.ok(result).build();
+      }
+	return null;
+   }
+
+   @DELETE
+   @Path("/customers/{customerId}")
+   @Produces("application/json")
+   public Response deleteCustomer(@PathParam("customerId") String customerId){
+      List<Customer> result = null;
+      try {
+    	  result = customerManager.removeCustomer(customerManager.getCustomerId(customerId));
+      } catch (CustomerNotFoundException e) {
+    	  e.printStackTrace();
+      }
+      if(result != null){
+         return Response.ok(result).build();
+      }
+      return Response.status(404).entity(FAILURE_RESULT).build();
+   }
+
+   @OPTIONS
+   @Path("/customers")
+   @Produces("application/json")
+   public String getSupportedOperations(){
+      return "<operations>GET, POST, DELETE</operations>";
+   }
 }

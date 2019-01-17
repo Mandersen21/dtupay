@@ -31,6 +31,7 @@ public class CustomerRepository implements ICustomerRepository {
     }
 
     public List<Customer> createCustomer(Customer customer) {
+    	
         if (getCustomerById(customer.getId()) == null) {
         	customerList.add(customer);
         }
