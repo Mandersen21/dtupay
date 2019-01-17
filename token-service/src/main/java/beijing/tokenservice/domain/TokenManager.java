@@ -51,9 +51,12 @@ public class TokenManager {
 		factory = new ConnectionFactory();
 		factory.setUsername("admin");
 		factory.setPassword("Banana");
-
+		//factory.setUsername("guest");
+		//factory.setUsername("guest");
+		
 		factory.setHost("02267-bejing.compute.dtu.dk");
-
+		//factory.setHost("localhost");
+		
 		connection = factory.newConnection();
 		channel = connection.createChannel();
 		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
