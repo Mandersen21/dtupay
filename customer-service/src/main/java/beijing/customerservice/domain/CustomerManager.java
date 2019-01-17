@@ -1,81 +1,37 @@
 package beijing.customerservice.domain;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
+import com.rabbitmq.client.*;
 
-import beijing.customerservice.domain.Customer;
-import beijing.customerservice.exception.CustomerNotFoundException;
-import beijing.customerservice.exception.RequestRejected;
-import beijing.customerservice.repository.ICustomerRepository;
+import beijing.customerservice.repository.CustomerRepository;
 
 public class CustomerManager {
-
+	private CustomerRepository dataService = CustomerRepository.getInstance();
 	private Customer customer;
-	public static ICustomerRepository customerRepository;
 
-	public CustomerManager(ICustomerRepository customer_repository) {
-		customerRepository = customer_repository;
-	}
+	// When the customer is created, send a message queue to the tokenService
+	private final static String CUSTOMERID_TO_TOKEN_QUEUE = "customerid_to_token";
+	private ConnectionFactory factory;
+ 	private Connection connection;
+ 	private Channel channel;
 
-	// Add customer
-	public List<Customer> addCustomer(String customerId, String cpr, String name, List<String> tokenList) throws Exception {
+	public void CustomerController() throws IOException, TimeoutException {
+  		factory = new ConnectionFactory();
+ 		factory.setHost("localhost");
 
-		if (name.matches(".*\\d+.*")) {
-			throw new RequestRejected("Invalid name!");
-		} else {
-			try {
-				Integer.parseInt(cpr);
-				if (cpr.length() != 10) {
-					throw new RequestRejected("Invalid CPR number!\nThe CPR has the following format:\nddmmyyxxxx ");
-				} else {
+  		connection = factory.newConnection();
+ 		channel = connection.createChannel();
 
-					if (customerRepository.customerExists(new Customer(customerId, name, cpr, tokenList))) {
-						throw new RequestRejected("The customer " + name + " already exists!");
-					} else {
-
-						customer = new Customer(customerId, name, cpr, tokenList);
-
-					}
-					customerRepository.createCustomer(customer);
-					System.out.println("The customer" + customer.getCpr() + " is added to the system!");
-				}
-			} catch (NumberFormatException e) {
-				throw new RequestRejected("Invalid format for CPR!");
-			}
-		}
-		return null;
-	}
+  		channel.queueDeclare(CUSTOMERID_TO_TOKEN_QUEUE, false, false, false, null);
+  		String message = dataService.addCustomer(customer.getName(), customer.getCpr(), customer.getTokenList()); 
+  		channel.basicPublish("", "products_queue", null, message.getBytes());
+  		
+  		channel.close();
+  		connection.close();
 	
-	// Remove customer
-	public List<Customer> removeCustomer(Customer customer) {
-		return customerRepository.removeCustomer(customer);
-	}
-	
-	// Get customer by id
-	public Customer getCustomerId(String customerId) throws CustomerNotFoundException {
-    	Customer customer = customerRepository.getCustomerById(customerId);
-    	if (customer == null) {
-    		throw new CustomerNotFoundException("Customer not found");
-    	}
-		return customer;
-	}
-	
-	// Get customer by name
-	public Customer getCustomerName(String customerName) throws CustomerNotFoundException {
-    	Customer customer = customerRepository.getCustomerByName(customerName);
-    	if (customer == null) {
-    		throw new CustomerNotFoundException("Customer not found");
-    	}
-		return customer;
-	}
-	
-	// Get customer by name
-	public List<String>  getCustomerToken(String customerToken) throws CustomerNotFoundException {
-    	List<String> tokens = customerRepository.getTokens(customer);
-    	if (customer == null) {
-    		throw new CustomerNotFoundException("Customer not found");
-    	}
-		return tokens;
-	}
-	
+	}	
 }

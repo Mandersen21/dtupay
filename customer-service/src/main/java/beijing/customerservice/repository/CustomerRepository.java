@@ -1,41 +1,46 @@
 package beijing.customerservice.repository;
 
-import beijing.customerservice.domain.Customer;
 import java.util.ArrayList;
+
 import java.util.List;
+import java.util.Random;
+
+import beijing.customerservice.domain.Customer;
 
 public class CustomerRepository implements ICustomerRepository {
+    private List<Customer> customerList = new ArrayList<>();
 
-    List<Customer> customerList;
+    private static CustomerRepository ourInstance = new CustomerRepository();
 
-    public CustomerRepository() {
-        customerList = new ArrayList<Customer>();
+    public static CustomerRepository getInstance() {
+        return ourInstance;
     }
 
-    public Customer getCustomerById(String customerId) {
-        for (Customer c : customerList) {
-            if (c.getId().contentEquals(customerId)) {
-                return c;
-            }
-        }
-        return null;
-    }
+    public String generateRandomCustomerId(int length) {
+		int m = (int) Math.pow(10, length - 1);
+		return Integer.toString(m + new Random().nextInt(9 * m));
+	}
     
-    public Customer getCustomerByName(String customerName) {
-        for (Customer c : customerList) {
-            if (c.getName().contentEquals(customerName)) {
-                return c;
-            }
-        }
-        return null;
+    public String addCustomer(String name, String cpr, List<String> tokenList) {
+    	String id = generateRandomCustomerId(3);
+        Customer customer = new Customer(id, name, cpr, tokenList);
+  
+        customerList.add(customer);
+        return id;
     }
 
-    public List<Customer> createCustomer(Customer customer) {
-    	
-        if (getCustomerById(customer.getId()) == null) {
-        	customerList.add(customer);
+    public List<Customer> getCustomerList() {
+        return customerList;
+    }
+
+    public Customer getCustomerById(String id) {
+        for (Customer customer : customerList) {
+            if (customer.getId().equals(id)) {
+                return customer;
+            }
         }
-		return customerList; 
+
+        return null;
     }
     
     public List<Customer> removeCustomer(Customer customer) {
@@ -54,9 +59,8 @@ public class CustomerRepository implements ICustomerRepository {
 	
 	public List<String> getTokens(Customer customer) {
 		for (Customer c : customerList) {
-			return c.getTokens();
+			return c.getTokenList();
         }
         return null;
     }
-    
 }
