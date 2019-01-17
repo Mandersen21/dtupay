@@ -5,10 +5,12 @@ import beijing.customerservice.domain.Customer;
 
 public interface ICustomerRepository {
 
-	public Customer getCustomerById(String customerId);
-	public Customer getCustomerByName(String customerId);
-	public List<Customer> createCustomer(Customer customer);
+	public String generateRandomCustomerId(int length);
+	public String addCustomer(String name, String cpr, List<String> tokenList);
+	public List<Customer> getCustomerList();
+	public Customer getCustomerById(String id);
 	public List<Customer> removeCustomer(Customer customer);
 	public boolean customerExists(Customer customer);
 	public List<String> getTokens(Customer customer);
+	
 }
