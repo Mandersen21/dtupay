@@ -160,4 +160,10 @@ public class MerchantController {
 		return to;
 
 	}
+	
+	public IMerchantRepositry getRepository() {
+		return this.repositry;
+	}
+	
+	
 }

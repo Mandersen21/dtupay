@@ -14,6 +14,7 @@ public interface IMerchantRepositry {
 	boolean createTransaction(TransactionObject transaction) throws DataAccessException;
 	boolean addToken(TokenValidation t) throws CorruptedTokenException;
 	Merchant getMerchant(String uid);
+	List<Merchant> getMerchants();
 	List<TransactionObject> getTransactions(String merchantUid);
 	TokenValidation getTokenById(String tokenId) throws CorruptedTokenException;
 }

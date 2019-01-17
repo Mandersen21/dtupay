@@ -68,6 +68,11 @@ public class MerchantRepositry implements IMerchantRepositry {
 	}
 
 	@Override
+	public List<Merchant> getMerchants(){
+		return this.merchantList;		
+	}
+	
+	@Override
 	public List<TransactionObject> getTransactions(String merchantUid) {
 		List<TransactionObject> merchantTrasactions = transactionsList.stream()
 				.filter(m -> m.getMerchantId().contentEquals(merchantUid)).collect(Collectors.toList());
