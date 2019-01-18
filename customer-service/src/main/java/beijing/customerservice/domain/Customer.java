@@ -2,20 +2,17 @@ package beijing.customerservice.domain;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
 public class Customer {
     private String id;
     private String name;
     private String cpr;
     private List<String> tokenList;
 
-    public Customer(String id, String name, String cpr, List<String> tokenList) {
+    public Customer(String id, String name, String cpr, List<String> list) {
     	this.id = id;
     	this.name = name;
     	this.cpr = cpr;
-    	this.tokenList = tokenList;
+    	this.tokenList = list;
     }
 
     public void setId(String id) {

@@ -51,4 +51,9 @@ public class CustomerRepository implements ICustomerRepository {
         return null;
     }
 
+	@Override
+	public List<Customer> getCustomers() {
+		return customerList;
+	}
+
 }
