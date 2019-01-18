@@ -15,6 +15,7 @@ import beijing.tokenservice.domain.Status;
 import beijing.tokenservice.domain.Token;
 import beijing.tokenservice.domain.TokenManager;
 import beijing.tokenservice.domain.TokenRepresentation;
+import beijing.tokenservice.exception.CustomerNotFoundException;
 import beijing.tokenservice.exception.DataAccessException;
 import beijing.tokenservice.exception.RequestRejected;
 import beijing.tokenservice.exception.TokenNotFoundException;
@@ -37,7 +38,7 @@ public class TokenManagerTest {
 	}
 
 	@Test()
-	public void requestTokensSuccesTest() throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException {
+	public void requestTokensSuccesTest() throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException, CustomerNotFoundException {
 		String customerId = UUID.randomUUID().toString();
 		cRepository.addCustomer(customerId);
 		List<TokenRepresentation> tokens = new ArrayList<TokenRepresentation>();
@@ -47,7 +48,7 @@ public class TokenManagerTest {
 
 	@Test()
 	public void requestTokensSuccesCustomerHaveOneActiveTokenTest()
-			throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException {
+			throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException, CustomerNotFoundException {
 		String customerId = UUID.randomUUID().toString();
 		cRepository.addCustomer(customerId);
 		token = new Token("123456", customerId, true, Status.ACTIVE, "");
@@ -62,7 +63,7 @@ public class TokenManagerTest {
 	public ExpectedException exception = ExpectedException.none();
 
 	@Test(expected = RequestRejected.class)
-	public void requestTokensDeniedTest() throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException {
+	public void requestTokensDeniedTest() throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException, CustomerNotFoundException {
 		String customerId = UUID.randomUUID().toString();
 		tokenManager.requestToken(customerId, 6);
 	}
