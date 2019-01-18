@@ -3,8 +3,6 @@ package beijing.tokenservice.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import beijing.tokenservice.domain.Token;
-
 public class CustomerRepository implements ICustomerRepository {
 
 	private List<String> customerList;

@@ -9,5 +9,15 @@ public class TokenRepresentation {
 		this.tokenId = tokenId;
 		this.tokenPath = tokenPath;
 	}
+
+	public String getTokenPath() {
+		return tokenPath;
+	}
+
+	public void setTokenPath(String tokenPath) {
+		this.tokenPath = tokenPath;
+	}
+	
+	
 	
 }
