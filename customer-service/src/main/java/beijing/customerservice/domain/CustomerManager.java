@@ -37,13 +37,15 @@ public class CustomerManager {
 
 	// Add customer
 	public boolean addCustomer(String id, String name, String cpr, List<String> tokenList)
-			throws RequestRejected, IOException {
+			throws RequestRejected, IOException, TimeoutException {
 
 		customer = new Customer(id, name, cpr, tokenList);
 		channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
-		System.out.println(customer.getCpr());
+		channel.close();
+		connection.close();
+		
 		return customerRepository.createCustomer(customer);
-
+		
 	}
 
 	// Remove customer
@@ -66,15 +68,6 @@ public class CustomerManager {
 			throw new CustomerNotFoundException("Customer not found");
 		}
 		return customer;
-	}
-
-	// Get customer by token
-	public List<String> getCustomerToken(String customerToken) throws CustomerNotFoundException {
-		List<String> tokens = customerRepository.getTokens(customer);
-		if (customer == null) {
-			throw new CustomerNotFoundException("Customer not found");
-		}
-		return tokens;
 	}
 
 	public List<Customer> getAllCustomers() {
