@@ -46,4 +46,5 @@ public class Customer {
     public List<String> getTokenList() {
         return tokenList;
     }
+    
 }
