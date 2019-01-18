@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
@@ -48,6 +49,18 @@ public class TokensEndpoint {
 	
 	@GET
 	@Produces("application/json")
+	public Response getAllTokens() throws IOException, TimeoutException {
+		List<Token> tokens = null;
+		try {
+			tokens = tokenManager.getAllTokens();
+		} catch (Exception e) {
+			return Response.status(406).entity("Request has been rejected").build();
+		}
+		return Response.ok(tokens, "application/json").build();
+	}
+	
+	@POST
+	@Produces("application/json")
 	public Response getTokens(@QueryParam("customerId") String customerId, @QueryParam("tokenAmount") int tokenAmount) throws IOException, TimeoutException {
 		List<Token> tokens = null;
 		try {
@@ -58,15 +71,4 @@ public class TokensEndpoint {
 		return Response.ok(tokens, "application/json").build();
 	}
 	
-	@GET
-	@Produces("application/json")
-	public Response getAllTokens() throws IOException, TimeoutException {
-		List<Token> tokens = null;
-		try {
-			tokens = tokenManager.getAllTokens();
-		} catch (Exception e) {
-			return Response.status(406).entity("Request has been rejected").build();
-		}
-		return Response.ok(tokens, "application/json").build();
-	}
 }
