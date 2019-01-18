@@ -36,9 +36,9 @@ public class TokenManager {
 
 	private final int tokenLength = 6;
 	private Token token;
-//	private final String tokenPath = "tokens/";
+	private final String tokenPath = "tokens/";
 
-	private List<Token> tokens;
+	private List<TokenRepresentation> tokens;
 
 	private ConnectionFactory factory;
 	private Connection connection;
@@ -69,20 +69,21 @@ public class TokenManager {
 		});
 	}
 
-	public List<Token> requestToken(String customerId, int tokenAmount)
+	public List<TokenRepresentation> requestToken(String customerId, int tokenAmount)
 			throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException {
-		tokens = new ArrayList<Token>();
+		List<Token> t = new ArrayList<Token>();
+		tokens = new ArrayList<TokenRepresentation>();
 
 		if (tokenAmount >= 1 && tokenAmount <= 5) {
 			if (repository.getCustomer(customerId) == null) {
 				throw new RequestRejected("No customer with customerId is created, request rejected");
 			}
-			tokens = repository.getTokensForCustomerId(customerId);
+			t = repository.getTokensForCustomerId(customerId);
 		} else {
 			throw new RequestRejected("Your request was rejected due to requesting less than 1 or more than 5 tokens");
 		}
 
-		if (tokens.size() > 1) {
+		if (t.size() > 1) {
 			throw new RequestRejected("Your request was rejected due to having more than one valid token left");
 		}
 
@@ -100,11 +101,14 @@ public class TokenManager {
 					unique = true;
 				}
 			}
-			Token token = new Token(tokenId, customerId, true, Status.ACTIVE);
-
+			
 			try {
+				Token token = new Token(tokenId, customerId, true, Status.ACTIVE, "");
+				File path = generateToken(token.getTokenId(), tokenPath + tokenId + ".png");
+				System.out.println("Token created: " + path.toString());
+				token.setPath(path.toString());
 				repository.createToken(token);
-				tokens.add(token);
+				tokens.add(new TokenRepresentation(token.getTokenId(), token.getPath()));
 
 				String message = token.getTokenId() + "," + token.getCustomerId() + "," + token.getValidationStatus();
 				channel.basicPublish("", TOKENID_TO_MERCHANTSERVICE_QUEUE, null, message.getBytes());
@@ -126,8 +130,14 @@ public class TokenManager {
 		return token.getValidationStatus() == true;
 	}
 
-	public List<Token> getAllTokens() {
-		return repository.getTokens();
+	public List<TokenRepresentation> getAllTokens() {
+		List<Token> list;
+		List<TokenRepresentation> tokens = null;
+		list = repository.getTokens();
+		for (Token t : list) {
+			tokens.add(new TokenRepresentation(t.getTokenId(), t.getPath()));
+		}
+		return tokens;
 	}
 
 	public boolean isTokenInvalid(String tokenId) {
@@ -173,55 +183,55 @@ public class TokenManager {
 		return Integer.toString(m + new Random().nextInt(9 * m));
 	}
 
-//    public File generateToken(String msg, String path) {
-//        File file = new File(path);
-//        try {
-//            generate(msg, new FileOutputStream(file));
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return file;
-//    }
+    public File generateToken(String msg, String path) {
+        File file = new File(path);
+        try {
+            generate(msg, new FileOutputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return file;
+    }
 
-//    public byte[] generate(String msg) {
-//        ByteArrayOutputStream ous = new ByteArrayOutputStream();
-//        generate(msg, ous);
-//        return ous.toByteArray();
-//    }
+    public byte[] generate(String msg) {
+        ByteArrayOutputStream ous = new ByteArrayOutputStream();
+        generate(msg, ous);
+        return ous.toByteArray();
+    }
 
-//    public void generate(String msg, OutputStream ous) {
-//        if (StringUtils.isEmpty(msg) || ous == null) {
-//            return;
-//        }
-//
-//        Code39Bean bean = new Code39Bean();
-//
-//        // accuracy
-//        final int dpi = 150;
-//        // module width
-//        final double moduleWidth = UnitConv.in2mm(1.0f / dpi);
-//
-//        // configuration object
-//        bean.setModuleWidth(moduleWidth);
-//        bean.setWideFactor(3);
-//        bean.doQuietZone(false);
-//
-//        String format = "image/png";
-//
-//        try {
-//
-//            // output to the stream
-//            BitmapCanvasProvider canvas = new BitmapCanvasProvider(ous, format, dpi, BufferedImage.TYPE_BYTE_BINARY,
-//                    false, 0);
-//
-//            // Generate a bar-code
-//            bean.generateBarcode(canvas, msg);
-//
-//            // end drawing
-//            canvas.finish();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public void generate(String msg, OutputStream ous) {
+        if (StringUtils.isEmpty(msg) || ous == null) {
+            return;
+        }
+
+        Code39Bean bean = new Code39Bean();
+
+        // accuracy
+        final int dpi = 150;
+        // module width
+        final double moduleWidth = UnitConv.in2mm(1.0f / dpi);
+
+        // configuration object
+        bean.setModuleWidth(moduleWidth);
+        bean.setWideFactor(3);
+        bean.doQuietZone(false);
+
+        String format = "image/png";
+
+        try {
+
+            // output to the stream
+            BitmapCanvasProvider canvas = new BitmapCanvasProvider(ous, format, dpi, BufferedImage.TYPE_BYTE_BINARY,
+                    false, 0);
+
+            // Generate a bar-code
+            bean.generateBarcode(canvas, msg);
+
+            // end drawing
+            canvas.finish();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

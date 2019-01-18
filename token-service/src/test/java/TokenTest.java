@@ -15,7 +15,7 @@ public class TokenTest {
 	
 	@Before
 	public void setUp() {
-		token = new Token(tokenId, customerId, true, Status.ACTIVE);
+		token = new Token(tokenId, customerId, true, Status.ACTIVE, "");
 	}
 	
 	@Test

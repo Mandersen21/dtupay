@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import beijing.tokenservice.domain.Status;
 import beijing.tokenservice.domain.Token;
 import beijing.tokenservice.domain.TokenManager;
+import beijing.tokenservice.domain.TokenRepresentation;
 import beijing.tokenservice.exception.DataAccessException;
 import beijing.tokenservice.exception.RequestRejected;
 import beijing.tokenservice.exception.TokenNotFoundException;
@@ -31,7 +32,6 @@ public class TokensEndpoint {
 
 	public TokensEndpoint() throws IOException, TimeoutException {
 		tokenManager = new TokenManager(repository);
-		repository.createToken(new Token("123456", "1234", true, Status.ACTIVE));
 	}
 	
 	@GET
@@ -50,7 +50,7 @@ public class TokensEndpoint {
 	@GET
 	@Produces("application/json")
 	public Response getAllTokens() throws IOException, TimeoutException {
-		List<Token> tokens = null;
+		List<TokenRepresentation> tokens = null;
 		try {
 			tokens = tokenManager.getAllTokens();
 		} catch (Exception e) {
@@ -62,7 +62,7 @@ public class TokensEndpoint {
 	@POST
 	@Produces("application/json")
 	public Response getTokens(@QueryParam("customerId") String customerId, @QueryParam("tokenAmount") int tokenAmount) throws IOException, TimeoutException {
-		List<Token> tokens = null;
+		List<TokenRepresentation> tokens = null;
 		try {
 			tokens = tokenManager.requestToken(customerId, tokenAmount);
 		} catch (RequestRejected | TokenNotFoundException | DataAccessException e) {
