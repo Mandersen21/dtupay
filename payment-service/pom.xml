@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>beijing</groupId>
 	<artifactId>payment-service</artifactId>
-	<name>Thorntail Example</name>
+	<name>Payment Service</name>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 
@@ -30,7 +30,7 @@
 	</dependencyManagement>
 
 	<build>
-		<finalName>demo</finalName>
+		<finalName>paymentservice</finalName>
 		<plugins>
 			<plugin>
 				<groupId>io.thorntail</groupId>
