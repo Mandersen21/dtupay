@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 public class TokenRepository implements ITokenRepository {
 
     List<Token> tokenList;
+    List<String> customerList;
 
     public TokenRepository() {
         tokenList = new ArrayList<Token>();
@@ -54,6 +55,31 @@ public class TokenRepository implements ITokenRepository {
     public List<Token> getTokenList() {
         return tokenList;
     }
+
+    @Override
+	public boolean addCustomer(String customerId) {
+		if (getCustomer(customerId) != null) {
+			return false;
+		} else {
+			customerList.add(customerId);
+			return true;
+		}
+	}
+
+	@Override
+	public List<String> getCustomers() {
+		return customerList;
+	}
+
+	@Override
+	public String getCustomer(String customerId) {
+		for (String c : customerList) {
+            if (c.contentEquals(customerId)) {
+                return c;
+            }
+        }
+        return null;
+	}
 
 
 }

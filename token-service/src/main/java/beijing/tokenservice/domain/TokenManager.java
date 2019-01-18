@@ -119,6 +119,10 @@ public class TokenManager {
 		}
 		return token.getValidationStatus() == true;
 	}
+	
+	public List<Token> getAllTokens() {
+		return tRepository.getTokens();
+	}
 
 	public boolean isTokenInvalid(String tokenId) {
 		token = tRepository.getToken(tokenId);

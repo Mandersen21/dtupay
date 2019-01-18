@@ -57,4 +57,16 @@ public class TokensEndpoint {
 		}
 		return Response.ok(tokens, "application/json").build();
 	}
+	
+	@GET
+	@Produces("application/json")
+	public Response getAllTokens() throws IOException, TimeoutException {
+		List<Token> tokens = null;
+		try {
+			tokens = tokenManager.getAllTokens();
+		} catch (Exception e) {
+			return Response.status(406).entity("Request has been rejected").build();
+		}
+		return Response.ok(tokens, "application/json").build();
+	}
 }

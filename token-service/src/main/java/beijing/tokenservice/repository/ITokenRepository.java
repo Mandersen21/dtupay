@@ -11,4 +11,7 @@ public interface ITokenRepository {
 	public boolean updateToken(Token token);
 	public List<Token> getTokens();
 	public List<Token> getTokensForCustomerId(String customerId);
+	public boolean addCustomer(String customerId);
+	public List<String> getCustomers();
+	public String getCustomer(String customerId);
 }
