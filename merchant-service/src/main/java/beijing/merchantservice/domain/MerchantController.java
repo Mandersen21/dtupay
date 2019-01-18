@@ -40,43 +40,26 @@ public class MerchantController {
 	private Consumer consumer;
 
 	/**
-	 * 
-	 * @throws IOException
-	 * @throws TimeoutException
+	 * creates a new MerchantRepository and tries
+	 * to set up the messageQueue
 	 */
-	public MerchantController() throws IOException {
+	public MerchantController() {
+		
 		repository = new MerchantRepository();
 		
-
-			try {
-				factory = new ConnectionFactory();
-				factory.setUsername("admin");
-				factory.setPassword("Banana");
-				factory.setHost("02267-bejing.compute.dtu.dk");
-				connection = factory.newConnection();
-				channel = connection.createChannel();
+		
+		try {
+			setupMessageQueue();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 				
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (TimeoutException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
-		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
-		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-			String message = new String(delivery.getBody(), "UTF-8");
-			try {
-				receiveNewTokens(consumerTag,message);
-			} catch (DataAccessException e) {
-				e.printStackTrace();
-			}
-		};
-		channel.basicConsume(TOKENID_TO_MERCHANTSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
-			
-		});
 	}
+
 
 	/**
 	 * 
@@ -230,6 +213,33 @@ public class MerchantController {
 		return m;
 	}
 
+	
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws TimeoutException
+	 */
+	private void setupMessageQueue() throws IOException, TimeoutException {
+		factory = new ConnectionFactory();
+		factory.setUsername("admin");
+		factory.setPassword("Banana");
+		factory.setHost("02267-bejing.compute.dtu.dk");
+		connection = factory.newConnection();
+		channel = connection.createChannel();
+		
+		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
+		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+			String message = new String(delivery.getBody(), "UTF-8");
+			try {
+				receiveNewTokens(consumerTag,message);
+			} catch (DataAccessException e) {
+				e.printStackTrace();
+			}
+		};
+		channel.basicConsume(TOKENID_TO_MERCHANTSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
+			
+		});
+	}
 	
 	
 	

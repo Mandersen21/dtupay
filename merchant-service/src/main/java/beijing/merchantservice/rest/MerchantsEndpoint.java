@@ -35,12 +35,7 @@ public class MerchantsEndpoint {
 	 * @throws TimeoutException
 	 */
 	public MerchantsEndpoint()  {
-		try {
-			controller = new MerchantController();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		controller = new MerchantController();
 	}
 	
 	/**
@@ -52,7 +47,10 @@ public class MerchantsEndpoint {
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response requestTransaction(String merchantId, String tokenId, String amount){
+	public Response requestTransaction(
+									@FormParam("merchantId") String merchantId,
+									@FormParam("tokeId") String tokenId,
+									@FormParam("amount") String amount){
 		TransactionObject to;
 		try {
 			to = controller.requestTransaction(merchantId, tokenId, amount);
@@ -96,9 +94,7 @@ public class MerchantsEndpoint {
     		if(m == null) {
     			String message ="Failed";
     			return Response.status(404).entity(message).build();
-    		}
-    	
-    	
+    		}    	
         return Response.ok(m, MediaType.APPLICATION_JSON).build();    
     }
 	
@@ -125,16 +121,5 @@ public class MerchantsEndpoint {
             return Response.ok(merchant, "application/json").build();
         }
     }
-    
-//    /**
-//     * 
-//     * @return
-//     */
-//	@GET
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response doGet() {
-//		Merchant m = new Merchant("123","74875858","ThornTail");
-//		return Response.ok(m, "application/json").build();
-//	}
 
 }
