@@ -32,8 +32,9 @@ public class TokenManager {
 	private final static String CUSTOMERID_TO_TOKENSERVICE_QUEUE = "customerid_to_tokenservice";
 	private final static String TOKENID_TO_MERCHANTSERVICE_QUEUE = "tokenid_to_merchantservice";
 
-	public static ITokenRepository repository;
-
+	public static ITokenRepository tokenRepository;
+	public static ICustomerRepository customerRepository;
+	
 	private final int tokenLength = 6;
 	private Token token;
 	private final String tokenPath = "tokens/";
@@ -45,9 +46,11 @@ public class TokenManager {
 	private Channel channel;
 	private Consumer consumer;
 
-	public TokenManager(ITokenRepository _repository) throws IOException, TimeoutException {
-		repository = _repository;
+	public TokenManager(ITokenRepository _tRepository, ICustomerRepository _cRepository) throws IOException, TimeoutException {
+		tokenRepository = _tRepository;
+		customerRepository = _cRepository;
 
+		// Connect to RabbitMq server
 		factory = new ConnectionFactory();
 		factory.setUsername("admin");
 		factory.setPassword("Banana");
@@ -62,8 +65,7 @@ public class TokenManager {
 		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 			String customerId = new String(delivery.getBody(), "UTF-8");
 			System.out.println("Message received: " + customerId);
-			repository.addCustomer(customerId);
-
+			customerRepository.addCustomer(customerId);
 		};
 		channel.basicConsume(CUSTOMERID_TO_TOKENSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
 		});
@@ -75,10 +77,10 @@ public class TokenManager {
 		tokens = new ArrayList<TokenRepresentation>();
 
 		if (tokenAmount >= 1 && tokenAmount <= 5) {
-			if (repository.getCustomer(customerId) == null) {
+			if (customerRepository.getCustomer(customerId) == null) {
 				throw new RequestRejected("No customer with customerId is created, request rejected");
 			}
-			t = repository.getTokensForCustomerId(customerId);
+			t = tokenRepository.getTokensForCustomerId(customerId);
 		} else {
 			throw new RequestRejected("Your request was rejected due to requesting less than 1 or more than 5 tokens");
 		}
@@ -96,17 +98,16 @@ public class TokenManager {
 
 			while (!unique) {
 				tokenId = generateRandomTokenNumber(tokenLength);
-				checkToken = repository.getToken(tokenId);
+				checkToken = tokenRepository.getToken(tokenId);
 				if (checkToken == null) {
 					unique = true;
 				}
 			}
 
 			Token token = new Token(tokenId, customerId, true, Status.ACTIVE, "");
-//			File path = generateToken(token.getTokenId(), tokenPath + tokenId + ".png");
-			token.setPath(tokenPath + tokenId + ".png");
-			repository.createToken(token);
-			tokens.add(new TokenRepresentation(token.getTokenId(), token.getPath()));
+			token.setPath(tokenId + ".png");
+			tokenRepository.createToken(token);
+			tokens.add(new TokenRepresentation(tokenId, token.getPath()));
 
 			String message = token.getTokenId() + "," + token.getCustomerId() + "," + token.getValidationStatus();
 			channel.basicPublish("", TOKENID_TO_MERCHANTSERVICE_QUEUE, null, message.getBytes());
@@ -117,7 +118,7 @@ public class TokenManager {
 	}
 
 	public boolean isTokenValid(String tokenId) throws TokenNotFoundException {
-		token = repository.getToken(tokenId);
+		token = tokenRepository.getToken(tokenId);
 		if (token == null) {
 			throw new TokenNotFoundException("Could not find the token based on tokenId");
 		}
@@ -125,9 +126,9 @@ public class TokenManager {
 	}
 
 	public List<TokenRepresentation> getAllTokens() {
+		List<TokenRepresentation> tokens = new ArrayList<TokenRepresentation>();
 		List<Token> list;
-		List<TokenRepresentation> tokens = null;
-		list = repository.getTokens();
+		list = tokenRepository.getTokens();
 		for (Token t : list) {
 			tokens.add(new TokenRepresentation(t.getTokenId(), t.getPath()));
 		}
@@ -135,12 +136,12 @@ public class TokenManager {
 	}
 
 	public boolean isTokenInvalid(String tokenId) {
-		token = repository.getToken(tokenId);
+		token = tokenRepository.getToken(tokenId);
 		return token.getValidationStatus() == false;
 	}
 
 	public Token getToken(String tokenId) throws TokenNotFoundException {
-		Token token = repository.getToken(tokenId);
+		Token token = tokenRepository.getToken(tokenId);
 		if (token == null) {
 			throw new TokenNotFoundException("Token not found");
 		}
@@ -150,13 +151,12 @@ public class TokenManager {
 	public boolean updateToken(String tokenId, Boolean validationStatus, Status status) throws TokenNotFoundException {
 		boolean response;
 		try {
-			token = repository.getToken(tokenId);
+			token = tokenRepository.getToken(tokenId);
 
 			if (token != null) {
 				token.setStatus(status);
 				token.setValidtionStatus(validationStatus);
-
-				response = repository.updateToken(token);
+				response = tokenRepository.updateToken(token);
 
 			} else {
 				throw new TokenNotFoundException("Could not find a token with that tokenId");
