@@ -5,26 +5,43 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import beijing.customerservice.domain.Customer;
 import beijing.customerservice.domain.CustomerManager;
+import beijing.customerservice.exception.ConnectionException;
 import beijing.customerservice.exception.CustomerNotFoundException;
 import beijing.customerservice.exception.RequestRejected;
+import beijing.customerservice.repository.CustomerRepository;
+import beijing.customerservice.repository.ICustomerRepository;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeoutException;
 
 @Path("customers")
 public class CustomerRestService {
+	private static ICustomerRepository repository = new CustomerRepository();
     private CustomerManager customerManager;
+    
+    public CustomerRestService() throws IOException, TimeoutException, ConnectionException {
+    	try {
+			customerManager = new CustomerManager(repository);
+		} catch (ConnectionException e) {
+			throw new ConnectionException("Connection lost");
+		}
+		repository.createCustomer(new Customer("123","Mikkel","2141235432",null));
+	}
 
     //localhost:8080/customers (Need to place a json file in the Body)
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response createCustomer(@FormParam("id") String id,
+    public Response createCustomer(
     						     @FormParam("name") String name,
                                  @FormParam("cpr") String cpr,
                                  @FormParam("tokenList") List<String> tokenList) {
         try {
+        	String id = UUID.randomUUID().toString();
         	if (customerManager.addCustomer(id, cpr, name, tokenList)) {
-        		return Response.ok().entity(customerManager.getCustomerById(id)).build();
+        		return Response.ok(customerManager.getCustomerById(id), "application/json").build();
         	}
         	return Response.status(500).build();
 		} catch (RequestRejected e) {

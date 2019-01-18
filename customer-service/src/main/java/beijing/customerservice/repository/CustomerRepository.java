@@ -5,13 +5,19 @@ import java.util.List;
 import beijing.customerservice.domain.Customer;
 
 public class CustomerRepository implements ICustomerRepository {
-    private List<Customer> customerList = new ArrayList<>();
+    private List<Customer> customerList;
 
+    public CustomerRepository() {
+    	customerList = new ArrayList<Customer>();
+    }
+    
     public boolean createCustomer(Customer customer) {
-    	if (customerList.contains(customer) == false) {
-    		return customerList.add(customer);
+    	if (getCustomerById(customer.getId()) != null) {
+    		return false;
+    	} else {
+    		customerList.add(customer);
+    		return true;
     	}
-		return false;
     }
 
     public Customer getCustomerById(String id) {
