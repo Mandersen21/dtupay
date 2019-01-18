@@ -1,17 +1,17 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="merchant-service:war exploded">
-    <output-path>$PROJECT_DIR$/merchant-service/target/paymentservice</output-path>
+  <artifact type="exploded-war" name="token-service:war exploded">
+    <output-path>$PROJECT_DIR$/token-service/target/tokenservice</output-path>
     <properties id="maven-jee-properties">
       <options>
         <exploded>true</exploded>
-        <module>merchant-service</module>
+        <module>token-service</module>
         <packaging>war</packaging>
       </options>
     </properties>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="merchant-service" />
+          <element id="module-output" name="token-service" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: io.thorntail:undertow:2.2.1.Final" />
@@ -62,9 +62,6 @@
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.9" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.9" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.9" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.8.9" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.8.9" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.9" />
           <element id="library" level="project" name="Maven: net.sf.barcode4j:barcode4j:2.1" />
           <element id="library" level="project" name="Maven: avalon-framework:avalon-framework-impl:4.2.0" />
           <element id="library" level="project" name="Maven: commons-cli:commons-cli:1.0" />
@@ -74,12 +71,18 @@
           <element id="library" level="project" name="Maven: org.apache.ant:ant-launcher:1.7.1" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.8.1" />
           <element id="library" level="project" name="Maven: commons-io:commons-io:1.3.2" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.8" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.8" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.8" />
+          <element id="library" level="project" name="Maven: com.rabbitmq:amqp-client:5.5.2" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.25" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-jdk14:1.7.25" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/merchant-service/target/paymentservice/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/token-service/target/tokenservice/META-INF/MANIFEST.MF" />
       </element>
-      <element id="javaee-facet-resources" facet="merchant-service/web/Web" />
+      <element id="javaee-facet-resources" facet="token-service/web/Web" />
     </root>
   </artifact>
 </component>

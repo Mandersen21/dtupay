@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="payment-service:war exploded">
-    <output-path>$PROJECT_DIR$/payment-service/target/demo</output-path>
+    <output-path>$PROJECT_DIR$/payment-service/target/paymentservice</output-path>
     <properties id="maven-jee-properties">
       <options>
         <exploded>true</exploded>
@@ -77,7 +77,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/payment-service/target/demo/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/payment-service/target/paymentservice/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="payment-service/web/Web" />
     </root>
