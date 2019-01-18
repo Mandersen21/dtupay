@@ -32,7 +32,7 @@ public class TokenManagerTest {
 	}
 
 	@Test()
-	public void requestTokensSuccesTest() throws RequestRejected, TokenNotFoundException, DataAccessException {
+	public void requestTokensSuccesTest() throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException {
 		String customerId = UUID.randomUUID().toString();
 
 		List<Token> tokens = new ArrayList<Token>();

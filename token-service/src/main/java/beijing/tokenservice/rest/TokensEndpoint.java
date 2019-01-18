@@ -48,7 +48,7 @@ public class TokensEndpoint {
 	
 	@GET
 	@Produces("application/json")
-	public Response getTokens(@QueryParam("customerId") String customerId, @QueryParam("tokenAmount") int tokenAmount) {
+	public Response getTokens(@QueryParam("customerId") String customerId, @QueryParam("tokenAmount") int tokenAmount) throws IOException, TimeoutException {
 		List<Token> tokens = null;
 		try {
 			tokens = tokenManager.requestToken(customerId, tokenAmount);

@@ -32,8 +32,7 @@ public class TokenManager {
 	private final static String TOKENID_TO_MERCHANTSERVICE_QUEUE = "tokenid_to_merchantservice";
 
 	public static ITokenRepository tRepository;
-	public static ICustomerRepository cRepository;
-
+	
 	private final int tokenLength = 6;
 	private Token token;
 //	private final String tokenPath = "tokens/";
@@ -51,22 +50,22 @@ public class TokenManager {
 		factory = new ConnectionFactory();
 		factory.setUsername("admin");
 		factory.setPassword("Banana");
-		
+
 		factory.setHost("02267-bejing.compute.dtu.dk");
 
 		connection = factory.newConnection();
 		channel = connection.createChannel();
 		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
+
+		// Listen for customer service
 	}
 
 	public List<Token> requestToken(String customerId, int tokenAmount)
-			throws RequestRejected, TokenNotFoundException, DataAccessException {
+			throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException {
 		tokens = new ArrayList<Token>();
 
 		if (tokenAmount >= 1 && tokenAmount <= 5) {
 			try {
-
-				// Check if customer is created
 
 			} catch (Exception e) {
 				throw new RequestRejected("No customer with customerId is created");
@@ -99,10 +98,17 @@ public class TokenManager {
 			try {
 				tRepository.createToken(token);
 				tokens.add(token);
+
+				String message = token.getTokenId();
+				System.out.println("Message generated: " + message);
+				channel.basicPublish("", TOKENID_TO_MERCHANTSERVICE_QUEUE, null, message.getBytes());
+
 			} catch (Exception e) {
 				throw new DataAccessException("Token could not be created");
 			}
 		}
+		channel.close();
+		connection.close();
 		return tokens;
 	}
 
