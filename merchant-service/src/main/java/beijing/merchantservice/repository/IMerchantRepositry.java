@@ -17,4 +17,5 @@ public interface IMerchantRepositry {
 	List<Merchant> getMerchants();
 	List<TransactionObject> getTransactions(String merchantUid);
 	TokenValidation getTokenById(String tokenId) throws CorruptedTokenException;
+	List<TokenValidation> getTokenValidation();
 }

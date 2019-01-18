@@ -73,6 +73,11 @@ public class MerchantRepositry implements IMerchantRepositry {
 	}
 	
 	@Override
+	public List<TokenValidation> getTokenValidation(){
+		return this.tokenList;		
+	}
+	
+	@Override
 	public List<TransactionObject> getTransactions(String merchantUid) {
 		List<TransactionObject> merchantTrasactions = transactionsList.stream()
 				.filter(m -> m.getMerchantId().contentEquals(merchantUid)).collect(Collectors.toList());
@@ -92,4 +97,6 @@ public class MerchantRepositry implements IMerchantRepositry {
 
 		return resultToken.get(0);
 	}
+	
+	
 }

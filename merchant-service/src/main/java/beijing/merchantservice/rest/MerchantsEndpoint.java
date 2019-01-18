@@ -37,37 +37,37 @@ public class MerchantsEndpoint {
 		controller.getRepository().createMerchant(m2);
 	}
 	
-	//Return all merchants
-    @GET
-    @Produces("application/json")
-    public Response getMerchantss() {
-        return Response.ok(controller.getRepository().getMerchants(), "application/json").build();
-    }
-    
-    //Post merchant
-    @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response createCustomer(
-    						     @FormParam("merhcantId") String merhcantId,
-                                 @FormParam("CVR") String CVR,
-                                 @FormParam("Name") String name) {
-        return Response.ok(controller.getRepository().createMerchant(new Merchant(merhcantId, CVR, name)), "application/json").build();    
-    }
-	
-    //Get merchant by id
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCustomer(@PathParam("id") String id) {
-        Merchant merchant = controller.getRepository().getMerchant(id);
-        if (merchant == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } else {
-            return Response.ok(merchant, "application/json").build();
-        }
-    }
-    
+//	//Return all merchants
+//    @GET
+//    @Produces("application/json")
+//    public Response getMerchantss() {
+//        return Response.ok(controller.getRepository().getMerchants(), "application/json").build();
+//    }
+//    
+//    //Post merchant
+//    @POST
+//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//    @Produces(MediaType.TEXT_PLAIN)
+//    public Response createCustomer(
+//    						     @FormParam("merhcantId") String merhcantId,
+//                                 @FormParam("CVR") String CVR,
+//                                 @FormParam("Name") String name) {
+//        return Response.ok(controller.getRepository().createMerchant(new Merchant(merhcantId, CVR, name)), "application/json").build();    
+//    }
+//	
+//    //Get merchant by id
+//    @GET
+//    @Path("/{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getCustomer(@PathParam("id") String id) {
+//        Merchant merchant = controller.getRepository().getMerchant(id);
+//        if (merchant == null) {
+//            return Response.status(Response.Status.NOT_FOUND).build();
+//        } else {
+//            return Response.ok(merchant, "application/json").build();
+//        }
+//    }
+//    
 //	@GET
 //	@Produces("application/json")
 //	public Response doGet() {

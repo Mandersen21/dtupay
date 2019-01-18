@@ -43,9 +43,9 @@ public class MerchantController {
 		// TODO: set up a message queue listener for new tokens.. use storeNewToken
 		try {
 			factory = new ConnectionFactory();
-			factory.setUsername("guest");
-			factory.setPassword("guest");
-			factory.setHost("localhost");
+			factory.setUsername("admin");
+			factory.setPassword("Banana");
+			factory.setHost("02267-bejing.compute.dtu.dk");
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 		} catch (Exception e) {
@@ -59,10 +59,14 @@ public class MerchantController {
 			// Add the token from the message to the repository
 			// IF the message is made for first 6 letters are tokenID, then a space and next
 			// 6 are the customerId
+			String[] tokenMessage = message.split(",");
+			
 			String tokenId = StringUtils.left(message, 6);
 			String customerId = StringUtils.substring(message, 8, 13);
 			try {
-				repositry.addToken(new TokenValidation(true, tokenId, customerId));
+				//repositry.addToken(new TokenValidation(true, tokenId, customerId));
+				repositry.addToken(new TokenValidation(true, tokenMessage[0], tokenMessage[1]));
+				System.out.println(repositry.getTokenValidation());
 			} catch (CorruptedTokenException e) {
 				e.printStackTrace();
 			}
@@ -94,7 +98,7 @@ public class MerchantController {
 		return to;
 	}
 
-	private void storeNewToken(List<TokenValidation> newTokens) {
+	protected void storeNewToken(List<TokenValidation> newTokens) {
 		for (TokenValidation t : newTokens) {
 			try {
 				repositry.addToken(t);
@@ -129,6 +133,7 @@ public class MerchantController {
 		AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)
 				.build();
 
+		channel.queueDeclare(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
 		String message = merchantId + " " + customerId + " " + amount;
 
 		channel.basicPublish("", RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, props, message.getBytes("UTF-8"));
@@ -161,8 +166,14 @@ public class MerchantController {
 
 	}
 	
+
+	
 	public IMerchantRepositry getRepository() {
 		return this.repositry;
+	}
+	
+	public List<TokenValidation> getTokenValidations(){
+		return this.repositry.getTokenValidation();
 	}
 	
 	
