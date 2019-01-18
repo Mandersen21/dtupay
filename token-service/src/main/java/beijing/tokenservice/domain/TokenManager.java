@@ -99,7 +99,7 @@ public class TokenManager {
 				tRepository.createToken(token);
 				tokens.add(token);
 
-				String message = token.getTokenId();
+				String message = token.getTokenId() + "," + token.getCustomerId() + "," + token.getValidationStatus();
 				System.out.println("Message generated: " + message);
 				channel.basicPublish("", TOKENID_TO_MERCHANTSERVICE_QUEUE, null, message.getBytes());
 
