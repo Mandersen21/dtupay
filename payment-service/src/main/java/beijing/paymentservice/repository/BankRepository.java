@@ -7,6 +7,12 @@ public class BankRepository implements IBankRepository {
 	Map<String,String> cardMap = new HashMap<String, String>();
 	
 	@Override
+	public Map<String, String> addBankCustomer(String cardId, String pwd) {
+		cardMap.put(cardId,pwd);
+		return cardMap;
+	}
+	
+	@Override
 	public boolean verifyBankCustomer(String cardId, String pwd) {
 		String key = cardId;
 		String v = pwd;
@@ -25,5 +31,4 @@ public class BankRepository implements IBankRepository {
 		}
 		return result;
 	}
-
 }
