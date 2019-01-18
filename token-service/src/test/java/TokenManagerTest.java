@@ -14,6 +14,7 @@ import org.junit.rules.ExpectedException;
 import beijing.tokenservice.domain.Status;
 import beijing.tokenservice.domain.Token;
 import beijing.tokenservice.domain.TokenManager;
+import beijing.tokenservice.domain.TokenRepresentation;
 import beijing.tokenservice.exception.DataAccessException;
 import beijing.tokenservice.exception.RequestRejected;
 import beijing.tokenservice.exception.TokenNotFoundException;
@@ -35,7 +36,7 @@ public class TokenManagerTest {
 	public void requestTokensSuccesTest() throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException {
 		String customerId = UUID.randomUUID().toString();
 		repository.addCustomer(customerId);
-		List<Token> tokens = new ArrayList<Token>();
+		List<TokenRepresentation> tokens = new ArrayList<TokenRepresentation>();
 		tokens = tokenManager.requestToken(customerId, 1);
 		assertEquals(tokens.size(), 1);
 	}
