@@ -74,9 +74,9 @@ public class TokenManager {
 		tokens = new ArrayList<Token>();
 
 		if (tokenAmount >= 1 && tokenAmount <= 5) {
-//			if (repository.getCustomer(customerId) == null) {
-//				throw new RequestRejected("No customer with customerId is created, request rejected");
-//			}
+			if (repository.getCustomer(customerId) == null) {
+				throw new RequestRejected("No customer with customerId is created, request rejected");
+			}
 			tokens = repository.getTokensForCustomerId(customerId);
 		} else {
 			throw new RequestRejected("Your request was rejected due to requesting less than 1 or more than 5 tokens");
