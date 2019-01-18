@@ -29,7 +29,7 @@ public class CustomerManager {
 		factory.setPassword("Banana");
 
 		factory.setHost("02267-bejing.compute.dtu.dk");
-
+	
 		connection = factory.newConnection();
 		channel = connection.createChannel();
 		channel.queueDeclare(CUSTOMERID_TO_TOKENSERVICE_QUEUE, false, false, false, null);
