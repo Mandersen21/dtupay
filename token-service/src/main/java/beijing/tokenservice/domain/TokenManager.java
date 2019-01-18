@@ -1,5 +1,6 @@
 package beijing.tokenservice.domain;
 
+import beijing.tokenservice.exception.CustomerNotFoundException;
 import beijing.tokenservice.exception.DataAccessException;
 import beijing.tokenservice.exception.RequestRejected;
 import beijing.tokenservice.exception.TokenNotFoundException;
@@ -70,13 +71,13 @@ public class TokenManager {
 	}
 
 	public List<TokenRepresentation> requestToken(String customerId, int tokenAmount)
-			throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException {
+			throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException, CustomerNotFoundException {
 		List<Token> t = new ArrayList<Token>();
 		tokens = new ArrayList<TokenRepresentation>();
 
 		if (tokenAmount >= 1 && tokenAmount <= 5) {
 			if (customerRepository.getCustomer(customerId) == null) {
-				throw new RequestRejected("No customer with customerId is created, request rejected");
+				throw new CustomerNotFoundException("No customer with customerId is created, request rejected");
 			}
 			t = tokenRepository.getTokensForCustomerId(customerId);
 		} else {

@@ -6,6 +6,7 @@ import javax.ws.rs.core.Response;
 import beijing.tokenservice.domain.Token;
 import beijing.tokenservice.domain.TokenManager;
 import beijing.tokenservice.domain.TokenRepresentation;
+import beijing.tokenservice.exception.CustomerNotFoundException;
 import beijing.tokenservice.exception.DataAccessException;
 import beijing.tokenservice.exception.RequestRejected;
 import beijing.tokenservice.exception.TokenNotFoundException;
@@ -70,6 +71,9 @@ public class TokensEndpoint {
 		} catch (DataAccessException e) {
 			return Response.status(406).entity("Data access error").build();
 		}
+		 catch (CustomerNotFoundException e) {
+			 return Response.status(406).entity("Customer was not found").build();
+		 }
 		catch (Exception e) {
 			return Response.status(500).entity("Internal server error").build();
 		}
