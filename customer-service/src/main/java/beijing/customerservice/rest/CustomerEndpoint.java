@@ -37,13 +37,15 @@ public class CustomerEndpoint {
 			if (customerManager.addCustomer(id, cpr, name, tokenList)) {
 				return Response.ok(customerManager.getCustomerById(id), "application/json").build();
 			}
-			return Response.status(500).build();
+			return Response.status(500).entity("RequestRejected for addCustomer").build();
 		} catch (RequestRejected e) {
-			return Response.status(404).build();
+			return Response.status(404).entity("RequestRejected").build();
 		} catch (IOException e) {
-			return Response.status(500).build();
+			return Response.status(500).entity("IOException").build();
 		} catch (CustomerNotFoundException e) {
-			return Response.status(404).build();
+			return Response.status(404).entity("CustomerNotFoundException").build();
+		} catch (TimeoutException e) {
+			return Response.status(500).entity("TimeoutException for RabbitMQ").build();
 		}
 	}
 
@@ -55,11 +57,11 @@ public class CustomerEndpoint {
 		try {
 			customer = customerManager.getCustomerById(id);
 		} catch (CustomerNotFoundException e) {
-			return Response.status(404).build();
+			return Response.status(404).entity("CustomerNotFoundException").build();
 		}
 
 		if (customer == null) {
-			return Response.status(404).build();
+			return Response.status(404).entity("CustomerNotFoundException").build();
 		} else {
 			return Response.ok().entity(customer).build();
 		}
@@ -72,7 +74,7 @@ public class CustomerEndpoint {
 		try {
 			customers = customerManager.getAllCustomers();
 		} catch (Exception e) {
-			return Response.status(404).build();
+			return Response.status(404).entity("CustomerNotFoundException").build();
 		}
 		return Response.ok(customers, "application/json").build();
 	}
@@ -85,16 +87,16 @@ public class CustomerEndpoint {
 		try {
 			customer = customerManager.getCustomerById(id);
 		} catch (CustomerNotFoundException e) {
-			return Response.status(404).build();
+			return Response.status(404).entity("CustomerNotFoundException").build();
 		}
 
 		if (customer == null) {
-			return Response.status(404).build();
+			return Response.status(404).entity("CustomerNotFoundException").build();
 		} else {
 			try {
 				return Response.ok().entity(customerManager.removeCustomer(customer)).build();
 			} catch (CustomerNotFoundException e) {
-				return Response.status(404).build();
+				return Response.status(404).entity("CustomerNotFoundException").build();
 			}
 		}
 	}
