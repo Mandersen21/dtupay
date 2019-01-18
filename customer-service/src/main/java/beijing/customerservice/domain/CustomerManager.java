@@ -39,32 +39,8 @@ public class CustomerManager {
 	public boolean addCustomer(String id, String name, String cpr, List<String> tokenList)
 			throws RequestRejected, IOException {
 
-//		if (name.matches(".*\\d+.*")) {
-//			throw new RequestRejected("Invalid name!");
-//		} else {
-//			try {
-//				Integer.parseInt(cpr);
-//				if (cpr.length() != 10) {
-//					throw new RequestRejected("Invalid CPR number!\nThe CPR has the following format:\nddmmyyxxxx ");
-//				} else {
-//
-//					if (customerRepository.customerExists(new Customer(id, name, cpr, tokenList))) {
-//						throw new RequestRejected("The customer with id " + id + " already exists!");
-//					} else {
-//
-//						customer = new Customer(id, name, cpr, tokenList);
-//
-//					}
-//					System.out.println("The customer" + customer.getCpr() + " is being added to the system!");
-//					channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
-//					return customerRepository.createCustomer(customer);
-//				}
-//			} catch (NumberFormatException e) {
-//				throw new RequestRejected("Invalid format for CPR!");
-//			}
-//		}
-
 		customer = new Customer(id, name, cpr, tokenList);
+		channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
 		System.out.println(customer.getCpr());
 		return customerRepository.createCustomer(customer);
 
