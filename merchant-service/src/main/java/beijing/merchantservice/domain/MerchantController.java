@@ -3,10 +3,11 @@ package beijing.merchantservice.domain;
 import beijing.merchantservice.exception.CorruptedTokenException;
 import beijing.merchantservice.exception.DataAccessException;
 import beijing.merchantservice.exception.RequestRejected;
-import beijing.merchantservice.repository.IMerchantRepositry;
-import beijing.merchantservice.repository.MerchantRepositry;
+import beijing.merchantservice.repository.IMerchantRepository;
+import beijing.merchantservice.repository.MerchantRepository;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -26,56 +27,68 @@ import com.rabbitmq.client.AMQP.BasicProperties;
 
 public class MerchantController {
 
-	IMerchantRepositry repositry;
+	IMerchantRepository repository;
 
 	private final static String TOKENID_TO_MERCHANTSERVICE_QUEUE = "tokenid_to_merchantservice";
 	private final static String MERCHANTSERVICE_TO_TOKENID_QUEUE = "merchantservice_to_tokenid";
 	private final static String RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE = "rpc_merchantservice_to_paymentservice";
+	private final static String MERCHANSERVICE_TO_PAYMENTSERVICE_REGISTRATION_QUEUE = "merchantservice_to_paymentservice_registration_queue";
 
 	private ConnectionFactory factory;
 	private Connection connection;
 	private Channel channel;
 	private Consumer consumer;
 
-	public MerchantController() throws IOException, TimeoutException {
-		repositry = new MerchantRepositry();
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws TimeoutException
+	 */
+	public MerchantController() throws IOException {
+		repository = new MerchantRepository();
+		
 
-		// TODO: set up a message queue listener for new tokens.. use storeNewToken
-		try {
-			factory = new ConnectionFactory();
-			factory.setUsername("admin");
-			factory.setPassword("Banana");
-			factory.setHost("02267-bejing.compute.dtu.dk");
-			connection = factory.newConnection();
-			channel = connection.createChannel();
-		} catch (Exception e) {
-			throw new TimeoutException("could not connect");
-		}
-
+			try {
+				factory = new ConnectionFactory();
+				factory.setUsername("admin");
+				factory.setPassword("Banana");
+				factory.setHost("02267-bejing.compute.dtu.dk");
+				connection = factory.newConnection();
+				channel = connection.createChannel();
+				
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (TimeoutException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
 		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 			String message = new String(delivery.getBody(), "UTF-8");
-			System.out.println(" [x] Received '" + message + "'");
-			// Add the token from the message to the repository
-			// IF the message is made for first 6 letters are tokenID, then a space and next
-			// 6 are the customerId
-			String[] tokenMessage = message.split(",");
-			
-			String tokenId = StringUtils.left(message, 6);
-			String customerId = StringUtils.substring(message, 8, 13);
 			try {
-				//repositry.addToken(new TokenValidation(true, tokenId, customerId));
-				repositry.addToken(new TokenValidation(true, tokenMessage[0], tokenMessage[1]));
-				System.out.println(repositry.getTokenValidation());
-			} catch (CorruptedTokenException e) {
+				receiveNewTokens(consumerTag,message);
+			} catch (DataAccessException e) {
 				e.printStackTrace();
 			}
-
 		};
 		channel.basicConsume(TOKENID_TO_MERCHANTSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
+			
 		});
 	}
 
+	/**
+	 * 
+	 * @param merchantid
+	 * @param tokenid
+	 * @param amount
+	 * @return
+	 * @throws RequestRejected
+	 * @throws DataAccessException
+	 * @throws CorruptedTokenException
+	 * @throws IOException
+	 */
 	public TransactionObject requestTransaction(String merchantid, String tokenid, String amount)
 			throws RequestRejected, DataAccessException, CorruptedTokenException, IOException {
 
@@ -93,48 +106,72 @@ public class MerchantController {
 		}
 
 		updateToken("tokenId", "PAID");
-		repositry.createTransaction(to);
+		repository.createTransaction(to);
 
 		return to;
 	}
 
-	protected void storeNewToken(List<TokenValidation> newTokens) {
-		for (TokenValidation t : newTokens) {
-			try {
-				repositry.addToken(t);
-			} catch (CorruptedTokenException e) {
-				e.printStackTrace();
-			}
-		}
+	/**
+	 * 
+	 * @param merchantId
+	 * @param cvrNumber
+	 * @param name
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Merchant createMerchant(String merchantId, String cvrNumber, String name) throws DataAccessException {
+		Merchant m = new Merchant(merchantId, cvrNumber, name);
+		repository.createMerchant(m);
+		return m;
 	}
 
-	private TokenValidation getTokenValidation(String tokenId) throws CorruptedTokenException {
-		// TODO: check in repository
-		if (repositry.getTokenById(tokenId) == null) {
+	/**
+	 * 
+	 * @param tokenId
+	 * @return
+	 * @throws CorruptedTokenException
+	 * @throws DataAccessException
+	 */
+	private TokenValidation getTokenValidation(String tokenId) throws CorruptedTokenException, DataAccessException {
+		if (repository.getTokenById(tokenId) == null) {
 			throw new CorruptedTokenException("Token does not exsist");
 		}
-		return repositry.getTokenById(tokenId);
+		return repository.getTokenById(tokenId);
 	}
-
+	
+	/**
+	 * 
+	 * @param tokenId
+	 * @param status
+	 * @throws IOException
+	 */
 	private void updateToken(String tokenId, String status) throws IOException {
-		// TODO: send request to tokenService through rabbitMQ
 		channel.queueDeclare(MERCHANTSERVICE_TO_TOKENID_QUEUE, false, false, false, null);
 		String message = tokenId + " " + status;
 		channel.basicPublish("", MERCHANTSERVICE_TO_TOKENID_QUEUE, null, message.getBytes());
 
 	}
-
+	
+	/**
+	 * 
+	 * @param merchantId
+	 * @param customerId
+	 * @param amount
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws RequestRejected
+	 */
 	private TransactionObject requestPayment(String merchantId, String customerId, String amount)
 			throws IOException, InterruptedException, RequestRejected {
-		// TODO: send request to paymentService through rabbitMQ RPC
 		final String corrId = UUID.randomUUID().toString();
-
-		String replyQueueName = channel.queueDeclare().getQueue();
-		AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)
-				.build();
 
 		channel.queueDeclare(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
 		String message = merchantId + " " + customerId + " " + amount;
+		
+		String replyQueueName = channel.queueDeclare().getQueue();
+		AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)
+				.build();
 
 		channel.basicPublish("", RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, props, message.getBytes("UTF-8"));
 
@@ -153,28 +190,47 @@ public class MerchantController {
 		if (result.equalsIgnoreCase("500")) {
 			throw new RequestRejected("The payment transaction failed");
 		} else {
-			// IF the message is made for first 6 letters are trID, then a space and next 8
-			// are the date
+			String[] resultSplit = result.split(",");
 			String transactionID = StringUtils.left(result, 6);
 			String transactionDate = StringUtils.substring(result, 8, 15);
-			to = new TransactionObject(merchantId, transactionID, amount, null);
+			to = new TransactionObject(merchantId, resultSplit[0], amount, new Date(Date.parse(resultSplit[1])));
 		}
-
 		channel.basicCancel(ctag);
-
 		return to;
+	}
+	
+	/**
+	 * 
+	 * @param cTag
+	 * @param message
+	 * @throws DataAccessException
+	 */
+	public void receiveNewTokens(String cTag, String message) throws DataAccessException {
+		System.out.println(" [x] Received '" + message + "'");
+		String[] tokenMessage = message.split(",");
+	
+		try {
+			//repositry.addToken(new TokenValidation(true, tokenId, customerId));
+			repository.addToken(new TokenValidation(true, tokenMessage[0], tokenMessage[1]));
+			System.out.println(repository.getTokenValidation());
+		} catch (CorruptedTokenException e) {
+			e.printStackTrace();
+		}
+	}
 
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Merchant getMerchant(String id) throws DataAccessException {
+		Merchant m = repository.getMerchant(id);
+		return m;
 	}
-	
 
 	
-	public IMerchantRepositry getRepository() {
-		return this.repositry;
-	}
-	
-	public List<TokenValidation> getTokenValidations(){
-		return this.repositry.getTokenValidation();
-	}
 	
 	
 }

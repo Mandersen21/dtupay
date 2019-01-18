@@ -10,13 +10,13 @@ import beijing.merchantservice.domain.TransactionObject;
 import beijing.merchantservice.exception.CorruptedTokenException;
 import beijing.merchantservice.exception.DataAccessException;
 
-public class MerchantRepositry implements IMerchantRepositry {
+public class MerchantRepository implements IMerchantRepository {
 
 	List<Merchant> merchantList;
 	List<TransactionObject> transactionsList;
 	List<TokenValidation> tokenList;
 
-	public MerchantRepositry() {
+	public MerchantRepository() {
 		merchantList = new ArrayList<>();
 		transactionsList = new ArrayList<>();
 		tokenList = new ArrayList<>();
