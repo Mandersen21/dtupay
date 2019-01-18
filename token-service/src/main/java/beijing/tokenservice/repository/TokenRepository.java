@@ -13,6 +13,7 @@ public class TokenRepository implements ITokenRepository {
 
     public TokenRepository() {
         tokenList = new ArrayList<Token>();
+        customerList = new ArrayList<String>();
     }
 
     public Token getToken(String tokenId) {

@@ -34,7 +34,7 @@ public class TokenManagerTest {
 	@Test()
 	public void requestTokensSuccesTest() throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException {
 		String customerId = UUID.randomUUID().toString();
-
+		repository.addCustomer(customerId);
 		List<Token> tokens = new ArrayList<Token>();
 		tokens = tokenManager.requestToken(customerId, 1);
 		assertEquals(tokens.size(), 1);
