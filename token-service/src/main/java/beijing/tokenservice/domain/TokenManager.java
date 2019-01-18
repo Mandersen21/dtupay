@@ -37,20 +37,18 @@ public class TokenManager {
 	
 	private final int tokenLength = 6;
 	private Token token;
-	private final String tokenPath = "tokens/";
 
 	private List<TokenRepresentation> tokens;
 
 	private ConnectionFactory factory;
 	private Connection connection;
 	private Channel channel;
-	private Consumer consumer;
 
 	public TokenManager(ITokenRepository _tRepository, ICustomerRepository _cRepository) throws IOException, TimeoutException {
 		tokenRepository = _tRepository;
 		customerRepository = _cRepository;
 
-		// Connect to RabbitMq server
+		// Connect to RabbitMQ
 		factory = new ConnectionFactory();
 		factory.setUsername("admin");
 		factory.setPassword("Banana");
