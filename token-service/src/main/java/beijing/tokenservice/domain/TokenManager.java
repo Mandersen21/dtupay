@@ -103,8 +103,8 @@ public class TokenManager {
 			}
 
 			Token token = new Token(tokenId, customerId, true, Status.ACTIVE, "");
-			File path = generateToken(token.getTokenId(), tokenPath + tokenId + ".png");
-			token.setPath(path.toString());
+//			File path = generateToken(token.getTokenId(), tokenPath + tokenId + ".png");
+			token.setPath(tokenPath + tokenId + ".png");
 			repository.createToken(token);
 			tokens.add(new TokenRepresentation(token.getTokenId(), token.getPath()));
 
