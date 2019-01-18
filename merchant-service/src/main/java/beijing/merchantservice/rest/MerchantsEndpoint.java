@@ -24,7 +24,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 
 
-@Path("Merchant")
+@Path("/merchants")
 public class MerchantsEndpoint {
 
 	private MerchantController controller;
@@ -35,6 +35,22 @@ public class MerchantsEndpoint {
 		Merchant m2 = new Merchant("1234","1234","qwee");
 		controller.getRepository().createMerchant(m);
 		controller.getRepository().createMerchant(m2);
+	}
+	
+	@POST
+	@Produces("application/json")
+	public Response requestTransaction(String merchantId, String tokenId, String amount) throws CorruptedTokenException, IOException {
+		TransactionObject to;
+		try {
+			to = controller.requestTransaction(merchantId, tokenId, amount);
+		} catch (RequestRejected requestRejected) {
+			return Response.status(500).build();
+
+		} catch (DataAccessException e) {
+			return Response.status(503).build();
+		}
+
+		return Response.ok(to, "application/json").build();
 	}
 	
 //	//Return all merchants
@@ -75,25 +91,4 @@ public class MerchantsEndpoint {
 //		return Response.ok(m, "application/json").build();
 //	}
 
-
-	@POST
-	@Path("/{id}")
-	@Produces("application/json")
-	public Response requestTransaction(String merchantId, String tokenId, String amount) throws CorruptedTokenException, IOException {
-		TransactionObject to;
-		try {
-			to = controller.requestTransaction(merchantId, tokenId, amount);
-		} catch (RequestRejected requestRejected) {
-			requestRejected.printStackTrace();
-			return Response.status(500).build();
-
-		} catch (DataAccessException e) {
-			e.printStackTrace();
-			return Response.status(503).build();
-		}
-
-		return Response.ok(to, "application/json").build();
-	}
-	
-	
 }
