@@ -68,9 +68,12 @@ public class TokensEndpoint {
 		} catch (RequestRejected e) {
 			return Response.status(406).entity("Request has been rejected").build();
 		} catch (TokenNotFoundException e) {
-			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
 		} catch (DataAccessException e) {
-			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+		catch (Exception e) {
+			return Response.status(400).entity(e.getMessage()).build();
 		}
 		return Response.ok(tokens, "application/json").build();
 	}
