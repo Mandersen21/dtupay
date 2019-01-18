@@ -67,13 +67,11 @@ public class TokensEndpoint {
 			tokens = tokenManager.requestToken(customerId, tokenAmount);
 		} catch (RequestRejected e) {
 			return Response.status(406).entity("Request has been rejected").build();
-		} catch (TokenNotFoundException e) {
-			return Response.status(406).entity(e.getMessage()).build();
 		} catch (DataAccessException e) {
-			return Response.status(406).entity(e.getMessage()).build();
+			return Response.status(406).entity("Data access error").build();
 		}
 		catch (Exception e) {
-			return Response.status(400).entity(e.getMessage()).build();
+			return Response.status(500).entity("Internal server error").build();
 		}
 		return Response.ok(tokens, "application/json").build();
 	}

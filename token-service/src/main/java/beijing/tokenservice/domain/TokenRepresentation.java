@@ -3,21 +3,27 @@ package beijing.tokenservice.domain;
 public class TokenRepresentation {
 
 	private String tokenId;
-	private String tokenPath;
+	private String path;
 	
 	public TokenRepresentation(String tokenId, String tokenPath) {
 		this.tokenId = tokenId;
-		this.tokenPath = tokenPath;
+		this.path = tokenPath;
 	}
 
 	public String getTokenPath() {
-		return tokenPath;
+		return path;
 	}
 
 	public void setTokenPath(String tokenPath) {
-		this.tokenPath = tokenPath;
+		this.path = tokenPath;
 	}
 	
-	
+	public String getTokenId() {
+		return tokenId;
+	}
+
+	public void setTokenId(String id) {
+		this.tokenId = id;
+	}
 	
 }
