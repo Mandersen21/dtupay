@@ -5,7 +5,7 @@ public class CustomerAccount extends IAccount{
 	private String cprNumber;
 	
 	
-	public String getCprNumber() {
+	public String getAccountViaCprNumber() {
 		return cprNumber;
 	}
 

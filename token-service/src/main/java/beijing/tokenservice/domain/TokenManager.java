@@ -1,25 +1,22 @@
 package beijing.tokenservice.domain;
 
 import beijing.tokenservice.exception.CustomerNotFoundException;
+
+
 import beijing.tokenservice.exception.DataAccessException;
 import beijing.tokenservice.exception.RequestRejected;
 import beijing.tokenservice.exception.TokenNotFoundException;
 import beijing.tokenservice.repository.ICustomerRepository;
 import beijing.tokenservice.repository.ITokenRepository;
-import beijing.tokenservice.repository.TokenRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.krysalis.barcode4j.impl.code39.Code39Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.krysalis.barcode4j.tools.UnitConv;
 
-import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.DeliverCallback;
-import com.rabbitmq.client.Envelope;
 
 import java.awt.image.BufferedImage;
 import java.io.*;

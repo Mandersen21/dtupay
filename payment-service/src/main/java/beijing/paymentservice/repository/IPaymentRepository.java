@@ -11,8 +11,6 @@ public interface IPaymentRepository {
 	boolean storeTransaction(Transaction t);
 	Transaction getTrasaction(String tid);
 	List<Transaction> getTransactions(String ownerId);
-	
-	
-	
+	IAccount takeAccount(String cpr);
 
 }

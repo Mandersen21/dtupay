@@ -1,6 +1,8 @@
 package beijing.paymentservice.domain;
 
 import java.io.IOException;
+
+
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.AMQP;
@@ -10,35 +12,41 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DeliverCallback;
 
+import beijing.paymentservice.exception.RequestRejected;
+import beijing.paymentservice.repository.IAccount;
+import beijing.paymentservice.repository.IPaymentRepository;
+
 public class PaymentServiceManager {
 	
-	
-	
-	
 	private static final String RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE = "rpc_merchantservice_to_paymentservice";
+	private static final String CUSTOMERSERVICE_TO_PAYMENTSERVICE_QUEUE = "customerservice_to_paymentservice";
+	private final static String ACCOUNT_TO_CUSTOMERSERVICE_QUEUE = "account_to_customerservice";
 	
 	private ConnectionFactory factory;
 	private Connection connection;
 	private Channel channel;
 	private Consumer consumer;
-
+	private IAccount account;
+	public static IPaymentRepository paymentRepository;
 	
-	public PaymentServiceManager() {
+	public PaymentServiceManager(IPaymentRepository _prepository) {
+		paymentRepository = _prepository;
+		
 		 try {
 			 
 			setupMessageQueue();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TimeoutException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	
 	private void setupMessageQueue() throws IOException, TimeoutException {
+		
+		// Connect to RabbitMQ
 		factory = new ConnectionFactory();
 		factory.setUsername("admin");
 		factory.setPassword("Banana");
@@ -47,10 +55,13 @@ public class PaymentServiceManager {
 		channel = connection.createChannel();
 		
 		setupMerchantRPC();
+		sendAccountForCustomerMQ();
 		
 	}
 	
-	private void verifyCustomerMQ() {
+	private void sendAccountForCustomerMQ() throws IOException, TimeoutException {
+		
+		channel.queueDeclare(ACCOUNT_TO_CUSTOMERSERVICE_QUEUE, false, false, false, null);
 		
 	}
 
@@ -103,6 +114,19 @@ public class PaymentServiceManager {
          }
 	}
 	
+	public IAccount takeAccount(String cpr) throws RequestRejected, IOException, TimeoutException {
+		
+		if (paymentRepository.getCustomerAccountByCPR(cpr) != null) {
+			throw new RequestRejected("The account for the cpr " + cpr + " already exists");
+		} 
+
+		channel.basicPublish("", CUSTOMERSERVICE_TO_PAYMENTSERVICE_QUEUE, null, cpr.getBytes());
+		channel.close();
+		connection.close();
+		
+		return paymentRepository.getCustomerAccountByCPR(cpr);
+		
+	}
 	
 	public String initiateTransfer(String merchantId, String customerId,String amount) {
 		return "";

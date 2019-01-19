@@ -1,6 +1,7 @@
 package beijing.customerservice.domain;
 
 import java.io.IOException;
+
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import com.rabbitmq.client.*;
@@ -9,10 +10,14 @@ import beijing.customerservice.exception.ConnectionException;
 import beijing.customerservice.exception.CustomerNotFoundException;
 import beijing.customerservice.exception.RequestRejected;
 import beijing.customerservice.repository.ICustomerRepository;
+//import beijing.paymentservice.repository.IPaymentRepository;
+
 
 public class CustomerManager {
 
 	private final static String CUSTOMERID_TO_TOKENSERVICE_QUEUE = "customerid_to_tokenservice";
+	private final static String CUSTOMERID_TO_PAYMENTSERVICE_QUEUE = "customerid_to_paymentservice";
+	private final static String ACCOUNT_TO_CUSTOMERSERVICE_QUEUE = "account_to_customerservice";
 
 	private ConnectionFactory factory;
 	private Connection connection;
@@ -20,9 +25,10 @@ public class CustomerManager {
 	private Customer customer;
 
 	public static ICustomerRepository customerRepository;
+//	public static IPaymentRepository paymentRepository;
 
 	public CustomerManager(ICustomerRepository _repository) throws ConnectionException, IOException, TimeoutException {
-		customerRepository = _repository;
+		customerRepository =_repository;
 
 		factory = new ConnectionFactory();
 		factory.setUsername("admin");
@@ -33,6 +39,16 @@ public class CustomerManager {
 		connection = factory.newConnection();
 		channel = connection.createChannel();
 		channel.queueDeclare(CUSTOMERID_TO_TOKENSERVICE_QUEUE, false, false, false, null);
+		channel.queueDeclare(CUSTOMERID_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
+		
+		// Listen for payment service that creates the account for the created customer
+//		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+//			String cpr = new String(delivery.getBody(), "UTF-8");
+//			System.out.println("Message received: " + cpr);
+//			paymentRepository.takeAccount(cpr);
+//		};
+//		channel.basicConsume(ACCOUNT_TO_CUSTOMERSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
+//		});
 	}
 
 	// Add customer
@@ -45,6 +61,7 @@ public class CustomerManager {
 		
 			customer = new Customer(id, name, cpr, tokenList);
 			channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
+			channel.basicPublish("", CUSTOMERID_TO_PAYMENTSERVICE_QUEUE, null, customer.getCpr().getBytes());
 			channel.close();
 			connection.close();
 			
