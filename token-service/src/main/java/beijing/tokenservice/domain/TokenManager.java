@@ -2,7 +2,6 @@ package beijing.tokenservice.domain;
 
 import beijing.tokenservice.exception.CustomerNotFoundException;
 
-
 import beijing.tokenservice.exception.DataAccessException;
 import beijing.tokenservice.exception.RequestRejected;
 import beijing.tokenservice.exception.TokenNotFoundException;
@@ -29,10 +28,11 @@ public class TokenManager {
 
 	private final static String CUSTOMERID_TO_TOKENSERVICE_QUEUE = "customerid_to_tokenservice";
 	private final static String TOKENID_TO_MERCHANTSERVICE_QUEUE = "tokenid_to_merchantservice";
+	private final static String MERCHANTSERVICE_TO_TOKENID_QUEUE = "merchantservice_to_tokenid";
 
 	public static ITokenRepository tokenRepository;
 	public static ICustomerRepository customerRepository;
-	
+
 	private final int tokenLength = 6;
 	private Token token;
 
@@ -42,33 +42,16 @@ public class TokenManager {
 	private Connection connection;
 	private Channel channel;
 
-	public TokenManager(ITokenRepository _tRepository, ICustomerRepository _cRepository) throws IOException, TimeoutException {
+	public TokenManager(ITokenRepository _tRepository, ICustomerRepository _cRepository)
+			throws IOException, TimeoutException {
 		tokenRepository = _tRepository;
 		customerRepository = _cRepository;
 
-		// Connect to RabbitMQ
-		factory = new ConnectionFactory();
-		factory.setUsername("admin");
-		factory.setPassword("Banana");
-
-		factory.setHost("02267-bejing.compute.dtu.dk");
-
-		connection = factory.newConnection();
-		channel = connection.createChannel();
-		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
-
-		// Listen for customer service
-		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-			String customerId = new String(delivery.getBody(), "UTF-8");
-			System.out.println("Message received: " + customerId);
-			customerRepository.addCustomer(customerId);
-		};
-		channel.basicConsume(CUSTOMERID_TO_TOKENSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
-		});
+		setupMessageQueue();
 	}
 
-	public List<TokenRepresentation> requestToken(String customerId, int tokenAmount)
-			throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException, CustomerNotFoundException {
+	public List<TokenRepresentation> requestToken(String customerId, int tokenAmount) throws RequestRejected,
+			TokenNotFoundException, DataAccessException, IOException, TimeoutException, CustomerNotFoundException {
 		List<Token> t = new ArrayList<Token>();
 		tokens = new ArrayList<TokenRepresentation>();
 
@@ -166,6 +149,55 @@ public class TokenManager {
 		}
 
 		return false;
+	}
+
+	private void setupMessageQueue() throws IOException, TimeoutException {
+		// Connect to RabbitMQ
+		factory = new ConnectionFactory();
+		factory.setUsername("admin");
+		factory.setPassword("Banana");
+
+		factory.setHost("02267-bejing.compute.dtu.dk");
+
+		connection = factory.newConnection();
+		channel = connection.createChannel();
+		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
+
+		// Listen for customer service
+		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+			String customerId = new String(delivery.getBody(), "UTF-8");
+			System.out.println("Message received: " + customerId);
+			customerRepository.addCustomer(customerId);
+		};
+		channel.basicConsume(CUSTOMERID_TO_TOKENSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
+		});
+
+		// Listen for merchant service
+		DeliverCallback deliverCallbackMerchant = (consumerTag, delivery) -> {
+			String message = new String(delivery.getBody(), "UTF-8");
+			String[] resultSplit = message.split(",");
+			
+			String id = resultSplit[0];
+			boolean valid = resultSplit[1] == "PAID" || resultSplit[1] == "INVALID" ? false : true;
+			Status status = Status.ACTIVE;
+			if (resultSplit[1] == "PAID") {
+				status = Status.PAID;
+			}
+			if (resultSplit[1] == "INVALID") {
+				status = Status.INVALID;
+			}
+			if (resultSplit[1] == "PENDING") {
+				status = Status.PENDING;
+			}
+			
+			try {
+				updateToken(id, valid, status);
+			} catch (TokenNotFoundException e) {
+				
+			}
+		};
+		channel.basicConsume(MERCHANTSERVICE_TO_TOKENID_QUEUE, true, deliverCallbackMerchant, consumerTag -> {
+		});
 	}
 
 	public String generateRandomTokenNumber(int length) {

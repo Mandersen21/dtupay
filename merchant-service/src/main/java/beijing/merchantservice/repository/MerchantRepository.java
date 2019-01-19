@@ -69,7 +69,7 @@ public class MerchantRepository implements IMerchantRepository {
 	 */
 	public Merchant getMerchantById(String uid) throws DataAccessException {
 		List<Merchant> resultMerchant = merchantList.stream()
-				.filter(m -> m.getMerchantID().contentEquals(uid)).collect(Collectors.toList());
+				.filter(m -> m.getMerchantId() == uid).collect(Collectors.toList());
 
 		if(resultMerchant.isEmpty()){
 			return null;

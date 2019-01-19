@@ -134,10 +134,8 @@ public class MerchantController {
 	 * @throws IOException
 	 */
 	private void updateToken(String tokenId, String status) throws IOException {
-		channel.queueDeclare(MERCHANTSERVICE_TO_TOKENID_QUEUE, false, false, false, null);
-		String message = tokenId + " " + status;
+		String message = tokenId + "," + status;
 		channel.basicPublish("", MERCHANTSERVICE_TO_TOKENID_QUEUE, null, message.getBytes());
-
 	}
 	
 	/**
@@ -229,6 +227,8 @@ public class MerchantController {
 		channel = connection.createChannel();
 		
 		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
+		channel.queueDeclare(MERCHANTSERVICE_TO_TOKENID_QUEUE, false, false, false, null);
+		
 		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 			String message = new String(delivery.getBody(), "UTF-8");
 			try {
