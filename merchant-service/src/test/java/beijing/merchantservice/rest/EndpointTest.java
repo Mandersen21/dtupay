@@ -18,7 +18,7 @@ public class EndpointTest {
 		MerchantsEndpoint endpoint = new MerchantsEndpoint();
 		Merchant m = endpoint.controller.createMerchant("12345678", "testCompany");
 		
-		Response r = endpoint.getMerchant(m.getMerchantID());
+//		Response r = endpoint.getMerchant(m.getMerchantID());
 			
 	}
 	
