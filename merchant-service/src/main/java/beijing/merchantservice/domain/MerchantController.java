@@ -95,7 +95,7 @@ public class MerchantController {
 	}
 
 	/**
-	 * 
+	 * creates a new merchant and adds him to the database.
 	 * @param merchantId
 	 * @param cvrNumber
 	 * @param name
@@ -109,7 +109,7 @@ public class MerchantController {
 	}
 
 	/**
-	 * 
+	 * retrieves the TokenValidation object with the give tokenId from the database
 	 * @param tokenId
 	 * @return
 	 * @throws CorruptedTokenException
@@ -123,7 +123,7 @@ public class MerchantController {
 	}
 	
 	/**
-	 * 
+	 * informs the token-service of the use of a token with the given tokenId
 	 * @param tokenId
 	 * @param status
 	 * @throws IOException
@@ -183,17 +183,17 @@ public class MerchantController {
 	}
 	
 	/**
-	 * 
+	 * converts message into an object of TokenValidation
+	 * and stores the object in the database.
 	 * @param cTag
 	 * @param message
 	 * @throws DataAccessException
 	 */
-	public void receiveNewTokens(String cTag, String message) throws DataAccessException {
+	public void receiveNewTokens(String message) throws DataAccessException {
 		System.out.println(" [x] Received '" + message + "'");
 		String[] tokenMessage = message.split(",");
 	
 		try {
-			//repositry.addToken(new TokenValidation(true, tokenId, customerId));
 			repository.addToken(new TokenValidation(true, tokenMessage[0], tokenMessage[1]));
 			System.out.println(repository.getTokenValidation());
 		} catch (CorruptedTokenException e) {
@@ -231,7 +231,7 @@ public class MerchantController {
 		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 			String message = new String(delivery.getBody(), "UTF-8");
 			try {
-				receiveNewTokens(consumerTag,message);
+				receiveNewTokens(message);
 			} catch (DataAccessException e) {
 				e.printStackTrace();
 			}

@@ -27,12 +27,9 @@ public class MerchantTest {
 	public void requestTokensSuccesTest() throws IOException, TimeoutException, RequestRejected, DataAccessException, CorruptedTokenException  {
 		MerchantController con = new MerchantController();
 		List<TokenValidation> t = new ArrayList<>();
-		t.add(new TokenValidation(true,"123","rtjioe"));
-		con.storeNewToken(t);
-		
-		//con.requestTransaction("1234", "123", "100");
+		con.receiveNewTokens("123,rtjioe");
 		
 		
 		//assertEquals(tokens.size(), 1);
-}
+	}
 }

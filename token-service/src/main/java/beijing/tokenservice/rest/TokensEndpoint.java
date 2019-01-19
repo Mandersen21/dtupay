@@ -3,13 +3,15 @@ package beijing.tokenservice.rest;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import beijing.tokenservice.domain.Status;
 import beijing.tokenservice.domain.Token;
 import beijing.tokenservice.domain.TokenManager;
+import beijing.tokenservice.domain.TokenRepresentation;
+import beijing.tokenservice.exception.CustomerNotFoundException;
 import beijing.tokenservice.exception.DataAccessException;
 import beijing.tokenservice.exception.RequestRejected;
 import beijing.tokenservice.exception.TokenNotFoundException;
+import beijing.tokenservice.repository.CustomerRepository;
+import beijing.tokenservice.repository.ICustomerRepository;
 import beijing.tokenservice.repository.ITokenRepository;
 import beijing.tokenservice.repository.TokenRepository;
 
@@ -25,13 +27,12 @@ import javax.ws.rs.QueryParam;
 @Path("/tokens")
 public class TokensEndpoint {
 
-	private static ITokenRepository repository = new TokenRepository();
+	private static ITokenRepository tRepository = new TokenRepository();
+	private static ICustomerRepository cRepository = new CustomerRepository(); 
 	private TokenManager tokenManager;
-	ObjectMapper mapper = new ObjectMapper();
 
 	public TokensEndpoint() throws IOException, TimeoutException {
-		tokenManager = new TokenManager(repository);
-		repository.createToken(new Token("123456", "1234", true, Status.ACTIVE));
+		tokenManager = new TokenManager(tRepository, cRepository);
 	}
 	
 	@GET
@@ -50,7 +51,7 @@ public class TokensEndpoint {
 	@GET
 	@Produces("application/json")
 	public Response getAllTokens() throws IOException, TimeoutException {
-		List<Token> tokens = null;
+		List<TokenRepresentation> tokens = null;
 		try {
 			tokens = tokenManager.getAllTokens();
 		} catch (Exception e) {
@@ -61,12 +62,20 @@ public class TokensEndpoint {
 	
 	@POST
 	@Produces("application/json")
-	public Response getTokens(@QueryParam("customerId") String customerId, @QueryParam("tokenAmount") int tokenAmount) throws IOException, TimeoutException {
-		List<Token> tokens = null;
+	public Response getTokens(@QueryParam("customerId") String customerId, @QueryParam("tokenAmount") int tokenAmount) {
+		List<TokenRepresentation> tokens = null;
 		try {
 			tokens = tokenManager.requestToken(customerId, tokenAmount);
-		} catch (RequestRejected | TokenNotFoundException | DataAccessException e) {
+		} catch (RequestRejected e) {
 			return Response.status(406).entity("Request has been rejected").build();
+		} catch (DataAccessException e) {
+			return Response.status(406).entity("Data access error").build();
+		}
+		 catch (CustomerNotFoundException e) {
+			 return Response.status(406).entity("Customer was not found").build();
+		 }
+		catch (Exception e) {
+			return Response.status(500).entity("Internal server error").build();
 		}
 		return Response.ok(tokens, "application/json").build();
 	}
