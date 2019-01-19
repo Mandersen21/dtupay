@@ -1,14 +1,21 @@
 package beijing.paymentservice.domain;
 
-public class Customer implements Account {
+public class Customer implements IAccount {
 	private String name;
 	private String cpr;
-	public Customer(String expId, String expName) {
-		this.name = expId;
-		this.cpr = expName;
+	
+	public Customer(String name, String cpr) {
+		this.name = name;
+		this.cpr = cpr;
 	}
-	public String getID() {
-		// TODO Auto-generated method stub
-		return this.cpr;
+	
+	public String getCpr() {
+		return cpr;
 	}
+	
+	public String getName() {
+		return cpr;
+	}
+
+
 }

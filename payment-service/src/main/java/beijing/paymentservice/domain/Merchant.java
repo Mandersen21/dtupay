@@ -1,16 +1,21 @@
 package beijing.paymentservice.domain;
 
-public class Merchant implements Account {
+public class Merchant implements IAccount {
+	
 	private String name;
 	private String cvr;
-	public Merchant(String expId, String expName) {
-		this.name = expId;
-		this.cvr = expName;
+	
+	public Merchant(String name, String cvr) {
+		this.name = name;
+		this.cvr = cvr;
 	}
 
-	@Override
-	public String getID() {
-		return this.cvr;
+	public String getCpr() {
+		return cvr;
+	}
+	
+	public String getName() {
+		return name;
 	}
 
 }

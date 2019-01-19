@@ -36,7 +36,7 @@ public class PaymentRepository implements IPaymentRepository{
 		for(IAccount a : accounts) {
 			if(a instanceof CustomerAccount) {
 				CustomerAccount c = (CustomerAccount)a;
-				if(c.getCprNumber().equals(cpr)) {
+				if(c.getAccountViaCprNumber().equals(cpr)) {
 					return c;
 				}
 			}
@@ -65,6 +65,16 @@ public class PaymentRepository implements IPaymentRepository{
 		List<Transaction> merchantTrasactions = transacions.stream()
 				.filter(t -> t.getTransactionId().contentEquals(ownerId)).collect(Collectors.toList());
 		return merchantTrasactions;
+	}
+
+	@Override
+	public IAccount takeAccount(String cpr) {
+		for(IAccount a : accounts) {
+			if(a.getOwnerId().equals(cpr)) {
+				return a;
+			}
+		}
+		return null;
 	}
 
 }
