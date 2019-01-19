@@ -14,6 +14,7 @@ import beijing.merchantservice.domain.TokenValidation;
 import beijing.merchantservice.exception.CorruptedTokenException;
 import beijing.merchantservice.exception.DataAccessException;
 import beijing.merchantservice.exception.RequestRejected;
+import beijing.merchantservice.repository.MerchantRepository;
 
 
 
@@ -25,14 +26,11 @@ public class MerchantTest {
 	
 	@Test()
 	public void requestTokensSuccesTest() throws IOException, TimeoutException, RequestRejected, DataAccessException, CorruptedTokenException  {
-		MerchantController con = new MerchantController();
+		MerchantController con = new MerchantController(new MerchantRepository());
 		List<TokenValidation> t = new ArrayList<>();
-		t.add(new TokenValidation(true,"123","rtjioe"));
-		con.storeNewToken(t);
-		
-		//con.requestTransaction("1234", "123", "100");
+		con.receiveNewTokens("123,rtjioe");
 		
 		
 		//assertEquals(tokens.size(), 1);
-}
+	}
 }

@@ -7,8 +7,11 @@ import beijing.merchantservice.domain.TransactionObject;
 import beijing.merchantservice.exception.CorruptedTokenException;
 import beijing.merchantservice.exception.DataAccessException;
 import beijing.merchantservice.exception.RequestRejected;
+import beijing.merchantservice.repository.IMerchantRepository;
+import beijing.merchantservice.repository.MerchantRepository;
 
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,69 +29,119 @@ import javax.ws.rs.Produces;
 
 @Path("/merchants")
 public class MerchantsEndpoint {
-
-	private MerchantController controller;
 	
-	public MerchantsEndpoint() throws IOException, TimeoutException {
-		controller = new MerchantController();
-		Merchant m = new Merchant("123","123","qwe");
-		Merchant m2 = new Merchant("1234","1234","qwee");
-		controller.getRepository().createMerchant(m);
-		controller.getRepository().createMerchant(m2);
+	private static IMerchantRepository repository = new MerchantRepository();
+	protected MerchantController controller;
+	
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws TimeoutException
+	 */
+	public MerchantsEndpoint()  {
+		controller = new MerchantController(repository);
 	}
 	
-	@POST
-	@Produces("application/json")
-	public Response requestTransaction(String merchantId, String tokenId, String amount) throws CorruptedTokenException, IOException {
+	/**
+	 * 
+	 * @param merchantId
+	 * @param tokenId
+	 * @param amount
+	 * @return
+	 */
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response requestTransaction(
+									@FormParam("merchantId") String merchantId,
+									@FormParam("tokeId") String tokenId,
+									@FormParam("amount") String amount){
 		TransactionObject to;
 		try {
 			to = controller.requestTransaction(merchantId, tokenId, amount);
 		} catch (RequestRejected requestRejected) {
-			return Response.status(500).build();
-
+			return Response.status(Response.Status.BAD_REQUEST).entity(requestRejected.getMessage()).build();
 		} catch (DataAccessException e) {
-			return Response.status(503).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		} catch (CorruptedTokenException e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 
-		return Response.ok(to, "application/json").build();
+		return Response.ok(to, MediaType.APPLICATION_JSON).build();
 	}
+
+	/**
+	 * 
+	 * @param merhcantId
+	 * @param CVR
+	 * @param name
+	 * @return
+	 */
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createMerchant(
+                                 @FormParam("CVR") String CVR,
+                                 @FormParam("Name") String name) {
+    	
+    		Merchant m;
+			try {
+				m = controller.createMerchant( CVR, name);
+			} catch (DataAccessException e) {
+				e.printStackTrace();
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			} catch (RequestRejected e) {
+				e.printStackTrace();
+				return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+			}
+    		if(m == null) {
+    			String message ="Failed";
+    			return Response.status(404).entity(message).build();
+    		}    	
+        return Response.ok(m, MediaType.APPLICATION_JSON).build();    
+    }
 	
-//	//Return all merchants
-//    @GET
-//    @Produces("application/json")
-//    public Response getMerchantss() {
-//        return Response.ok(controller.getRepository().getMerchants(), "application/json").build();
-//    }
-//    
-//    //Post merchant
-//    @POST
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    @Produces(MediaType.TEXT_PLAIN)
-//    public Response createCustomer(
-//    						     @FormParam("merhcantId") String merhcantId,
-//                                 @FormParam("CVR") String CVR,
-//                                 @FormParam("Name") String name) {
-//        return Response.ok(controller.getRepository().createMerchant(new Merchant(merhcantId, CVR, name)), "application/json").build();    
-//    }
-//	
-//    //Get merchant by id
-//    @GET
-//    @Path("/{id}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getCustomer(@PathParam("id") String id) {
-//        Merchant merchant = controller.getRepository().getMerchant(id);
+    /**
+     * 
+     * @param id
+     * @return
+     */
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMerchant(@PathParam("id") String id) {
+    	Merchant merchant = null;
+    	
+         try {
+			merchant = controller.getMerchantById(id);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+         
 //        if (merchant == null) {
 //            return Response.status(Response.Status.NOT_FOUND).build();
-//        } else {
-//            return Response.ok(merchant, "application/json").build();
-//        }
-//    }
-//    
-//	@GET
-//	@Produces("application/json")
-//	public Response doGet() {
-//		Merchant m = new Merchant("123","74875858","ThornTail");
-//		return Response.ok(m, "application/json").build();
-//	}
+//        } 
+        return Response.ok(merchant, "application/json").build();
+        
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllMerhcants() {
+    	List<Merchant> merchantList = null;
+		try {
+			merchantList = controller.getAllMerhcants();
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return Response.ok(merchantList, "application/json").build();
+    	
+    }
+    
 
 }
