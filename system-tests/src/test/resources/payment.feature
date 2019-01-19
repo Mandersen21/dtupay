@@ -29,3 +29,4 @@ Feature: Title of your feature
 	And requests payment for 100 kroner using the token
 	Then the payment succeeds
 	And the money is transferred from the customer bank account to the merchant bank account
+	
