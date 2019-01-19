@@ -13,9 +13,12 @@ public interface IMerchantRepository {
 	boolean createMerchant(Merchant merchant) throws DataAccessException;
 	boolean createTransaction(TransactionObject transaction) throws DataAccessException;
 	boolean addToken(TokenValidation t) throws CorruptedTokenException, DataAccessException;
-	Merchant getMerchant(String uid)throws DataAccessException;
+	Merchant getMerchantById(String uid)throws DataAccessException;
+	Merchant getMerchantByCVR(String cvrNumber)throws DataAccessException;
+	TokenValidation getTokenById(String tokenId) throws CorruptedTokenException, DataAccessException;
 	List<Merchant> getMerchants()throws DataAccessException;
 	List<TransactionObject> getTransactions(String merchantUid)throws DataAccessException;
-	TokenValidation getTokenById(String tokenId) throws CorruptedTokenException, DataAccessException;
-	List<TokenValidation> getTokenValidation() throws DataAccessException;
+	List<TokenValidation> getTokenValidations() throws DataAccessException;
+	List<Merchant> getMerchantList() throws DataAccessException;
+	
 }

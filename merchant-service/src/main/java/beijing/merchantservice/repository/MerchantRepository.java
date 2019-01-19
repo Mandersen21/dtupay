@@ -33,9 +33,7 @@ public class MerchantRepository implements IMerchantRepository {
 		if (merchantList.contains(uid)) {
 			return false;
 		}
-
 		merchantList.add(uid);
-
 		return true;
 
 	}
@@ -69,17 +67,15 @@ public class MerchantRepository implements IMerchantRepository {
 	 * 
 	 * @return 
 	 */
-	public Merchant getMerchant(String uid) throws DataAccessException {
-		if (uid == null) {
+	public Merchant getMerchantById(String uid) throws DataAccessException {
+		List<Merchant> resultMerchant = merchantList.stream()
+				.filter(m -> m.getMerchantID().contentEquals(uid)).collect(Collectors.toList());
+
+		if(resultMerchant.isEmpty()){
 			return null;
 		}
-		for (Merchant m : merchantList) {
-			if (m.getMerchantID().equals(uid)) {
-				return m;
-			}
 
-		}
-		return null;
+		return resultMerchant.get(0);
 	}
 
 	/**
@@ -94,7 +90,7 @@ public class MerchantRepository implements IMerchantRepository {
 	 * 
 	 * @return
 	 */
-	public List<TokenValidation> getTokenValidation(){
+	public List<TokenValidation> getTokenValidations(){
 		return this.tokenList;		
 	}
 	
@@ -116,13 +112,30 @@ public class MerchantRepository implements IMerchantRepository {
 		List<TokenValidation> resultToken = tokenList.stream()
 				.filter(t -> t.getTokenId().contentEquals(tokenId)).collect(Collectors.toList());
 
-		if(resultToken.size()>1){
-			throw new CorruptedTokenException("multiple tokens with same id");
-		}else if(resultToken.isEmpty()){
+		if(resultToken.isEmpty()){
 			return null;
 		}
 
 		return resultToken.get(0);
+	}
+
+
+
+	@Override
+	public Merchant getMerchantByCVR(String cvrNumber) throws DataAccessException {
+		List<Merchant> resultmerchant = merchantList.stream()
+				.filter(m -> m.getCvrNumber().contentEquals(cvrNumber)).collect(Collectors.toList());
+		if(resultmerchant.isEmpty()) {
+			return null;
+		}
+		return resultmerchant.get(0);
+	}
+
+
+
+	@Override
+	public List<Merchant> getMerchantList() throws DataAccessException {
+		return merchantList;
 	}
 	
 	

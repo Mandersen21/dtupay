@@ -27,7 +27,7 @@ import com.rabbitmq.client.AMQP.BasicProperties;
 
 public class MerchantController {
 
-	IMerchantRepository repository;
+	private static IMerchantRepository repository;
 
 	private final static String TOKENID_TO_MERCHANTSERVICE_QUEUE = "tokenid_to_merchantservice";
 	private final static String MERCHANTSERVICE_TO_TOKENID_QUEUE = "merchantservice_to_tokenid";
@@ -40,14 +40,12 @@ public class MerchantController {
 	private Consumer consumer;
 
 	/**
-	 * creates a new MerchantRepository and tries
-	 * to set up the messageQueue
+	 * 
+	 * @param repository
 	 */
-	public MerchantController() {
-		
-		repository = new MerchantRepository();
-		
-		
+	public MerchantController(IMerchantRepository repository) {
+		this.repository = repository;		
+				
 		try {
 			setupMessageQueue();
 		} catch (IOException e) {
@@ -57,7 +55,6 @@ public class MerchantController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-				
 	}
 
 
@@ -99,12 +96,20 @@ public class MerchantController {
 	 * @param merchantId
 	 * @param cvrNumber
 	 * @param name
-	 * @return
+	 * @return newly created Merchant object
 	 * @throws DataAccessException
+	 * @throws RequestRejected 
 	 */
-	public Merchant createMerchant(String merchantId, String cvrNumber, String name) throws DataAccessException {
-		Merchant m = new Merchant(merchantId, cvrNumber, name);
-		repository.createMerchant(m);
+	public Merchant createMerchant( String cvrNumber, String name) throws DataAccessException, RequestRejected {
+		Merchant m =  repository.getMerchantByCVR(cvrNumber);
+		if( m == null) {
+			String merchantId = UUID.randomUUID().toString();
+			m = new Merchant(merchantId, cvrNumber, name);
+			repository.createMerchant(m);
+		}else {
+			throw new RequestRejected("CVR already registred");
+		}
+		
 		return m;
 	}
 
@@ -174,8 +179,6 @@ public class MerchantController {
 			throw new RequestRejected("The payment transaction failed");
 		} else {
 			String[] resultSplit = result.split(",");
-			String transactionID = StringUtils.left(result, 6);
-			String transactionDate = StringUtils.substring(result, 8, 15);
 			to = new TransactionObject(merchantId, resultSplit[0], amount, new Date(Date.parse(resultSplit[1])));
 		}
 		channel.basicCancel(ctag);
@@ -185,7 +188,6 @@ public class MerchantController {
 	/**
 	 * converts message into an object of TokenValidation
 	 * and stores the object in the database.
-	 * @param cTag
 	 * @param message
 	 * @throws DataAccessException
 	 */
@@ -195,7 +197,7 @@ public class MerchantController {
 	
 		try {
 			repository.addToken(new TokenValidation(true, tokenMessage[0], tokenMessage[1]));
-			System.out.println(repository.getTokenValidation());
+			System.out.println(repository.getTokenValidations());
 		} catch (CorruptedTokenException e) {
 			e.printStackTrace();
 		}
@@ -208,9 +210,8 @@ public class MerchantController {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Merchant getMerchant(String id) throws DataAccessException {
-		Merchant m = repository.getMerchant(id);
-		return m;
+	public Merchant getMerchantById(String id) throws DataAccessException {
+		return repository.getMerchantById(id);
 	}
 
 	
@@ -239,6 +240,11 @@ public class MerchantController {
 		channel.basicConsume(TOKENID_TO_MERCHANTSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
 			
 		});
+	}
+
+
+	public List<Merchant> getAllMerhcants() throws DataAccessException {
+		return repository.getMerchantList();
 	}
 	
 	
