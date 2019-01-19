@@ -2,7 +2,7 @@ package beijing.paymentservice.bank;
 
 import java.util.Map;
 
-import beijing.paymentservice.account.Customer;
+import beijing.paymentservice.domain.Customer;
 import beijing.paymentservice.repository.BankRepository;
 import beijing.paymentservice.repository.IBankRepository;
 

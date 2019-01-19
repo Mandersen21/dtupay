@@ -1,4 +1,4 @@
-package beijing.paymentservice.account;
+package beijing.paymentservice.domain;
 
 public class Merchant implements Account {
 	private String name;

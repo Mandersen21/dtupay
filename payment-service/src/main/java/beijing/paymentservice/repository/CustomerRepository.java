@@ -2,8 +2,8 @@ package beijing.paymentservice.repository;
 
 import java.util.List;
 
-import beijing.paymentservice.account.Account;
-import beijing.paymentservice.account.Customer;
+import beijing.paymentservice.domain.Account;
+import beijing.paymentservice.domain.Customer;
 
 public interface CustomerRepository {
 

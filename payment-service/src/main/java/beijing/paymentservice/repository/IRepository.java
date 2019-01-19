@@ -3,9 +3,9 @@ package beijing.paymentservice.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import beijing.paymentservice.account.Account;
-import beijing.paymentservice.account.Customer;
-import beijing.paymentservice.account.Merchant;
+import beijing.paymentservice.domain.Account;
+import beijing.paymentservice.domain.Customer;
+import beijing.paymentservice.domain.Merchant;
 
 public class IRepository implements CustomerRepository, MerchantRepository {
 	List<Customer> cList = new ArrayList<>();

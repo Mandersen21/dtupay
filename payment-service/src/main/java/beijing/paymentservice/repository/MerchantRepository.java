@@ -1,6 +1,6 @@
 package beijing.paymentservice.repository;
 
-import beijing.paymentservice.account.Account;
+import beijing.paymentservice.domain.Account;
 
 public interface MerchantRepository {
 
