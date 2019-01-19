@@ -12,6 +12,9 @@ import com.rabbitmq.client.DeliverCallback;
 
 public class PaymentServiceManager {
 	
+	
+	
+	
 	private static final String RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE = "rpc_merchantservice_to_paymentservice";
 	
 	private ConnectionFactory factory;
@@ -19,6 +22,20 @@ public class PaymentServiceManager {
 	private Channel channel;
 	private Consumer consumer;
 
+	
+	public PaymentServiceManager() {
+		 try {
+			 
+			setupMessageQueue();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	
 	private void setupMessageQueue() throws IOException, TimeoutException {
@@ -29,6 +46,16 @@ public class PaymentServiceManager {
 		connection = factory.newConnection();
 		channel = connection.createChannel();
 		
+		setupMerchantRPC();
+		
+	}
+	
+	private void verifyCustomerMQ() {
+		
+	}
+
+	
+	private void setupMerchantRPC() throws IOException {
 		channel.queueDeclare(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
 		channel.queuePurge(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE);
 		channel.basicQos(1);
@@ -43,17 +70,11 @@ public class PaymentServiceManager {
              String response = "";
 
              try {
+            	 String merchantInputMessage = new String(delivery.getBody(),"UTF-8");
+            	 String[] transforValues = merchantInputMessage.split(",");
             	 
-            	 response = "helloWorld i hate you!";
-            	 
-//                 String message = new String(delivery.getBody(), "UTF-8");
-//                 int n = Integer.parseInt(message);
-//
-//                 System.out.println(" [.] fib(" + message + ")");
-//                 response += fib(n);
-                 
-                 
-                 
+            	 response = initiateTransfer(transforValues[0],transforValues[1],transforValues[2]);
+            	
                  
              } catch (RuntimeException e) {
                  System.out.println(" [.] " + e.toString());
@@ -80,13 +101,10 @@ public class PaymentServiceManager {
                  }
              }
          }
-         
-         
-         
-         
-		
 	}
 	
 	
-
+	public String initiateTransfer(String merchantId, String customerId,String amount) {
+		return "";
+	}
 }
