@@ -30,6 +30,8 @@ public class MerchantTest {
 		List<TokenValidation> t = new ArrayList<>();
 		con.receiveNewTokens("123,rtjioe");
 		
+		con.requestTransaction("111", "123", "100");
+		
 		
 		//assertEquals(tokens.size(), 1);
 	}
