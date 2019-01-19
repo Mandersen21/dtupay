@@ -17,11 +17,5 @@ public interface IMerchantRepository {
 	List<Merchant> getMerchants()throws DataAccessException;
 	List<TransactionObject> getTransactions(String merchantUid)throws DataAccessException;
 	TokenValidation getTokenById(String tokenId) throws CorruptedTokenException, DataAccessException;
-	
-	/**
-	 * 
-	 * @return
-	 * @throws DataAccessException
-	 */
 	List<TokenValidation> getTokenValidation() throws DataAccessException;
 }

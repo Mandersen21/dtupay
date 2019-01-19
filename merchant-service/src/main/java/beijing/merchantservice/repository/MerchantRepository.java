@@ -16,14 +16,20 @@ public class MerchantRepository implements IMerchantRepository {
 	List<TransactionObject> transactionsList;
 	List<TokenValidation> tokenList;
 
+
 	public MerchantRepository() {
 		merchantList = new ArrayList<>();
 		transactionsList = new ArrayList<>();
 		tokenList = new ArrayList<>();
 	}
 
-	@Override
-	public boolean createMerchant(Merchant uid) {
+
+	
+	/**
+	 * 
+	 * @return operation success 
+	 */
+	public boolean createMerchant(Merchant uid) throws DataAccessException {
 		if (merchantList.contains(uid)) {
 			return false;
 		}
@@ -34,7 +40,10 @@ public class MerchantRepository implements IMerchantRepository {
 
 	}
 
-	@Override
+	/**
+	 * 
+	 * @return operation success
+	 */
 	public boolean createTransaction(TransactionObject transaction) throws DataAccessException {
 		try{
 			transactionsList.add(transaction);
@@ -44,8 +53,11 @@ public class MerchantRepository implements IMerchantRepository {
 		}
 	}
 
-	@Override
-	public boolean addToken(TokenValidation t) throws CorruptedTokenException {
+	/**
+	 * 
+	 * @return operation success
+	 */
+	public boolean addToken(TokenValidation t) throws CorruptedTokenException, DataAccessException {
 		if(getTokenById(t.getTokenId()) != null) {
 			throw new CorruptedTokenException("token already exist");
 		}
@@ -53,8 +65,11 @@ public class MerchantRepository implements IMerchantRepository {
 		return true;
 	}
 
-	@Override
-	public Merchant getMerchant(String uid) {
+	/**
+	 * 
+	 * @return 
+	 */
+	public Merchant getMerchant(String uid) throws DataAccessException {
 		if (uid == null) {
 			return null;
 		}
@@ -67,25 +82,37 @@ public class MerchantRepository implements IMerchantRepository {
 		return null;
 	}
 
-	@Override
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Merchant> getMerchants(){
 		return this.merchantList;		
 	}
 	
-	@Override
+	/**
+	 * 
+	 * @return
+	 */
 	public List<TokenValidation> getTokenValidation(){
 		return this.tokenList;		
 	}
 	
-	@Override
-	public List<TransactionObject> getTransactions(String merchantUid) {
+	/**
+	 * 
+	 * @return
+	 */
+	public List<TransactionObject> getTransactions(String merchantUid) throws DataAccessException {
 		List<TransactionObject> merchantTrasactions = transactionsList.stream()
 				.filter(m -> m.getMerchantId().contentEquals(merchantUid)).collect(Collectors.toList());
 		return merchantTrasactions;
 	}
 
-	@Override
-	public TokenValidation getTokenById(String tokenId) throws CorruptedTokenException {
+	/**
+	 * 
+	 * @return
+	 */
+	public TokenValidation getTokenById(String tokenId) throws CorruptedTokenException, DataAccessException {
 		List<TokenValidation> resultToken = tokenList.stream()
 				.filter(t -> t.getTokenId().contentEquals(tokenId)).collect(Collectors.toList());
 
