@@ -30,6 +30,16 @@ public class CustomerRepository implements ICustomerRepository {
         return null;
     }
     
+    public Customer getCustomerByCpr(String cpr) {
+        for (Customer customer : customerList) {
+            if (customer.getCpr().equals(cpr)) {
+                return customer;
+            }
+        }
+
+        return null;
+    }
+    
     public boolean removeCustomer(Customer customer) {
         if (getCustomerById(customer.getId()) != null) {
         	return customerList.remove(customer);

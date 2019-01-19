@@ -37,14 +37,19 @@ public class CustomerManager {
 
 	// Add customer
 	public boolean addCustomer(String id, String name, String cpr, List<String> tokenList)
-			throws RequestRejected, IOException, TimeoutException {
-
-		customer = new Customer(id, name, cpr, tokenList);
-		channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
-		channel.close();
-		connection.close();
+			throws RequestRejected, IOException, TimeoutException, CustomerNotFoundException {
 		
-		return customerRepository.createCustomer(customer);
+		if (customerRepository.getCustomerByCpr(cpr) != null) {
+			throw new RequestRejected("The customer " + cpr + " is already in the system!");
+        } else {
+		
+			customer = new Customer(id, name, cpr, tokenList);
+			channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
+			channel.close();
+			connection.close();
+			
+			return customerRepository.createCustomer(customer);
+        }
 		
 	}
 
@@ -69,7 +74,17 @@ public class CustomerManager {
 		}
 		return customer;
 	}
+	
+	// Get customer by cpr
+	public Customer getCustomerByCpr(String cpr) throws CustomerNotFoundException {
+		Customer customer = customerRepository.getCustomerByCpr(cpr);
+		if (customer == null) {
+			throw new CustomerNotFoundException("Customer not found");
+		}
+		return customer;
+	}
 
+	// Get all customers
 	public List<Customer> getAllCustomers() {
 		return customerRepository.getCustomers();
 	}

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.Before;
@@ -29,43 +28,79 @@ public class CustomerManagerTest {
 		customerManager = new CustomerManager(repository);
 	}
 
+	// Add tests
 	@Test()
-	public void addCustomerSuccesTest() throws ConnectionException, IOException, TimeoutException, RequestRejected {
+	public void addCustomerExistingTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
 
 		List<Customer> customers = new ArrayList<Customer>();
 		customerManager = new CustomerManager(repository);
-		customerManager.addCustomer("123", "Mikkel", "2141235432", null);
+		customerManager.addCustomer("342", "Cristian", "1423142342", null);
 		assertTrue(customers != null);
 		
 	}
 	
-	@Test(expected = CustomerNotFoundException.class)
-	public void removeCustomerSuccesTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
+	@Test(expected = RequestRejected.class)
+	public void addCustomerNotExistingTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
 
-		customerManager = new CustomerManager(repository);
-		customerManager.removeCustomer(new Customer("123", "Mikkel", "2141235432", null));
-		assertEquals(customerManager.getCustomerById("123"), false);
-		
-	}
-	
-	@Test(expected = AssertionError.class)
-	public void removeCustomerTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
-
+		List<Customer> customers = new ArrayList<Customer>();
 		customerManager = new CustomerManager(repository);
 		customerManager.addCustomer("123", "Mikkel", "2141235432", null);
-		customerManager.removeCustomer(new Customer("123", "Mikkel", "2141235432", null));
-		assertEquals(customerManager.getCustomerById("123"), false);
+		
+	}
+	
+	// Remove tests
+	@Test()
+	public void removeCustomerExistingTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
+		
+		customerManager = new CustomerManager(repository);
+		customerManager.addCustomer("12345", "Mikkel", "2423142", null);
+		assertEquals(customerManager.removeCustomer(new Customer("12345", "Mikkel", "2423142", null)), true);
 		
 	}
 	
 	@Test(expected = CustomerNotFoundException.class)
-	public void getCustomerByIdTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
+	public void removeCustomerNotExistingTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
 
 		customerManager = new CustomerManager(repository);
-		assertEquals(customerManager.getCustomerById("12453"), false);
+		assertEquals(customerManager.removeCustomer(new Customer("12345", "Mikkel", "2141235432", null)), false);
 		
 	}
 	
+	// Id tests
+	@Test()
+	public void getCustomerExistingByIdTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
+
+		customerManager = new CustomerManager(repository);
+		customerManager.addCustomer("12345", "Mikkel", "14232324", null);
+		assertEquals(customerManager.getCustomerById("12345") != null, true);
+		
+	}
+	
+	@Test(expected = CustomerNotFoundException.class)
+	public void getCustomerNotExistingByIdTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
+
+		customerManager = new CustomerManager(repository);
+		assertEquals(customerManager.getCustomerById("12453") !=  null, false);
+		
+	}
+	
+	// Cpr tests
+	@Test()
+	public void getCustomerExistingByCprTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
+
+		customerManager = new CustomerManager(repository);
+		assertEquals(customerManager.getCustomerByCpr("2141235432") != null, true);
+	}
+	
+	@Test(expected = CustomerNotFoundException.class)
+	public void getCustomerNotExistingByCprTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
+
+		customerManager = new CustomerManager(repository);
+		assertEquals(customerManager.getCustomerByCpr("12453") !=  null, false);
+		
+	}
+	
+	// AllCustomer test
 	@Test()
 	public void getAllCustomersTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
 
