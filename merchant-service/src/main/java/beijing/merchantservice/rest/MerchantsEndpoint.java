@@ -15,6 +15,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.tools.ant.types.Description;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -52,7 +54,7 @@ public class MerchantsEndpoint {
 			@FormParam("amount") String amount) {
 		TransactionObject to;
 		try {
-			to = controller.requestTransaction(merchantId, tokenId, amount);
+			to = controller.requestTransaction(merchantId, tokenId, amount, "DTU Pay Service");
 		} catch (RequestRejected requestRejected) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(requestRejected.getMessage()).build();
 		} catch (DataAccessException e) {

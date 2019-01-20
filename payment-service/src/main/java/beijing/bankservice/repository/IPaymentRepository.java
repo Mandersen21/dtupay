@@ -7,8 +7,7 @@ import beijing.bankservice.model.Transaction;
 
 public interface IPaymentRepository {
 	
-	boolean createCustomer(Account customer);
-	boolean createMerchant(Account merchant);
+	boolean createAccount(Account account);
 	Account getAccount(String id);
 	Account getCustomerAccountByCPR(String cpr);
 	boolean storeTransaction(Transaction t);

@@ -22,13 +22,13 @@ public class TestBank {
 //		
 //		man.setupMessageQueue();
 		BankService bank = new BankServiceServiceLocator().getBankServicePort();
-		String t = bank.createAccountWithBalance(new User("123987", "John", "John"), new BigDecimal(100));
+		String t = bank.createAccountWithBalance(new User("123988", "John", "John"), new BigDecimal(100));
 		System.out.println("Test 0 " + t);
 		
-		Account test = bank.getAccountByCprNumber("123987");
+		Account test = bank.getAccountByCprNumber("123988");
 		System.out.println("Test 1 " + test.getId());
 		
-		System.out.println(bank.getAccountByCprNumber("123987").getBalance());
+		System.out.println(bank.getAccountByCprNumber("123988").getBalance());
 		System.out.println(bank.getAccounts().length);
 		assertEquals(test.getBalance(), new BigDecimal(100));
 		bank.retireAccount(test.getId());

@@ -1,8 +1,11 @@
 package beijing.customerservice.domain;
 
 import java.io.IOException;
-
+import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeoutException;
 import com.rabbitmq.client.*;
 
@@ -11,13 +14,14 @@ import beijing.customerservice.exception.CustomerNotFoundException;
 import beijing.customerservice.exception.RequestRejected;
 import beijing.customerservice.repository.ICustomerRepository;
 //import beijing.paymentservice.repository.IPaymentRepository;
+import beijing.merchantservice.domain.TransactionObject;
 
 
 public class CustomerManager {
 
 	private final static String CUSTOMERID_TO_TOKENSERVICE_QUEUE = "customerid_to_tokenservice";
 	private final static String CUSTOMERID_TO_PAYMENTSERVICE_QUEUE = "customerid_to_paymentservice";
-	private final static String ACCOUNT_TO_CUSTOMERSERVICE_QUEUE = "account_to_customerservice";
+	private final static String RPC_CUSTOMER_PAYMENT_REGITRATION = "rpc_customer_payment_registration";
 
 	private ConnectionFactory factory;
 	private Connection connection;
@@ -60,8 +64,42 @@ public class CustomerManager {
         } else {
 		
 			customer = new Customer(id, name, cpr, tokenList);
-			channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
-			channel.basicPublish("", CUSTOMERID_TO_PAYMENTSERVICE_QUEUE, null, customer.getCpr().getBytes());
+			
+//			channel.basicPublish("", CUSTOMERID_TO_PAYMENTSERVICE_QUEUE, null, customer.getCpr().getBytes());
+			
+			
+			
+			final String corrId = UUID.randomUUID().toString();		
+			String replyQueueName = channel.queueDeclare().getQueue();
+			AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)
+					.build();
+
+			String message = cpr+","+id;
+			
+			channel.basicPublish("", RPC_CUSTOMER_PAYMENT_REGITRATION, props, message.getBytes("UTF-8"));
+
+			final BlockingQueue<String> response = new ArrayBlockingQueue<>(1);
+
+			String ctag = channel.basicConsume(replyQueueName, true, (consumerTag, delivery) -> {
+				if (delivery.getProperties().getCorrelationId().equals(corrId)) {
+					response.offer(new String(delivery.getBody(), "UTF-8"));
+				}
+			}, consumerTag -> {
+			});
+
+			try {
+				String result = response.take();
+				
+				if(result.equals("VERIFIED"))
+				channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
+				
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+			channel.basicCancel(ctag);
+				
 			channel.close();
 			connection.close();
 			

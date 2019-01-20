@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import beijing.bankservice.model.Account;
-import beijing.bankservice.model.Customer;
 import beijing.bankservice.model.Transaction;
 
 
@@ -14,16 +13,11 @@ public class PaymentRepository implements IPaymentRepository{
 	List<Transaction> transacions;
 
 	@Override
-	public boolean createCustomer(Account customer) {
-		accounts.add(customer);
+	public boolean createAccount(Account account) {
+		accounts.add(account);
 		return true;
 	}
 
-	@Override
-	public boolean createMerchant(Account merchant) {
-		accounts.add(merchant);
-		return false;
-	}
 
 	@Override
 	public Account getAccount(String id) {
@@ -38,12 +32,9 @@ public class PaymentRepository implements IPaymentRepository{
 	@Override
 	public Account getCustomerAccountByCPR(String cpr) {
 		for(Account a : accounts) {
-			if(a instanceof Account) {
-				Customer c = (Customer)a;
-				if(c.getCpr().equals(cpr)) {
-					return c;
-				}
-			}
+			if(a.getUser().getCprNumber().equals(cpr)) {
+				return a;
+			}	
 		}
 		return null;
 	}
