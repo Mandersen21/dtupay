@@ -2,8 +2,8 @@ package beijing.bankservice.repository;
 
 import java.util.List;
 
-import beijing.bankservice.domain.Account;
-import beijing.bankservice.domain.Transaction;
+import beijing.bankservice.model.Account;
+import beijing.bankservice.model.Transaction;
 
 public interface IPaymentRepository {
 	

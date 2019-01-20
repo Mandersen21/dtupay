@@ -5,7 +5,7 @@
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package beijing.bankservice.domain;
+package beijing.bankservice.model;
 
 public class AccountInfo  implements java.io.Serializable {
     /**
@@ -15,14 +15,14 @@ public class AccountInfo  implements java.io.Serializable {
 
 	private java.lang.String accountId;
 
-    private beijing.bankservice.domain.User user;
+    private beijing.bankservice.model.User user;
 
     public AccountInfo() {
     }
 
     public AccountInfo(
            java.lang.String accountId,
-           beijing.bankservice.domain.User user) {
+           beijing.bankservice.model.User user) {
            this.accountId = accountId;
            this.user = user;
     }
@@ -53,7 +53,7 @@ public class AccountInfo  implements java.io.Serializable {
      * 
      * @return user
      */
-    public beijing.bankservice.domain.User getUser() {
+    public beijing.bankservice.model.User getUser() {
         return user;
     }
 
@@ -63,7 +63,7 @@ public class AccountInfo  implements java.io.Serializable {
      * 
      * @param user
      */
-    public void setUser(beijing.bankservice.domain.User user) {
+    public void setUser(beijing.bankservice.model.User user) {
         this.user = user;
     }
 

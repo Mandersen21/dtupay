@@ -5,7 +5,7 @@
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package beijing.bankservice.domain;
+package beijing.bankservice.model;
 
 public class Account  implements java.io.Serializable {
     /**
@@ -17,9 +17,9 @@ public class Account  implements java.io.Serializable {
 
     private java.lang.String id;
 
-    private beijing.bankservice.domain.Transaction[] transactions;
+    private beijing.bankservice.model.Transaction[] transactions;
 
-    private beijing.bankservice.domain.User user;
+    private beijing.bankservice.model.User user;
 
     public Account() {
     }
@@ -27,8 +27,8 @@ public class Account  implements java.io.Serializable {
     public Account(
            java.math.BigDecimal balance,
            java.lang.String id,
-           beijing.bankservice.domain.Transaction[] transactions,
-           beijing.bankservice.domain.User user) {
+           beijing.bankservice.model.Transaction[] transactions,
+           beijing.bankservice.model.User user) {
            this.balance = balance;
            this.id = id;
            this.transactions = transactions;
@@ -81,7 +81,7 @@ public class Account  implements java.io.Serializable {
      * 
      * @return transactions
      */
-    public beijing.bankservice.domain.Transaction[] getTransactions() {
+    public beijing.bankservice.model.Transaction[] getTransactions() {
         return transactions;
     }
 
@@ -91,15 +91,15 @@ public class Account  implements java.io.Serializable {
      * 
      * @param transactions
      */
-    public void setTransactions(beijing.bankservice.domain.Transaction[] transactions) {
+    public void setTransactions(beijing.bankservice.model.Transaction[] transactions) {
         this.transactions = transactions;
     }
 
-    public beijing.bankservice.domain.Transaction getTransactions(int i) {
+    public beijing.bankservice.model.Transaction getTransactions(int i) {
         return this.transactions[i];
     }
 
-    public void setTransactions(int i, beijing.bankservice.domain.Transaction _value) {
+    public void setTransactions(int i, beijing.bankservice.model.Transaction _value) {
         this.transactions[i] = _value;
     }
 
@@ -109,7 +109,7 @@ public class Account  implements java.io.Serializable {
      * 
      * @return user
      */
-    public beijing.bankservice.domain.User getUser() {
+    public beijing.bankservice.model.User getUser() {
         return user;
     }
 
@@ -119,7 +119,7 @@ public class Account  implements java.io.Serializable {
      * 
      * @param user
      */
-    public void setUser(beijing.bankservice.domain.User user) {
+    public void setUser(beijing.bankservice.model.User user) {
         this.user = user;
     }
 
