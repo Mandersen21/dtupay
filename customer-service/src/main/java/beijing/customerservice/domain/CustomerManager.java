@@ -27,7 +27,6 @@ public class CustomerManager {
 	private Customer customer;
 
 	public static ICustomerRepository customerRepository;
-//	public static IPaymentRepository paymentRepository;
 
 	public CustomerManager(ICustomerRepository _repository) throws ConnectionException, IOException, TimeoutException {
 		customerRepository =_repository;
@@ -43,14 +42,6 @@ public class CustomerManager {
 		channel.queueDeclare(CUSTOMERID_TO_TOKENSERVICE_QUEUE, false, false, false, null);
 		channel.queueDeclare(CUSTOMERID_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
 		
-		// Listen for payment service that creates the account for the created customer
-//		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-//			String cpr = new String(delivery.getBody(), "UTF-8");
-//			System.out.println("Message received: " + cpr);
-//			paymentRepository.takeAccount(cpr);
-//		};
-//		channel.basicConsume(ACCOUNT_TO_CUSTOMERSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
-//		});
 	}
 
 	// Add customer
@@ -62,11 +53,7 @@ public class CustomerManager {
         } else {
 		
 			customer = new Customer(id, name, cpr, tokenList);
-			
-//			channel.basicPublish("", CUSTOMERID_TO_PAYMENTSERVICE_QUEUE, null, customer.getCpr().getBytes());
-			
-			
-			
+	
 			final String corrId = UUID.randomUUID().toString();		
 			String replyQueueName = channel.queueDeclare().getQueue();
 			AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)
@@ -92,7 +79,6 @@ public class CustomerManager {
 				channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
 				
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
