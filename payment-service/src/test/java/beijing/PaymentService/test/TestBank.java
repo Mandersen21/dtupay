@@ -9,8 +9,8 @@ import javax.xml.rpc.ServiceException;
 
 import org.junit.Test;
 
-import beijing.bankservice.domain.Account;
-import beijing.bankservice.domain.User;
+import beijing.bankservice.model.Account;
+import beijing.bankservice.model.User;
 import beijing.bankservice.soap.BankService;
 import beijing.bankservice.soap.BankServiceServiceLocator;
 
