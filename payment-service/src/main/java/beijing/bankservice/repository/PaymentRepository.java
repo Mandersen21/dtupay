@@ -3,28 +3,31 @@ package beijing.bankservice.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import beijing.bankservice.domain.Account;
+import beijing.bankservice.domain.Transaction;
+
 
 public class PaymentRepository implements IPaymentRepository{
 	
-	List<IAccount> accounts;
+	List<Account> accounts;
 	List<Transaction> transacions;
 
 	@Override
-	public boolean createCustomer(IAccount customer) {
+	public boolean createCustomer(Account customer) {
 		accounts.add(customer);
 		return true;
 	}
 
 	@Override
-	public boolean createMerchant(IAccount merchant) {
+	public boolean createMerchant(Account merchant) {
 		accounts.add(merchant);
 		return false;
 	}
 
 	@Override
-	public IAccount getAccount(String id) {
-		for(IAccount a : accounts) {
-			if(a.ownerId.equals(id)) {
+	public Account getAccount(String id) {
+		for(Account a : accounts) {
+			if(a.getId().equals(id)) {
 				return a;
 			}
 		}
@@ -32,11 +35,11 @@ public class PaymentRepository implements IPaymentRepository{
 	}
 
 	@Override
-	public IAccount getCustomerAccountByCPR(String cpr) {
-		for(IAccount a : accounts) {
-			if(a instanceof CustomerAccount) {
-				CustomerAccount c = (CustomerAccount)a;
-				if(c.getAccountViaCprNumber().equals(cpr)) {
+	public Account getCustomerAccountByCPR(String cpr) {
+		for(Account a : accounts) {
+			if(a instanceof Account) {
+				Account c = (Account)a;
+				if(c.getId().equals(cpr)) {
 					return c;
 				}
 			}
@@ -53,8 +56,24 @@ public class PaymentRepository implements IPaymentRepository{
 	@Override
 	public Transaction getTrasaction(String tid) {
 		for(Transaction t : transacions) {
-			if(t.transactionId.equals(tid)) {
-				return t;
+//			if(t.transactionId.equals(tid)) {
+//				return t;
+//			}
+		}
+		return null;
+	}
+
+//	public List<Transaction> getTransactions(String ownerId) {
+//		List<Transaction> merchantTrasactions = transacions.stream()
+//				.filter(t -> t.getTransactionId().contentEquals(ownerId)).collect(Collectors.toList());
+//		return merchantTrasactions;
+//	}
+
+	@Override
+	public Account takeAccount(String cpr) {
+		for(Account a : accounts) {
+			if(a.getId().equals(cpr)) {
+				return a;
 			}
 		}
 		return null;
@@ -62,18 +81,7 @@ public class PaymentRepository implements IPaymentRepository{
 
 	@Override
 	public List<Transaction> getTransactions(String ownerId) {
-		List<Transaction> merchantTrasactions = transacions.stream()
-				.filter(t -> t.getTransactionId().contentEquals(ownerId)).collect(Collectors.toList());
-		return merchantTrasactions;
-	}
-
-	@Override
-	public IAccount takeAccount(String cpr) {
-		for(IAccount a : accounts) {
-			if(a.getOwnerId().equals(cpr)) {
-				return a;
-			}
-		}
+		// TODO Auto-generated method stub
 		return null;
 	}
 

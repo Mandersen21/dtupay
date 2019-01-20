@@ -8,7 +8,12 @@
 package beijing.bankservice.domain;
 
 public class User  implements java.io.Serializable {
-    private java.lang.String cprNumber;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private java.lang.String cprNumber;
 
     private java.lang.String firstName;
 

@@ -8,9 +8,14 @@
 package beijing.bankservice.soap;
 
 
-public class BankServiceServiceLocator extends org.apache.axis.client.Service implements beijing.bankservice.repository.BankServiceService {
+public class BankServiceServiceLocator extends org.apache.axis.client.Service implements beijing.bankservice.soap.BankServiceService {
 
-    public BankServiceServiceLocator() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public BankServiceServiceLocator() {
     }
 
 
@@ -40,7 +45,7 @@ public class BankServiceServiceLocator extends org.apache.axis.client.Service im
         BankServicePortWSDDServiceName = name;
     }
 
-    public beijing.bankservice.repository.BankService getBankServicePort() throws javax.xml.rpc.ServiceException {
+    public beijing.bankservice.soap.BankService getBankServicePort() throws javax.xml.rpc.ServiceException {
        java.net.URL endpoint;
         try {
             endpoint = new java.net.URL(BankServicePort_address);
@@ -51,7 +56,7 @@ public class BankServiceServiceLocator extends org.apache.axis.client.Service im
         return getBankServicePort(endpoint);
     }
 
-    public beijing.bankservice.repository.BankService getBankServicePort(java.net.URL portAddress) throws javax.xml.rpc.ServiceException {
+    public beijing.bankservice.soap.BankService getBankServicePort(java.net.URL portAddress) throws javax.xml.rpc.ServiceException {
         try {
             beijing.bankservice.soap.BankServiceServiceSoapBindingStub _stub = new beijing.bankservice.soap.BankServiceServiceSoapBindingStub(portAddress, this);
             _stub.setPortName(getBankServicePortWSDDServiceName());
@@ -73,7 +78,7 @@ public class BankServiceServiceLocator extends org.apache.axis.client.Service im
      */
     public java.rmi.Remote getPort(Class serviceEndpointInterface) throws javax.xml.rpc.ServiceException {
         try {
-            if (beijing.bankservice.repository.BankService.class.isAssignableFrom(serviceEndpointInterface)) {
+            if (beijing.bankservice.soap.BankService.class.isAssignableFrom(serviceEndpointInterface)) {
                 beijing.bankservice.soap.BankServiceServiceSoapBindingStub _stub = new beijing.bankservice.soap.BankServiceServiceSoapBindingStub(new java.net.URL(BankServicePort_address), this);
                 _stub.setPortName(getBankServicePortWSDDServiceName());
                 return _stub;
