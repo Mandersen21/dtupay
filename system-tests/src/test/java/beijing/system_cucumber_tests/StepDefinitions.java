@@ -1,6 +1,5 @@
 package beijing.system_cucumber_tests;
 
-import beijing.customerservice.domain.CustomerManager;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -8,15 +7,8 @@ import cucumber.api.java.en.When;
 
 public class StepDefinitions {
 
-	private CustomerManager customerManager;
-//	private TokenManager tokenManager;
-//	private MerchantController merchantManager;
-//	
-//	private ICustomerRepository customerRepository;
-//	private ITokenRepository tokenRepository;
-//	
 	public StepDefinitions() {
-//		customerMananger = new CustomerManager();
+
 	}
 	
 	@Given("^a registered customer with a bank account$")
