@@ -1,7 +1,7 @@
 package beijing.merchantservice.rest;
 
 import beijing.merchantservice.domain.Merchant;
-import beijing.merchantservice.domain.MerchantController;
+import beijing.merchantservice.domain.MerchantManager;
 import beijing.merchantservice.domain.TransactionObject;
 import beijing.merchantservice.exception.CorruptedTokenException;
 import beijing.merchantservice.exception.DataAccessException;
@@ -28,7 +28,7 @@ import javax.ws.rs.Produces;
 public class MerchantsEndpoint {
 
 	private static IMerchantRepository repository = new MerchantRepository();
-	protected MerchantController controller;
+	protected MerchantManager controller;
 
 	/**
 	 * 
@@ -36,7 +36,7 @@ public class MerchantsEndpoint {
 	 * @throws TimeoutException
 	 */
 	public MerchantsEndpoint() {
-		controller = new MerchantController(repository);
+		controller = new MerchantManager(repository);
 	}
 
 	/**

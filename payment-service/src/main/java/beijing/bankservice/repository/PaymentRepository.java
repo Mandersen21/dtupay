@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import beijing.bankservice.model.Account;
+import beijing.bankservice.model.Customer;
 import beijing.bankservice.model.Transaction;
 
 
@@ -27,7 +28,7 @@ public class PaymentRepository implements IPaymentRepository{
 	@Override
 	public Account getAccount(String id) {
 		for(Account a : accounts) {
-			if(a.getId().equals(id)) {
+			if(a.getDtuId().equals(id)) {
 				return a;
 			}
 		}
@@ -38,8 +39,8 @@ public class PaymentRepository implements IPaymentRepository{
 	public Account getCustomerAccountByCPR(String cpr) {
 		for(Account a : accounts) {
 			if(a instanceof Account) {
-				Account c = (Account)a;
-				if(c.getId().equals(cpr)) {
+				Customer c = (Customer)a;
+				if(c.getCpr().equals(cpr)) {
 					return c;
 				}
 			}
@@ -53,36 +54,21 @@ public class PaymentRepository implements IPaymentRepository{
 		return true;
 	}
 
-	@Override
-	public Transaction getTrasaction(String tid) {
-		for(Transaction t : transacions) {
+//	@Override
+//	public Transaction getTrasaction(String tid) {
+//		for(Transaction t : transacions) {
 //			if(t.transactionId.equals(tid)) {
 //				return t;
 //			}
-		}
-		return null;
-	}
-
-//	public List<Transaction> getTransactions(String ownerId) {
-//		List<Transaction> merchantTrasactions = transacions.stream()
-//				.filter(t -> t.getTransactionId().contentEquals(ownerId)).collect(Collectors.toList());
-//		return merchantTrasactions;
+//		}
+//		return null;
 //	}
 
-	@Override
-	public Account takeAccount(String cpr) {
-		for(Account a : accounts) {
-			if(a.getId().equals(cpr)) {
-				return a;
-			}
-		}
-		return null;
+	public List<Transaction> getTransactions(String ownerId) {
+		List<Transaction> merchantTrasactions = transacions.stream()
+				.filter(t -> t.getCreditor().contentEquals(ownerId)||t.getDebtor().contentEquals(ownerId)).collect(Collectors.toList());
+		return merchantTrasactions;
 	}
 
-	@Override
-	public List<Transaction> getTransactions(String ownerId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

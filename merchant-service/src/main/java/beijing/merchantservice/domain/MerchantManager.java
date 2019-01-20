@@ -25,7 +25,7 @@ import com.rabbitmq.client.GetResponse;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AMQP.BasicProperties;
 
-public class MerchantController {
+public class MerchantManager {
 
 	private static IMerchantRepository repository;
 
@@ -43,7 +43,7 @@ public class MerchantController {
 	 * 
 	 * @param repository
 	 */
-	public MerchantController(IMerchantRepository _repository) {
+	public MerchantManager(IMerchantRepository _repository) {
 		repository = _repository;		
 				
 		try {
@@ -153,7 +153,7 @@ public class MerchantController {
 		final String corrId = UUID.randomUUID().toString();
 
 		channel.queueDeclare(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
-		String message = merchantId + " " + customerId + " " + amount;
+		String message = merchantId + "," + customerId + "," + amount;
 		
 		String replyQueueName = channel.queueDeclare().getQueue();
 		AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)

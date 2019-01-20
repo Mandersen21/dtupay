@@ -12,8 +12,7 @@ public interface IPaymentRepository {
 	Account getAccount(String id);
 	Account getCustomerAccountByCPR(String cpr);
 	boolean storeTransaction(Transaction t);
-	Transaction getTrasaction(String tid);
+//	Transaction getTrasaction(String tid);
 	List<Transaction> getTransactions(String ownerId);
-	Account takeAccount(String cpr);
 
 }

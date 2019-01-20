@@ -1,10 +1,12 @@
 package beijing.bankservice.domain;
 
 import java.io.IOException;
-
-
-
+import java.math.BigDecimal;
+import java.rmi.RemoteException;
+import java.util.Calendar;
 import java.util.concurrent.TimeoutException;
+
+import javax.xml.rpc.ServiceException;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -13,9 +15,13 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DeliverCallback;
 
+import beijing.bankservice.exception.BankServiceException;
 import beijing.bankservice.exception.RequestRejected;
 import beijing.bankservice.model.Account;
+import beijing.bankservice.model.Transaction;
 import beijing.bankservice.repository.IPaymentRepository;
+import beijing.bankservice.soap.BankService;
+import beijing.bankservice.soap.BankServiceServiceLocator;
 
 public class BankServiceManager {
 	
@@ -30,18 +36,23 @@ public class BankServiceManager {
 	private Account account;
 	public static IPaymentRepository paymentRepository;
 	
+	private BankService bankService;
+	
 	public BankServiceManager(IPaymentRepository _prepository) {
 		paymentRepository = _prepository;
 		
 		
 		
 		 try {
-			 
+			bankService = new BankServiceServiceLocator().getBankServicePort();
 			setupMessageQueue();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (TimeoutException e) {
+			e.printStackTrace();
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		 
@@ -87,10 +98,11 @@ public class BankServiceManager {
              String response = "";
 
              try {
-            	 String merchantInputMessage = new String(delivery.getBody(),"UTF-8");
-            	 String[] transforValues = merchantInputMessage.split(",");
             	 
-            	 response = initiateTransfer(transforValues[0],transforValues[1],transforValues[2]);
+            	 String merchantInputMessage = new String(delivery.getBody(),"UTF-8");
+            	 String[] transferValues = merchantInputMessage.split(",");
+            	 
+            	 response = initiateTransfer(transferValues[0],transferValues[1],transferValues[2],"DTUPay Service");
             	
                  
              } catch (RuntimeException e) {
@@ -119,13 +131,16 @@ public class BankServiceManager {
              }
          }
 	}
+
 	
-	public Account takeAccount(String cpr) throws RequestRejected, IOException, TimeoutException {
+	public Account verifyAccount(String cpr) throws RequestRejected, IOException, TimeoutException {
 		
 		if (paymentRepository.getCustomerAccountByCPR(cpr) != null) {
 			throw new RequestRejected("The account for the cpr " + cpr + " already exists");
 		} 
-
+		Account a = bankService.getAccountByCprNumber(cpr);
+		
+		
 		channel.basicPublish("", CUSTOMERSERVICE_TO_PAYMENTSERVICE_QUEUE, null, cpr.getBytes());
 		channel.close();
 		connection.close();
@@ -134,7 +149,23 @@ public class BankServiceManager {
 		
 	}
 	
-	public String initiateTransfer(String merchantId, String customerId,String amount) {
-		return "";
+	public String initiateTransfer(String merchantId, String customerId,String amount, String description) throws BankServiceException, RemoteException {
+		// get Account finds the account based on the id given by the DTU Pay service
+		Account merchant = paymentRepository.getAccount(merchantId); 
+		Account customer = paymentRepository.getAccount(customerId);
+		
+		Transaction t = new Transaction();
+		t.setAmount(new BigDecimal(amount));
+		t.setCreditor(merchantId);
+		t.setDebtor(customerId);
+		t.setDescription(description);
+		t.setTime(Calendar.getInstance());
+			
+			// getid refers to the account id which is given by the bank 
+		bankService.transferMoneyFromTo(customer.getId(), merchant.getId(), new BigDecimal(amount), description);
+		
+		paymentRepository.storeTransaction(t);
+		
+		return "Transfer completed";
 	}
 }
