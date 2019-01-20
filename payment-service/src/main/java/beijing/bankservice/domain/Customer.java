@@ -1,4 +1,4 @@
-package beijing.paymentservice.domain;
+package beijing.bankservice.domain;
 
 public class Customer implements IAccount {
 	private String name;

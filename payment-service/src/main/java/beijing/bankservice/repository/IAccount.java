@@ -1,4 +1,4 @@
-package beijing.paymentservice.repository;
+package beijing.bankservice.repository;
 
 public abstract class IAccount {
 	

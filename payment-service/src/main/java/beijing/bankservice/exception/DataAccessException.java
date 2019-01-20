@@ -1,4 +1,4 @@
-package beijing.paymentservice.exception;
+package beijing.bankservice.exception;
 
 public class DataAccessException extends Exception {
 

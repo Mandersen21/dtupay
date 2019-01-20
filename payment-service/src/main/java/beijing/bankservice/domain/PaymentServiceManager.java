@@ -1,4 +1,4 @@
-package beijing.paymentservice.domain;
+package beijing.bankservice.domain;
 
 import java.io.IOException;
 
@@ -12,9 +12,9 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DeliverCallback;
 
-import beijing.paymentservice.exception.RequestRejected;
-import beijing.paymentservice.repository.IAccount;
-import beijing.paymentservice.repository.IPaymentRepository;
+import beijing.bankservice.exception.RequestRejected;
+import beijing.bankservice.repository.IAccount;
+import beijing.bankservice.repository.IPaymentRepository;
 
 public class PaymentServiceManager {
 	
