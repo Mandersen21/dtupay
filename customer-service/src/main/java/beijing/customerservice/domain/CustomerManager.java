@@ -1,7 +1,7 @@
 package beijing.customerservice.domain;
 
 import java.io.IOException;
-import java.util.Calendar;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -13,8 +13,6 @@ import beijing.customerservice.exception.ConnectionException;
 import beijing.customerservice.exception.CustomerNotFoundException;
 import beijing.customerservice.exception.RequestRejected;
 import beijing.customerservice.repository.ICustomerRepository;
-//import beijing.paymentservice.repository.IPaymentRepository;
-import beijing.merchantservice.domain.TransactionObject;
 
 
 public class CustomerManager {
