@@ -1,7 +1,7 @@
 package beijing.merchantservice.rest;
 
 import beijing.merchantservice.domain.Merchant;
-import beijing.merchantservice.domain.MerchantController;
+import beijing.merchantservice.domain.MerchantManager;
 import beijing.merchantservice.domain.TransactionObject;
 import beijing.merchantservice.exception.CorruptedTokenException;
 import beijing.merchantservice.exception.DataAccessException;
@@ -14,6 +14,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.tools.ant.types.Description;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +30,7 @@ import javax.ws.rs.Produces;
 public class MerchantsEndpoint {
 
 	private static IMerchantRepository repository = new MerchantRepository();
-	protected MerchantController controller;
+	protected MerchantManager controller;
 
 	/**
 	 * 
@@ -36,7 +38,7 @@ public class MerchantsEndpoint {
 	 * @throws TimeoutException
 	 */
 	public MerchantsEndpoint() {
-		controller = new MerchantController(repository);
+		controller = new MerchantManager(repository);
 	}
 
 	/**
@@ -52,7 +54,7 @@ public class MerchantsEndpoint {
 			@FormParam("amount") String amount) {
 		TransactionObject to;
 		try {
-			to = controller.requestTransaction(merchantId, tokenId, amount);
+			to = controller.requestTransaction(merchantId, tokenId, amount, "DTU Pay Service");
 		} catch (RequestRejected requestRejected) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(requestRejected.getMessage()).build();
 		} catch (DataAccessException e) {

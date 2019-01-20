@@ -12,6 +12,8 @@ public class Account  implements java.io.Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private java.lang.String dtuId;
 
 	private java.math.BigDecimal balance;
 
@@ -34,6 +36,25 @@ public class Account  implements java.io.Serializable {
            this.transactions = transactions;
            this.user = user;
     }
+    
+    
+    /**
+     * gets the id given by dtu pay service
+     * 
+     * @return dtuId
+     */
+    public java.lang.String getDtuId() {
+		return dtuId;
+	}
+    
+    /**
+     * stores id given by dtu pay service
+     * 
+     * @param dtuId
+     */
+    public void setDtuId(java.lang.String dtuId) {
+		this.dtuId = dtuId;
+	}
 
 
     /**

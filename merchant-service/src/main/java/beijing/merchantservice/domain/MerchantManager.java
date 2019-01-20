@@ -7,6 +7,7 @@ import beijing.merchantservice.repository.IMerchantRepository;
 import beijing.merchantservice.repository.MerchantRepository;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,7 @@ import com.rabbitmq.client.GetResponse;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AMQP.BasicProperties;
 
-public class MerchantController {
+public class MerchantManager {
 
 	private static IMerchantRepository repository;
 
@@ -43,7 +44,7 @@ public class MerchantController {
 	 * 
 	 * @param repository
 	 */
-	public MerchantController(IMerchantRepository _repository) {
+	public MerchantManager(IMerchantRepository _repository) {
 		repository = _repository;		
 				
 		try {
@@ -69,7 +70,7 @@ public class MerchantController {
 	 * @throws CorruptedTokenException
 	 * @throws IOException
 	 */
-	public TransactionObject requestTransaction(String merchantid, String tokenid, String amount)
+	public TransactionObject requestTransaction(String merchantid, String tokenid, String amount,String description)
 			throws RequestRejected, DataAccessException, CorruptedTokenException, IOException {
 
 		TokenValidation tv = getTokenValidation(tokenid);
@@ -78,13 +79,17 @@ public class MerchantController {
 		}
 
 		TransactionObject to;
+		
 		try {
-			to = requestPayment(merchantid, tv.getCustomerId(), amount);
-		} catch (Exception e) {
+			to = requestPayment(merchantid, tv.getCustomerId(), amount,description);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			updateToken("tokenId", "INVALID");
 			throw new RequestRejected("request failed");
 		}
-
+		
+		
 		updateToken("tokenId", "PAID");
 		repository.createTransaction(to);
 
@@ -148,17 +153,17 @@ public class MerchantController {
 	 * @throws InterruptedException
 	 * @throws RequestRejected
 	 */
-	private TransactionObject requestPayment(String merchantId, String customerId, String amount)
+	private TransactionObject requestPayment(String merchantId, String customerId, String amount, String description)
 			throws IOException, InterruptedException, RequestRejected {
-		final String corrId = UUID.randomUUID().toString();
-
-		channel.queueDeclare(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
-		String message = merchantId + " " + customerId + " " + amount;
 		
+		
+		final String corrId = UUID.randomUUID().toString();		
 		String replyQueueName = channel.queueDeclare().getQueue();
 		AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)
 				.build();
 
+		String message = merchantId + "," + customerId + "," + amount+ "," + description;
+		
 		channel.basicPublish("", RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, props, message.getBytes("UTF-8"));
 
 		final BlockingQueue<String> response = new ArrayBlockingQueue<>(1);
@@ -176,8 +181,10 @@ public class MerchantController {
 		if (result.equalsIgnoreCase("500")) {
 			throw new RequestRejected("The payment transaction failed");
 		} else {
-			String[] resultSplit = result.split(",");
-			to = new TransactionObject(merchantId, resultSplit[0], amount, new Date(Date.parse(resultSplit[1])));
+//			String[] resultSplit = result.split(",");
+			System.out.print(result);
+			to = new TransactionObject(merchantId, "123", amount, Calendar.getInstance().getTime());
+//			to = new TransactionObject(merchantId, resultSplit[0], amount, new Date(Date.parse(resultSplit[1])));
 		}
 		channel.basicCancel(ctag);
 		return to;
@@ -232,6 +239,7 @@ public class MerchantController {
 		
 		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
 		channel.queueDeclare(MERCHANTSERVICE_TO_TOKENID_QUEUE, false, false, false, null);
+		channel.queueDeclare(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
 		
 		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 			String message = new String(delivery.getBody(), "UTF-8");
