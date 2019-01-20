@@ -1,6 +1,5 @@
 package beijing.merchantservice.rest;
 
-
 import beijing.merchantservice.domain.Merchant;
 import beijing.merchantservice.domain.MerchantController;
 import beijing.merchantservice.domain.TransactionObject;
@@ -20,28 +19,26 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-import javax.websocket.server.PathParam;
-import javax.ws.rs.Consumes;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 
-
 @Path("/merchants")
 public class MerchantsEndpoint {
-	
+
 	private static IMerchantRepository repository = new MerchantRepository();
 	protected MerchantController controller;
-	
+
 	/**
 	 * 
 	 * @throws IOException
 	 * @throws TimeoutException
 	 */
-	public MerchantsEndpoint()  {
+	public MerchantsEndpoint() {
 		controller = new MerchantController(repository);
 	}
-	
+
 	/**
 	 * 
 	 * @param merchantId
@@ -50,11 +47,9 @@ public class MerchantsEndpoint {
 	 * @return
 	 */
 	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response requestTransaction(
-									@FormParam("merchantId") String merchantId,
-									@FormParam("tokeId") String tokenId,
-									@FormParam("amount") String amount){
+	@Produces("application/json")
+	public Response requestTransaction(@FormParam("merchantId") String merchantId, @FormParam("tokenId") String tokenId,
+			@FormParam("amount") String amount) {
 		TransactionObject to;
 		try {
 			to = controller.requestTransaction(merchantId, tokenId, amount);
@@ -80,68 +75,59 @@ public class MerchantsEndpoint {
 	 * @param name
 	 * @return
 	 */
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createMerchant(
-                                 @FormParam("CVR") String CVR,
-                                 @FormParam("Name") String name) {
-    	
-    		Merchant m;
-			try {
-				m = controller.createMerchant( CVR, name);
-			} catch (DataAccessException e) {
-				e.printStackTrace();
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-			} catch (RequestRejected e) {
-				e.printStackTrace();
-				return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-			}
-    		if(m == null) {
-    			String message ="Failed";
-    			return Response.status(404).entity(message).build();
-    		}    	
-        return Response.ok(m, MediaType.APPLICATION_JSON).build();    
-    }
-	
-    /**
-     * 
-     * @param id
-     * @return
-     */
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMerchant(@PathParam("id") String id) {
-    	Merchant merchant = null;
-    	
-         try {
-			merchant = controller.getMerchantById(id);
+	@POST
+	@Produces("application/json")
+	public Response createMerchant(@FormParam("cvr") String CVR, @FormParam("name") String name) {
+
+		Merchant m;
+		try {
+			m = controller.createMerchant(CVR, name);
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		} catch (RequestRejected e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
-         
-//        if (merchant == null) {
-//            return Response.status(Response.Status.NOT_FOUND).build();
-//        } 
-        return Response.ok(merchant, "application/json").build();
-        
-    }
-    
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllMerhcants() {
-    	List<Merchant> merchantList = null;
+		if (m == null) {
+			String message = "Failed";
+			return Response.status(404).entity(message).build();
+		}
+		return Response.ok(m, MediaType.APPLICATION_JSON).build();
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@GET
+	@Path("/{merchantId}") 
+	@Produces("application/json")
+	public Response getMerchant(@PathParam("merchantId") String merchantId) {
+		Merchant merchant = null;
+
+		try {
+			merchant = controller.getMerchantById(merchantId);
+		} catch (DataAccessException e) {
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok(merchant, "application/json").build();
+	}
+
+	@GET
+	@Produces("application/json")
+	public Response getAllMerhcants() {
+		List<Merchant> merchantList = null;
 		try {
 			merchantList = controller.getAllMerhcants();
 		} catch (DataAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
 		}
-    	
-    	return Response.ok(merchantList, "application/json").build();
-    	
-    }
-    
+		return Response.ok(merchantList, "application/json").build();
+	}
 
 }

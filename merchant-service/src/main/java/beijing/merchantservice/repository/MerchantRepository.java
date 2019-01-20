@@ -23,8 +23,6 @@ public class MerchantRepository implements IMerchantRepository {
 		tokenList = new ArrayList<>();
 	}
 
-
-	
 	/**
 	 * 
 	 * @return operation success 
@@ -35,7 +33,6 @@ public class MerchantRepository implements IMerchantRepository {
 		}
 		merchantList.add(uid);
 		return true;
-
 	}
 
 	/**
@@ -68,14 +65,12 @@ public class MerchantRepository implements IMerchantRepository {
 	 * @return 
 	 */
 	public Merchant getMerchantById(String uid) throws DataAccessException {
-		List<Merchant> resultMerchant = merchantList.stream()
-				.filter(m -> m.getMerchantId() == uid).collect(Collectors.toList());
-
-		if(resultMerchant.isEmpty()){
-			return null;
+		List<Merchant> merchants = merchantList.stream().filter(m -> m.getMerchantId().contentEquals(uid)).collect(Collectors.toList());
+		
+		if(merchants.size() > 0){
+			return merchants.get(0);
 		}
-
-		return resultMerchant.get(0);
+		return null;
 	}
 
 	/**

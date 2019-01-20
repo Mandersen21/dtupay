@@ -43,8 +43,8 @@ public class MerchantController {
 	 * 
 	 * @param repository
 	 */
-	public MerchantController(IMerchantRepository repository) {
-		this.repository = repository;		
+	public MerchantController(IMerchantRepository _repository) {
+		repository = _repository;		
 				
 		try {
 			setupMessageQueue();
@@ -209,7 +209,11 @@ public class MerchantController {
 	 * @throws DataAccessException
 	 */
 	public Merchant getMerchantById(String id) throws DataAccessException {
-		return repository.getMerchantById(id);
+		Merchant merchant = repository.getMerchantById(id);
+		if (merchant == null) {
+			throw new DataAccessException("Merchant with given id was not found");
+		}
+		return merchant;
 	}
 
 	
