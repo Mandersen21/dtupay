@@ -2,15 +2,18 @@ package beijing.bankservice.repository;
 
 import java.util.List;
 
+import beijing.bankservice.domain.Account;
+import beijing.bankservice.domain.Transaction;
+
 public interface IPaymentRepository {
 	
-	boolean createCustomer(IAccount customer);
-	boolean createMerchant(IAccount merchant);
-	IAccount getAccount(String id);
-	IAccount getCustomerAccountByCPR(String cpr);
+	boolean createCustomer(Account customer);
+	boolean createMerchant(Account merchant);
+	Account getAccount(String id);
+	Account getCustomerAccountByCPR(String cpr);
 	boolean storeTransaction(Transaction t);
 	Transaction getTrasaction(String tid);
 	List<Transaction> getTransactions(String ownerId);
-	IAccount takeAccount(String cpr);
+	Account takeAccount(String cpr);
 
 }

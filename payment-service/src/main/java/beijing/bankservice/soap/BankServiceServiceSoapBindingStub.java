@@ -7,7 +7,7 @@
 
 package beijing.bankservice.soap;
 
-public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.Stub implements beijing.bankservice.repository.BankService {
+public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.Stub implements beijing.bankservice.soap.BankService {
     private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
     private java.util.Vector cachedSerFactories = new java.util.Vector();

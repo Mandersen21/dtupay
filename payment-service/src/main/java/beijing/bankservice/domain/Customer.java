@@ -1,6 +1,10 @@
 package beijing.bankservice.domain;
 
-public class Customer implements IAccount {
+public class Customer extends Account {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String cpr;
 	

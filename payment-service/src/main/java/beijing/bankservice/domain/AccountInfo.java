@@ -8,7 +8,12 @@
 package beijing.bankservice.domain;
 
 public class AccountInfo  implements java.io.Serializable {
-    private java.lang.String accountId;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private java.lang.String accountId;
 
     private beijing.bankservice.domain.User user;
 

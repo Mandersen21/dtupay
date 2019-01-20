@@ -3,6 +3,7 @@ package beijing.bankservice.domain;
 import java.io.IOException;
 
 
+
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.AMQP;
@@ -13,7 +14,6 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DeliverCallback;
 
 import beijing.bankservice.exception.RequestRejected;
-import beijing.bankservice.repository.IAccount;
 import beijing.bankservice.repository.IPaymentRepository;
 
 public class PaymentServiceManager {
@@ -26,7 +26,7 @@ public class PaymentServiceManager {
 	private Connection connection;
 	private Channel channel;
 	private Consumer consumer;
-	private IAccount account;
+	private Account account;
 	public static IPaymentRepository paymentRepository;
 	
 	public PaymentServiceManager(IPaymentRepository _prepository) {
@@ -114,7 +114,7 @@ public class PaymentServiceManager {
          }
 	}
 	
-	public IAccount takeAccount(String cpr) throws RequestRejected, IOException, TimeoutException {
+	public Account takeAccount(String cpr) throws RequestRejected, IOException, TimeoutException {
 		
 		if (paymentRepository.getCustomerAccountByCPR(cpr) != null) {
 			throw new RequestRejected("The account for the cpr " + cpr + " already exists");

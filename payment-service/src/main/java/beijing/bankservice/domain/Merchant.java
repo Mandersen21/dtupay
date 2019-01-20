@@ -1,7 +1,11 @@
 package beijing.bankservice.domain;
 
-public class Merchant implements IAccount {
+public class Merchant extends Account {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String cvr;
 	

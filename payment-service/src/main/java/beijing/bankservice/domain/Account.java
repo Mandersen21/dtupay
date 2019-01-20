@@ -8,7 +8,12 @@
 package beijing.bankservice.domain;
 
 public class Account  implements java.io.Serializable {
-    private java.math.BigDecimal balance;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private java.math.BigDecimal balance;
 
     private java.lang.String id;
 

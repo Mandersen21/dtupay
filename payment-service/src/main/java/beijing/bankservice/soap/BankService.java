@@ -5,12 +5,7 @@
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package beijing.bankservice.repository;
-
-import beijing.bankservice.domain.Account;
-import beijing.bankservice.domain.AccountInfo;
-import beijing.bankservice.domain.User;
-import beijing.bankservice.exception.BankServiceException;
+package beijing.bankservice.soap;
 
 public interface BankService extends java.rmi.Remote {
     public beijing.bankservice.domain.Account getAccount(java.lang.String arg0) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException;

@@ -1,10 +1,8 @@
 package beijing.bankservice.domain;
 
-import beijing.bankservice.soap.BankServiceServiceLocator;
-
-public class BankServiceProxy implements beijing.bankservice.repository.BankService {
+public class BankServiceProxy implements beijing.bankservice.soap.BankService {
   private String _endpoint = null;
-  private beijing.bankservice.repository.BankService bankService = null;
+  private beijing.bankservice.soap.BankService bankService = null;
   
   public BankServiceProxy() {
     _initBankServiceProxy();
@@ -40,7 +38,7 @@ public class BankServiceProxy implements beijing.bankservice.repository.BankServ
     
   }
   
-  public beijing.bankservice.repository.BankService getBankService() {
+  public beijing.bankservice.soap.BankService getBankService() {
     if (bankService == null)
       _initBankServiceProxy();
     return bankService;
