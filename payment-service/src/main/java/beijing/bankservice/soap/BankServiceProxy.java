@@ -1,4 +1,8 @@
-package beijing.bankservice.domain;
+package beijing.bankservice.soap;
+
+import beijing.bankservice.model.Account;
+import beijing.bankservice.model.AccountInfo;
+import beijing.bankservice.model.User;
 
 public class BankServiceProxy implements beijing.bankservice.soap.BankService {
   private String _endpoint = null;
@@ -44,19 +48,19 @@ public class BankServiceProxy implements beijing.bankservice.soap.BankService {
     return bankService;
   }
   
-  public beijing.bankservice.domain.Account getAccount(java.lang.String arg0) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException{
+  public beijing.bankservice.model.Account getAccount(java.lang.String arg0) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException{
     if (bankService == null)
       _initBankServiceProxy();
     return bankService.getAccount(arg0);
   }
   
-  public beijing.bankservice.domain.Account getAccountByCprNumber(java.lang.String arg0) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException{
+  public beijing.bankservice.model.Account getAccountByCprNumber(java.lang.String arg0) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException{
     if (bankService == null)
       _initBankServiceProxy();
     return bankService.getAccountByCprNumber(arg0);
   }
   
-  public java.lang.String createAccountWithBalance(beijing.bankservice.domain.User arg0, java.math.BigDecimal arg1) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException{
+  public java.lang.String createAccountWithBalance(beijing.bankservice.model.User arg0, java.math.BigDecimal arg1) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException{
     if (bankService == null)
       _initBankServiceProxy();
     return bankService.createAccountWithBalance(arg0, arg1);
@@ -68,7 +72,7 @@ public class BankServiceProxy implements beijing.bankservice.soap.BankService {
     bankService.retireAccount(arg0);
   }
   
-  public beijing.bankservice.domain.AccountInfo[] getAccounts() throws java.rmi.RemoteException{
+  public beijing.bankservice.model.AccountInfo[] getAccounts() throws java.rmi.RemoteException{
     if (bankService == null)
       _initBankServiceProxy();
     return bankService.getAccounts();

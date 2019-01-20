@@ -29,7 +29,7 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
         param.setOmittable(true);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://fastmoney.ws.dtu/", "account"));
-        oper.setReturnClass(beijing.bankservice.domain.Account.class);
+        oper.setReturnClass(beijing.bankservice.model.Account.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
@@ -47,7 +47,7 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
         param.setOmittable(true);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://fastmoney.ws.dtu/", "account"));
-        oper.setReturnClass(beijing.bankservice.domain.Account.class);
+        oper.setReturnClass(beijing.bankservice.model.Account.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
@@ -61,7 +61,7 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("createAccountWithBalance");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "arg0"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://fastmoney.ws.dtu/", "user"), beijing.bankservice.domain.User.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "arg0"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://fastmoney.ws.dtu/", "user"), beijing.bankservice.model.User.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "arg1"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "decimal"), java.math.BigDecimal.class, false, false);
@@ -99,7 +99,7 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getAccounts");
         oper.setReturnType(new javax.xml.namespace.QName("http://fastmoney.ws.dtu/", "accountInfo"));
-        oper.setReturnClass(beijing.bankservice.domain.AccountInfo[].class);
+        oper.setReturnClass(beijing.bankservice.model.AccountInfo[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
@@ -163,14 +163,14 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
             qName = new javax.xml.namespace.QName("http://fastmoney.ws.dtu/", "account");
             cachedSerQNames.add(qName);
-            cls = beijing.bankservice.domain.Account.class;
+            cls = beijing.bankservice.model.Account.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://fastmoney.ws.dtu/", "accountInfo");
             cachedSerQNames.add(qName);
-            cls = beijing.bankservice.domain.AccountInfo.class;
+            cls = beijing.bankservice.model.AccountInfo.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -184,14 +184,14 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
 
             qName = new javax.xml.namespace.QName("http://fastmoney.ws.dtu/", "transaction");
             cachedSerQNames.add(qName);
-            cls = beijing.bankservice.domain.Transaction.class;
+            cls = beijing.bankservice.model.Transaction.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://fastmoney.ws.dtu/", "user");
             cachedSerQNames.add(qName);
-            cls = beijing.bankservice.domain.User.class;
+            cls = beijing.bankservice.model.User.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -262,7 +262,7 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
         }
     }
 
-    public beijing.bankservice.domain.Account getAccount(java.lang.String arg0) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException {
+    public beijing.bankservice.model.Account getAccount(java.lang.String arg0) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -286,9 +286,9 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
         else {
             extractAttachments(_call);
             try {
-                return (beijing.bankservice.domain.Account) _resp;
+                return (beijing.bankservice.model.Account) _resp;
             } catch (java.lang.Exception _exception) {
-                return (beijing.bankservice.domain.Account) org.apache.axis.utils.JavaUtils.convert(_resp, beijing.bankservice.domain.Account.class);
+                return (beijing.bankservice.model.Account) org.apache.axis.utils.JavaUtils.convert(_resp, beijing.bankservice.model.Account.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -304,7 +304,7 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
 }
     }
 
-    public beijing.bankservice.domain.Account getAccountByCprNumber(java.lang.String arg0) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException {
+    public beijing.bankservice.model.Account getAccountByCprNumber(java.lang.String arg0) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -328,9 +328,9 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
         else {
             extractAttachments(_call);
             try {
-                return (beijing.bankservice.domain.Account) _resp;
+                return (beijing.bankservice.model.Account) _resp;
             } catch (java.lang.Exception _exception) {
-                return (beijing.bankservice.domain.Account) org.apache.axis.utils.JavaUtils.convert(_resp, beijing.bankservice.domain.Account.class);
+                return (beijing.bankservice.model.Account) org.apache.axis.utils.JavaUtils.convert(_resp, beijing.bankservice.model.Account.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -346,7 +346,7 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
 }
     }
 
-    public java.lang.String createAccountWithBalance(beijing.bankservice.domain.User arg0, java.math.BigDecimal arg1) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException {
+    public java.lang.String createAccountWithBalance(beijing.bankservice.model.User arg0, java.math.BigDecimal arg1) throws java.rmi.RemoteException, beijing.bankservice.exception.BankServiceException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -423,7 +423,7 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
 }
     }
 
-    public beijing.bankservice.domain.AccountInfo[] getAccounts() throws java.rmi.RemoteException {
+    public beijing.bankservice.model.AccountInfo[] getAccounts() throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -447,9 +447,9 @@ public class BankServiceServiceSoapBindingStub extends org.apache.axis.client.St
         else {
             extractAttachments(_call);
             try {
-                return (beijing.bankservice.domain.AccountInfo[]) _resp;
+                return (beijing.bankservice.model.AccountInfo[]) _resp;
             } catch (java.lang.Exception _exception) {
-                return (beijing.bankservice.domain.AccountInfo[]) org.apache.axis.utils.JavaUtils.convert(_resp, beijing.bankservice.domain.AccountInfo[].class);
+                return (beijing.bankservice.model.AccountInfo[]) org.apache.axis.utils.JavaUtils.convert(_resp, beijing.bankservice.model.AccountInfo[].class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

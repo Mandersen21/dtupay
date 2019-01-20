@@ -1,4 +1,4 @@
-package beijing.bankservice.domain;
+package beijing.bankservice.model;
 
 public class Customer extends Account {
 	/**

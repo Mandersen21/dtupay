@@ -14,9 +14,10 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DeliverCallback;
 
 import beijing.bankservice.exception.RequestRejected;
+import beijing.bankservice.model.Account;
 import beijing.bankservice.repository.IPaymentRepository;
 
-public class PaymentServiceManager {
+public class BankServiceManager {
 	
 	private static final String RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE = "rpc_merchantservice_to_paymentservice";
 	private static final String CUSTOMERSERVICE_TO_PAYMENTSERVICE_QUEUE = "customerservice_to_paymentservice";
@@ -29,8 +30,10 @@ public class PaymentServiceManager {
 	private Account account;
 	public static IPaymentRepository paymentRepository;
 	
-	public PaymentServiceManager(IPaymentRepository _prepository) {
+	public BankServiceManager(IPaymentRepository _prepository) {
 		paymentRepository = _prepository;
+		
+		
 		
 		 try {
 			 
@@ -41,6 +44,9 @@ public class PaymentServiceManager {
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}
+		 
+		 
+		 
 	}
 	
 	
