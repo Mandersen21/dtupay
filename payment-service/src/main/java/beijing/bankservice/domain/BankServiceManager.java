@@ -35,6 +35,7 @@ public class BankServiceManager {
 	private ConnectionFactory factory;
 	private Connection connection;
 	private Channel channel;
+	private Channel channel2;
 	private Consumer consumer;
 	private Account account;
 	public static IPaymentRepository paymentRepository;
@@ -63,7 +64,7 @@ public class BankServiceManager {
 		factory.setHost("02267-bejing.compute.dtu.dk");
 		connection = factory.newConnection();
 		channel = connection.createChannel();
-		
+//		channel2 = connection.createChannel();
 //		setupMerchantRPC();
 		setupCustomerVerification();
 //		setupSignupRPCChannel(RPC_CUSTOMER_PAYMENT_REGITRATION);
