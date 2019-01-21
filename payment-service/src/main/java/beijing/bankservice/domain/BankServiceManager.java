@@ -26,8 +26,11 @@ public class BankServiceManager {
 	
 	private static final String RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE = "rpc_merchantservice_to_paymentservice";
 	
+//	private final static String PAYMENT_CUSTOMER_REGITRATION = "payment_customer_registration";
+//	private final static String CUSTOMER_PAYMENT_REGITRATION = "customer_payment_registration";
+	
+	private final static String CUSTOMER_PAYMENT_REGISTRATION = "customer_payment_registration";
 	private final static String PAYMENT_CUSTOMER_REGITRATION = "payment_customer_registration";
-	private final static String CUSTOMER_PAYMENT_REGITRATION = "customer_payment_registration";
 	
 	private final static String RPC_CUSTOMER_PAYMENT_REGITRATION = "rpc_customer_payment_registration";
 	private final static String RPC_MERCHANT_PAYMENT_REGITRATION = "rpc_merchant_payment_registration";
@@ -64,9 +67,9 @@ public class BankServiceManager {
 		factory.setHost("02267-bejing.compute.dtu.dk");
 		connection = factory.newConnection();
 		channel = connection.createChannel();
-//		channel2 = connection.createChannel();
-//		setupMerchantRPC();
-		setupCustomerVerification();
+		channel2 = connection.createChannel();
+		setupMerchantRPC();
+//		setupCustomerVerification();
 //		setupSignupRPCChannel(RPC_CUSTOMER_PAYMENT_REGITRATION);
 //		setupSignupRPCChannel(RPC_MERCHANT_PAYMENT_REGITRATION);
 //		
@@ -75,7 +78,7 @@ public class BankServiceManager {
 	
 	private void setupCustomerVerification() throws IOException {
 		channel.queueDeclare(PAYMENT_CUSTOMER_REGITRATION, false, false, false, null);
-
+//		channel.queueDeclare(CUSTOMER_PAYMENT_REGITRATION, false, false, false, null);
 //		Listen for customer service sends details to verify account
 		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 			String message = new String(delivery.getBody());
@@ -84,17 +87,27 @@ public class BankServiceManager {
 			String customerId = verificationValues[0];
 			String customerCPR = verificationValues[1];
 			
-			Account a = bankService.getAccountByCprNumber(customerCPR);
-			if(a != null) {
-				a.setDtuId(customerId);
-				paymentRepository.createAccount(a);
-				channel.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"VERIFIED".getBytes() );
-			}else {
-				channel.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"ERROR".getBytes() );
-			}
+			System.out.println("REECIVED: " + message);
+			System.out.println("REECIVED3: " + customerCPR);
+			//Account a = bankService.getAccountByCprNumber(customerCPR);
+			Account a = new Account();
+			System.out.println(a.getId());
+			System.out.println("REECIVED4: " + message);
+//			if(a != null) {
+//				System.out.println("REECIVED1: " + message);
+//				a.setDtuId(customerId);
+//				paymentRepository.createAccount(a);
+//				
+//				channel.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"VERIFIED".getBytes() );
+//				
+//			}else {
+//				System.out.println("REECIVED2: " + message);
+			channel2.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"ERROR".getBytes() );
+				
+//			}
 			
 		};
-		channel.basicConsume(CUSTOMER_PAYMENT_REGITRATION, true, deliverCallback, consumerTag -> {
+		channel.basicConsume(CUSTOMER_PAYMENT_REGISTRATION, true, deliverCallback, consumerTag -> {
 		});		
 	}
 
@@ -167,13 +180,16 @@ public class BankServiceManager {
 
              String response = "";
 
+             
+             
              try {
             	 
             	 String merchantInputMessage = new String(delivery.getBody(),"UTF-8");
+            	 System.out.println("RECEIVED: " + merchantInputMessage);
             	 String[] transferValues = merchantInputMessage.split(",");
-            	 
+            	 System.out.println(transferValues[0]);
             	 response = initiateTransfer(transferValues[0],transferValues[1],transferValues[2],"DTUPay Service");
-            	
+            	 System.out.println("RECEIVED: " + merchantInputMessage);
                  
              } catch (RuntimeException e) {
                  System.out.println(" [.] " + e.toString());
@@ -229,20 +245,37 @@ public class BankServiceManager {
 	
 	public String initiateTransfer(String merchantId, String customerId,String amount, String description) throws BankServiceException, RemoteException {
 		// get Account finds the account based on the id given by the DTU Pay service
+		System.out.println("1");
+		System.out.println(merchantId);
 		Account merchant = paymentRepository.getAccount(merchantId); 
+		System.out.println("12");
 		Account customer = paymentRepository.getAccount(customerId);
 		
+		System.out.println("13");
 		Transaction t = new Transaction();
 		t.setAmount(new BigDecimal(amount));
 		t.setCreditor(merchantId);
 		t.setDebtor(customerId);
 		t.setDescription(description);
 		t.setTime(Calendar.getInstance());
-			
+		System.out.println("14");
 			// getid refers to the account id which is given by the bank 
-		bankService.transferMoneyFromTo(customer.getId(), merchant.getId(), new BigDecimal(amount), description);
-		
+		String t1 = bankService.getAccountByCprNumber("123987").getId();
+        String t2 = bankService.getAccountByCprNumber("789456").getId();
+        System.out.println("15");
+        
+        
+        System.out.println("Before Customer: " + bankService.getAccount(customer.getId()).getBalance());
+		System.out.println("Before Merchant: " + bankService.getAccount(merchant.getId()).getBalance());
+        
+		bankService.transferMoneyFromTo(merchant.getId(), customer.getId(), new BigDecimal(amount), description);
+		System.out.println("16");
 		paymentRepository.storeTransaction(t);
+		System.out.println("17");
+		
+		
+		System.out.println("After Customer: " + bankService.getAccount(customer.getId()).getBalance());
+		System.out.println("After Merchant: " + bankService.getAccount(merchant.getId()).getBalance());
 		
 		return "Transfer completed";
 	}

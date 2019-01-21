@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang.StringUtils;
@@ -175,7 +176,10 @@ public class MerchantManager {
 		}, consumerTag -> {
 		});
 
-		String result = response.take();
+		String result = response.poll(5000, TimeUnit.MILLISECONDS);
+		if(result==null) {
+			throw new RequestRejected("Could not talk to the payment service");
+		}
 		TransactionObject to;
 		// Make result string into a TransactionObject
 		if (result.equalsIgnoreCase("500")) {

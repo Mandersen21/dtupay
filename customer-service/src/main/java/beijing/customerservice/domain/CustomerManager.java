@@ -62,7 +62,11 @@ public class CustomerManager {
 			
 			Customer customer = customerRepository.getCustomerById(customerId);
 			customer.setStatus(accountStatus);
+			System.out.println("STATUS0: " + customer.getStatus());
 			customerRepository.updateCustomer(customer);
+			System.out.println("RECEIVED: " + message );
+			
+			System.out.println("STATUS1: " + customer.getStatus());
 			
 			if(accountStatus.equals(AccountStatus.VERIFIED)) {	
 				channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());

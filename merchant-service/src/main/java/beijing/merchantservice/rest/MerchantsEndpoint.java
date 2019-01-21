@@ -34,11 +34,13 @@ public class MerchantsEndpoint {
 
 	/**
 	 * 
+	 * @throws DataAccessException 
 	 * @throws IOException
 	 * @throws TimeoutException
 	 */
-	public MerchantsEndpoint() {
+	public MerchantsEndpoint() throws DataAccessException {
 		controller = new MerchantManager(repository);
+		controller.receiveNewTokens("123,rtjioe");
 	}
 
 	/**
