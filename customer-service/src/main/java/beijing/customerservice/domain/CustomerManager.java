@@ -34,7 +34,16 @@ public class CustomerManager {
 		customerRepository =_repository;
 
 		setupMessageQueue();
-
+		
+		
+		
+		/// Cucumber user story 1
+		Customer c = new Customer("123456", "john john", "1234567890", null, AccountStatus.VERIFIED);
+		customerRepository.createCustomer(c);
+		
+		
+		
+		
 		
 	}
 	
@@ -71,9 +80,6 @@ public class CustomerManager {
 		channel.basicConsume(PAYMENT_CUSTOMER_REGITRATION, true, deliverCallback, consumerTag -> {
 		});		
 	}
-	
-	
-
 	// Add customer
 	public Customer addCustomer(String name, String cpr)
 			throws RequestRejected, IOException, TimeoutException, CustomerNotFoundException {
@@ -88,36 +94,6 @@ public class CustomerManager {
 			
 			channel.basicPublish("", CUSTOMER_PAYMENT_REGITRATION, null, message.getBytes());
 					
-//			final String corrId = UUID.randomUUID().toString();		
-//			String replyQueueName = channel.queueDeclare().getQueue();
-//			AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)
-//					.build();
-//
-//			String message = cpr+","+id;
-//			
-//			channel.basicPublish("", RPC_CUSTOMER_PAYMENT_REGITRATION, props, message.getBytes("UTF-8"));
-//
-//			final BlockingQueue<String> response = new ArrayBlockingQueue<>(1);
-//
-//			String ctag = channel.basicConsume(replyQueueName, true, (consumerTag, delivery) -> {
-//				if (delivery.getProperties().getCorrelationId().equals(corrId)) {
-//					response.offer(new String(delivery.getBody(), "UTF-8"));
-//				}
-//			}, consumerTag -> {
-//			});
-//
-//			try {
-//				String result = response.take();
-//				
-//				if(result.equals("VERIFIED"))
-//				channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
-//				
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		
-//			channel.basicCancel(ctag);
 			
 			customerRepository.createCustomer(c);
 			
