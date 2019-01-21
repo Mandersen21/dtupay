@@ -51,6 +51,7 @@ public class CustomerManager {
 		channel = connection.createChannel();
 		channel.queueDeclare(CUSTOMERID_TO_TOKENSERVICE_QUEUE, false, false, false, null);
 		channel.queueDeclare(CUSTOMER_PAYMENT_REGITRATION, false, false, false, null);
+		channel.queueDeclare(PAYMENT_CUSTOMER_REGITRATION, false, false, false, null);
 		
 //		Listen for payment service that creates the account for the created customer
 		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
