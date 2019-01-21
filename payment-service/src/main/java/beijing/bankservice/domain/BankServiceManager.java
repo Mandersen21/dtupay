@@ -41,7 +41,7 @@ public class BankServiceManager {
 	
 	private BankService bankService;
 	
-	public BankServiceManager(IPaymentRepository _prepository) {
+	public BankServiceManager(IPaymentRepository _prepository) throws IOException, TimeoutException {
 		paymentRepository = _prepository;
 		
 		try {
@@ -50,18 +50,7 @@ public class BankServiceManager {
 			e.printStackTrace();
 		}
 		
-//		try {
-//			bankService = new BankServiceServiceLocator().getBankServicePort();
-//			setupMessageQueue();
-			
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (TimeoutException e) {
-//			e.printStackTrace();
-//		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}		 
+		setupMessageQueue();	 
 	}
 	
 	
