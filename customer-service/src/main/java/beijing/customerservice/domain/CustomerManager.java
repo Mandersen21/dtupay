@@ -84,11 +84,10 @@ public class CustomerManager {
         } else {
 		
 			Customer  c = new Customer(id, name, cpr, new ArrayList<String>(), AccStatus.UNVERIFIED);
+			String message = c.getId()+","+c.getCpr();
 			
-			channel.basicPublish("", CUSTOMER_PAYMENT_REGITRATION, null, c.getCpr().getBytes());
-			
-//			
-//					
+			channel.basicPublish("", CUSTOMER_PAYMENT_REGITRATION, null, message.getBytes());
+					
 //			final String corrId = UUID.randomUUID().toString();		
 //			String replyQueueName = channel.queueDeclare().getQueue();
 //			AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)
