@@ -25,17 +25,16 @@ public class CustomerEndpoint {
 
 	public CustomerEndpoint() throws IOException, TimeoutException, ConnectionException {
 		customerManager = new CustomerManager(repository);
-		repository.createCustomer(new Customer("123", "Mikkel", "2141235432", new ArrayList<String>()));
+		
 	}
 
 	@POST
 	@Produces("application/json")
-	public Response createCustomer(@FormParam("name") String name, @FormParam("cpr") String cpr,
-			@FormParam("tokenList") List<String> tokenList) {
+	public Response createCustomer(@FormParam("name") String name, @FormParam("cpr") String cpr) {
 		try {
-			String id = UUID.randomUUID().toString();
-			if (customerManager.addCustomer(id, cpr, name, tokenList)) {
-				return Response.ok(customerManager.getCustomerById(id), "application/json").build();
+			
+			if (customerManager.addCustomer(cpr, name)) {
+				return Response.ok(customerManager.getCustomerByCpr(cpr), "application/json").build();
 			}
 			return Response.status(500).entity("RequestRejected for addCustomer").build();
 		} catch (RequestRejected e) {

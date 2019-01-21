@@ -1,7 +1,7 @@
 package beijing.customerservice.domain;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -18,7 +18,8 @@ import beijing.customerservice.repository.ICustomerRepository;
 public class CustomerManager {
 
 	private final static String CUSTOMERID_TO_TOKENSERVICE_QUEUE = "customerid_to_tokenservice";
-	private final static String CUSTOMERID_TO_PAYMENTSERVICE_QUEUE = "customerid_to_paymentservice";
+	private final static String CUSTOMER_PAYMENT_REGITRATION = "customer_payment_registration";
+	private final static String PAYMENT_CUSTOMER_REGITRATION = "payment_customer_registration";
 	private final static String RPC_CUSTOMER_PAYMENT_REGITRATION = "rpc_customer_payment_registration";
 
 	private ConnectionFactory factory;
@@ -29,74 +30,94 @@ public class CustomerManager {
 	public static ICustomerRepository customerRepository;
 //	public static IPaymentRepository paymentRepository;
 
-	public CustomerManager(ICustomerRepository _repository) throws ConnectionException, IOException, TimeoutException {
+	public CustomerManager(ICustomerRepository _repository) throws IOException, TimeoutException  {
 		customerRepository =_repository;
 
+		setupMessageQueue();
+
+		
+	}
+	
+	
+	private void setupMessageQueue() throws IOException, TimeoutException {
+		
 		factory = new ConnectionFactory();
 		factory.setUsername("admin");
 		factory.setPassword("Banana");
-
 		factory.setHost("02267-bejing.compute.dtu.dk");
-	
 		connection = factory.newConnection();
+		
+		
 		channel = connection.createChannel();
 		channel.queueDeclare(CUSTOMERID_TO_TOKENSERVICE_QUEUE, false, false, false, null);
-		channel.queueDeclare(CUSTOMERID_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
+		channel.queueDeclare(CUSTOMER_PAYMENT_REGITRATION, false, false, false, null);
 		
-		// Listen for payment service that creates the account for the created customer
-//		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-//			String cpr = new String(delivery.getBody(), "UTF-8");
-//			System.out.println("Message received: " + cpr);
-//			paymentRepository.takeAccount(cpr);
-//		};
-//		channel.basicConsume(ACCOUNT_TO_CUSTOMERSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
-//		});
+//		Listen for payment service that creates the account for the created customer
+		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+			String message = new String(delivery.getBody());
+			String[] paymentvalues = message.split(",");
+			String customerId = paymentvalues[0];
+			AccStatus accountStatus = paymentvalues[1] == "VERIFIED" ? AccStatus.VERIFIED : AccStatus.UNVERIFIED;
+			
+			Customer customer = customerRepository.getCustomerById(customerId);
+			customer.setStatus(accountStatus);
+			customerRepository.updateCustomer(customer);
+			
+			if(accountStatus.equals(AccStatus.VERIFIED)) {	
+				channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
+			}
+		};
+		channel.basicConsume(PAYMENT_CUSTOMER_REGITRATION, true, deliverCallback, consumerTag -> {
+		});		
 	}
+	
+	
 
 	// Add customer
-	public boolean addCustomer(String id, String name, String cpr, List<String> tokenList)
+	public boolean addCustomer(String name, String cpr)
 			throws RequestRejected, IOException, TimeoutException, CustomerNotFoundException {
+		String id = UUID.randomUUID().toString();
 		
 		if (customerRepository.getCustomerByCpr(cpr) != null) {
 			throw new RequestRejected("The customer " + cpr + " is already in the system!");
         } else {
 		
-			customer = new Customer(id, name, cpr, tokenList);
+			customer = new Customer(id, name, cpr, new ArrayList<String>(), AccStatus.UNVERIFIED);
 			
-//			channel.basicPublish("", CUSTOMERID_TO_PAYMENTSERVICE_QUEUE, null, customer.getCpr().getBytes());
+			channel.basicPublish("", CUSTOMER_PAYMENT_REGITRATION, null, customer.getCpr().getBytes());
 			
-			
-			
-			final String corrId = UUID.randomUUID().toString();		
-			String replyQueueName = channel.queueDeclare().getQueue();
-			AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)
-					.build();
-
-			String message = cpr+","+id;
-			
-			channel.basicPublish("", RPC_CUSTOMER_PAYMENT_REGITRATION, props, message.getBytes("UTF-8"));
-
-			final BlockingQueue<String> response = new ArrayBlockingQueue<>(1);
-
-			String ctag = channel.basicConsume(replyQueueName, true, (consumerTag, delivery) -> {
-				if (delivery.getProperties().getCorrelationId().equals(corrId)) {
-					response.offer(new String(delivery.getBody(), "UTF-8"));
-				}
-			}, consumerTag -> {
-			});
-
-			try {
-				String result = response.take();
-				
-				if(result.equals("VERIFIED"))
-				channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
-				
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-			channel.basicCancel(ctag);
+//			
+//					
+//			final String corrId = UUID.randomUUID().toString();		
+//			String replyQueueName = channel.queueDeclare().getQueue();
+//			AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().correlationId(corrId).replyTo(replyQueueName)
+//					.build();
+//
+//			String message = cpr+","+id;
+//			
+//			channel.basicPublish("", RPC_CUSTOMER_PAYMENT_REGITRATION, props, message.getBytes("UTF-8"));
+//
+//			final BlockingQueue<String> response = new ArrayBlockingQueue<>(1);
+//
+//			String ctag = channel.basicConsume(replyQueueName, true, (consumerTag, delivery) -> {
+//				if (delivery.getProperties().getCorrelationId().equals(corrId)) {
+//					response.offer(new String(delivery.getBody(), "UTF-8"));
+//				}
+//			}, consumerTag -> {
+//			});
+//
+//			try {
+//				String result = response.take();
+//				
+//				if(result.equals("VERIFIED"))
+//				channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
+//				
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		
+//			channel.basicCancel(ctag);
 				
 			channel.close();
 			connection.close();
@@ -108,14 +129,11 @@ public class CustomerManager {
 
 	// Remove customer
 	public boolean removeCustomer(Customer customer) throws CustomerNotFoundException {
-		if (customerRepository.customerExists(
-				new Customer(customer.getId(), customer.getName(), customer.getCpr(), customer.getTokenList()))) {
+		if (customerRepository.customerExists(customer)) {
 			customerRepository.removeCustomer(customer);
 			return true;
 		} else {
-
 			throw new CustomerNotFoundException("The customer " + customer.getName() + " is not in the system!");
-
 		}
 	}
 

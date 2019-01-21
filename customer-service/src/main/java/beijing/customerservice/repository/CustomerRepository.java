@@ -66,4 +66,14 @@ public class CustomerRepository implements ICustomerRepository {
 		return customerList;
 	}
 
+	@Override
+	public boolean updateCustomer(Customer customer) {
+		for(Customer c : customerList) {
+			if(c.getId().equals(customer.getId())) {
+				c = customer;
+			}
+		}
+		return true;
+	}
+
 }

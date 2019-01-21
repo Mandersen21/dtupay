@@ -16,7 +16,6 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DeliverCallback;
 
 import beijing.bankservice.exception.BankServiceException;
-import beijing.bankservice.exception.RequestRejected;
 import beijing.bankservice.model.Account;
 import beijing.bankservice.model.Transaction;
 import beijing.bankservice.repository.IPaymentRepository;
@@ -26,6 +25,10 @@ import beijing.bankservice.soap.BankServiceServiceLocator;
 public class BankServiceManager {
 	
 	private static final String RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE = "rpc_merchantservice_to_paymentservice";
+	
+	private final static String PAYMENT_CUSTOMER_REGITRATION = "payment_customer_registration";
+	private final static String CUSTOMER_PAYMENT_REGITRATION = "customer_payment_registration";
+	
 	private final static String RPC_CUSTOMER_PAYMENT_REGITRATION = "rpc_customer_payment_registration";
 	private final static String RPC_MERCHANT_PAYMENT_REGITRATION = "rpc_merchant_payment_registration";
 	
@@ -66,64 +69,91 @@ public class BankServiceManager {
 		channel = connection.createChannel();
 		
 		setupMerchantRPC();
-		setupSignupRPCChannel(RPC_CUSTOMER_PAYMENT_REGITRATION);
-		setupSignupRPCChannel(RPC_MERCHANT_PAYMENT_REGITRATION);
-		
+		setupCustomerVerification();
+//		setupSignupRPCChannel(RPC_CUSTOMER_PAYMENT_REGITRATION);
+//		setupSignupRPCChannel(RPC_MERCHANT_PAYMENT_REGITRATION);
+//		
 	}
 	
 	
-	private void setupSignupRPCChannel(String channelRpc)throws IOException {
-		channel.queueDeclare(channelRpc, false, false, false, null);
-		channel.queuePurge(channelRpc);
-		channel.basicQos(1);
-		
-		Object monitor = new Object();
-        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-            AMQP.BasicProperties replyProps = new AMQP.BasicProperties
-                    .Builder()
-                    .correlationId(delivery.getProperties().getCorrelationId())
-                    .build();
+	private void setupCustomerVerification() throws IOException {
+		channel.queueDeclare(PAYMENT_CUSTOMER_REGITRATION, false, false, false, null);
 
-            String response = "";
-
-            try {
-           	 
-           	 String merchantInputMessage = new String(delivery.getBody(),"UTF-8");
-           	 String[] transferValues = merchantInputMessage.split(",");
-           	 
-           	 String cpr = transferValues[0];
-           	 String  dtuId = transferValues[1];
-           	 
-           	 boolean status = verifyAccount(cpr, dtuId);
-           	 
-           	 response = status?"VERIFIED":"NOT VERIFIED";
-           	
-                
-            } catch (RuntimeException e) {
-                System.out.println(" [.] " + e.toString());
-            } finally {
-                channel.basicPublish("", delivery.getProperties().getReplyTo(), replyProps, response.getBytes("UTF-8"));
-                channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
-                // RabbitMq consumer worker thread notifies the RPC server owner thread
-                synchronized (monitor) {
-                    monitor.notify();
-                }
-            }
-		
-        };
-        
-        channel.basicConsume(channelRpc, false, deliverCallback, (consumerTag -> { }));
-        // Wait and be prepared to consume the message from RPC client.
-        while (true) {
-            synchronized (monitor) {
-                try {
-                    monitor.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+//		Listen for customer service sends details to verify account
+		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+			String message = new String(delivery.getBody());
+			String[] verificationValues = message.split(",");
+			
+			String customerId = verificationValues[0];
+			String customerCPR = verificationValues[1];
+			
+			Account a = bankService.getAccountByCprNumber(customerCPR);
+			if(a != null) {
+				a.setDtuId(customerId);
+				paymentRepository.createAccount(a);
+				channel.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"VERIFIED".getBytes() );
+			}else {
+				channel.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"UNVERIFIED".getBytes() );
+			}
+			
+		};
+		channel.basicConsume(CUSTOMER_PAYMENT_REGITRATION, true, deliverCallback, consumerTag -> {
+		});		
 	}
+
+
+//	private void setupSignupRPCChannel(String channelRpc)throws IOException {
+//		channel.queueDeclare(channelRpc, false, false, false, null);
+//		channel.queuePurge(channelRpc);
+//		channel.basicQos(1);
+//		
+//		Object monitor = new Object();
+//        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+//            AMQP.BasicProperties replyProps = new AMQP.BasicProperties
+//                    .Builder()
+//                    .correlationId(delivery.getProperties().getCorrelationId())
+//                    .build();
+//
+//            String response = "";
+//
+//            try {
+//           	 
+//           	 String merchantInputMessage = new String(delivery.getBody(),"UTF-8");
+//           	 String[] transferValues = merchantInputMessage.split(",");
+//           	 
+//           	 String cpr = transferValues[0];
+//           	 String  dtuId = transferValues[1];
+//           	 
+//           	 boolean status = verifyAccount(cpr, dtuId);
+//           	 
+//           	 response = status?"VERIFIED":"NOT VERIFIED";
+//           	
+//                
+//            } catch (RuntimeException e) {
+//                System.out.println(" [.] " + e.toString());
+//            } finally {
+//                channel.basicPublish("", delivery.getProperties().getReplyTo(), replyProps, response.getBytes("UTF-8"));
+//                channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+//                // RabbitMq consumer worker thread notifies the RPC server owner thread
+//                synchronized (monitor) {
+//                    monitor.notify();
+//                }
+//            }
+//		
+//        };
+//        
+//        channel.basicConsume(channelRpc, false, deliverCallback, (consumerTag -> { }));
+//        // Wait and be prepared to consume the message from RPC client.
+//        while (true) {
+//            synchronized (monitor) {
+//                try {
+//                    monitor.wait();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//	}
 
 	
 	private void setupMerchantRPC() throws IOException {

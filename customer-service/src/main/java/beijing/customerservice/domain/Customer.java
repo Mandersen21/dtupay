@@ -7,15 +7,25 @@ public class Customer {
     private String name;
     private String cpr;
     private List<String> tokenList;
+    private AccStatus status;
 
-    public Customer(String id, String name, String cpr, List<String> list) {
+    public Customer(String id, String name, String cpr, List<String> list,AccStatus status) {
     	this.id = id;
     	this.name = name;
     	this.cpr = cpr;
     	this.tokenList = list;
+    	this.status = status;
     }
 
-    public void setId(String id) {
+    public AccStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(AccStatus status) {
+		this.status = status;
+	}
+
+	public void setId(String id) {
         this.id = id;
     }
 
@@ -46,5 +56,6 @@ public class Customer {
     public List<String> getTokenList() {
         return tokenList;
     }
+    
     
 }

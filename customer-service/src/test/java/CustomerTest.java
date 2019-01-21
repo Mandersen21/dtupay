@@ -1,10 +1,12 @@
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import beijing.customerservice.domain.AccStatus;
 import beijing.customerservice.domain.Customer;
 
 public class CustomerTest {
-	Customer Stephen = new Customer("123", "Stephen", "123102", null);
+	Customer Stephen = new Customer("123", "Stephen", "123102", null, AccStatus.UNVERIFIED);
 	
 	@Test
 	public void getSetUserDetails() {
