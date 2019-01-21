@@ -68,20 +68,20 @@ public class TestBank {
 //	}
 	
 	
-//	@Test
-//	public void rabbitMQTest() {
-//		PaymentRepository res = new PaymentRepository();
-//		BankServiceManager man = new BankServiceManager(res);
-//        
-//		BigDecimal balance = new BigDecimal(100);
-//		Transaction[] t = null;
-//        Transaction[] tv = null;       
-//		Account cusA = new Account(balance,"321", t, new User("123987", "John", "John"));
-//		cusA.setDtuId("123");
-//		Account merA = new Account(balance,"123", tv,new User("789456", "Mon", "Mon"));
-//		cusA.setDtuId("123");
+	@Test
+	public void rabbitMQTest() {
+		PaymentRepository res = new PaymentRepository();
+		BankServiceManager man = new BankServiceManager(res);
+        
+		BigDecimal balance = new BigDecimal(100);
+		Transaction[] t = null;
+        Transaction[] tv = null;       
+		Account cusA = new Account(balance,"321", t, new User("123987", "John", "John"));
+		cusA.setDtuId("123");
+		Account merA = new Account(balance,"123", tv,new User("789456", "Mon", "Mon"));
+		cusA.setDtuId("123");
 //		man.paymentRepository.createCustomer(cusA);
 //		man.paymentRepository.createMerchant(merA);
-//	}
+	}
 }
 

@@ -43,18 +43,25 @@ public class BankServiceManager {
 	
 	public BankServiceManager(IPaymentRepository _prepository) {
 		paymentRepository = _prepository;
+		
 		try {
 			bankService = new BankServiceServiceLocator().getBankServicePort();
-			setupMessageQueue();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (TimeoutException e) {
-			e.printStackTrace();
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		 
+		}
+		
+//		try {
+//			bankService = new BankServiceServiceLocator().getBankServicePort();
+//			setupMessageQueue();
+			
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (TimeoutException e) {
+//			e.printStackTrace();
+//		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}		 
 	}
 	
 	
@@ -68,7 +75,7 @@ public class BankServiceManager {
 		connection = factory.newConnection();
 		channel = connection.createChannel();
 		
-		setupMerchantRPC();
+//		setupMerchantRPC();
 		setupCustomerVerification();
 //		setupSignupRPCChannel(RPC_CUSTOMER_PAYMENT_REGITRATION);
 //		setupSignupRPCChannel(RPC_MERCHANT_PAYMENT_REGITRATION);

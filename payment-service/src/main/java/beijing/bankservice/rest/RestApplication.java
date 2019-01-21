@@ -8,11 +8,5 @@ import beijing.bankservice.repository.PaymentRepository;
 
 @ApplicationPath("/")
 public class RestApplication extends Application {
-	static BankServiceManager bankServiceManager;
-	
-	public RestApplication() {
-		if(bankServiceManager == null) {
-			bankServiceManager = new BankServiceManager(new PaymentRepository());
-		}
-	}
+
 }
