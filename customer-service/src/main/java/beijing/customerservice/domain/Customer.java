@@ -7,9 +7,9 @@ public class Customer {
     private String name;
     private String cpr;
     private List<String> tokenList;
-    private AccStatus status;
+    private AccountStatus status;
 
-    public Customer(String id, String name, String cpr, List<String> list,AccStatus status) {
+    public Customer(String id, String name, String cpr, List<String> list,AccountStatus status) {
     	this.id = id;
     	this.name = name;
     	this.cpr = cpr;
@@ -17,11 +17,11 @@ public class Customer {
     	this.status = status;
     }
 
-    public AccStatus getStatus() {
+    public AccountStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(AccStatus status) {
+	public void setStatus(AccountStatus status) {
 		this.status = status;
 	}
 

@@ -58,13 +58,13 @@ public class CustomerManager {
 			String message = new String(delivery.getBody());
 			String[] paymentvalues = message.split(",");
 			String customerId = paymentvalues[0];
-			AccStatus accountStatus = paymentvalues[1] == "VERIFIED" ? AccStatus.VERIFIED : AccStatus.UNVERIFIED;
+			AccountStatus accountStatus = paymentvalues[1].equals("VERIFIED") ? AccountStatus.VERIFIED : AccountStatus.ERROR;
 			
 			Customer customer = customerRepository.getCustomerById(customerId);
 			customer.setStatus(accountStatus);
 			customerRepository.updateCustomer(customer);
 			
-			if(accountStatus.equals(AccStatus.VERIFIED)) {	
+			if(accountStatus.equals(AccountStatus.VERIFIED)) {	
 				channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
 			}
 		};
@@ -83,7 +83,7 @@ public class CustomerManager {
 			throw new RequestRejected("The customer " + cpr + " is already in the system!");
         } else {
 		
-			Customer  c = new Customer(id, name, cpr, new ArrayList<String>(), AccStatus.UNVERIFIED);
+			Customer  c = new Customer(id, name, cpr, new ArrayList<String>(), AccountStatus.UNVERIFIED);
 			String message = c.getId()+","+c.getCpr();
 			
 			channel.basicPublish("", CUSTOMER_PAYMENT_REGITRATION, null, message.getBytes());

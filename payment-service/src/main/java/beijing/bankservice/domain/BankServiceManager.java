@@ -90,7 +90,7 @@ public class BankServiceManager {
 				paymentRepository.createAccount(a);
 				channel.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"VERIFIED".getBytes() );
 			}else {
-				channel.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"UNVERIFIED".getBytes() );
+				channel.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"ERROR".getBytes() );
 			}
 			
 		};
