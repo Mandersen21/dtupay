@@ -1,6 +1,8 @@
 package beijing.bankservice.repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.stream.Collectors;
 
 import beijing.bankservice.model.Account;
@@ -11,6 +13,11 @@ public class PaymentRepository implements IPaymentRepository{
 	
 	List<Account> accounts;
 	List<Transaction> transacions;
+	
+	public PaymentRepository() {
+		accounts = new ArrayList<Account>();
+		transacions = new ArrayList<Transaction>();
+	}
 
 	@Override
 	public boolean createAccount(Account account) {
