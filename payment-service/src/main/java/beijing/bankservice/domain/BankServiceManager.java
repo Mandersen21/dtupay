@@ -26,8 +26,8 @@ public class BankServiceManager {
 	
 	private static final String RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE = "rpc_merchantservice_to_paymentservice";
 	
-	private final static String PAYMENT_CUSTOMER_REGITRATION = "payment_customer_registration";
-	private final static String CUSTOMER_PAYMENT_REGITRATION = "customer_payment_registration";
+	private final static String PAYMENT_CUSTOMER_REGISTRATION = "payment_customer_registration";
+	private final static String CUSTOMER_PAYMENT_REGISTRATION = "customer_payment_registration";
 	
 	private final static String RPC_CUSTOMER_PAYMENT_REGITRATION = "rpc_customer_payment_registration";
 	private final static String RPC_MERCHANT_PAYMENT_REGITRATION = "rpc_merchant_payment_registration";
@@ -74,7 +74,8 @@ public class BankServiceManager {
 	
 	
 	private void setupCustomerVerification() throws IOException {
-		channel.queueDeclare(PAYMENT_CUSTOMER_REGITRATION, false, false, false, null);
+		channel.queueDeclare(PAYMENT_CUSTOMER_REGISTRATION, false, false, false, null);
+		channel.queueDeclare(CUSTOMER_PAYMENT_REGISTRATION, false, false, false, null);
 
 //		Listen for customer service sends details to verify account
 		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
@@ -88,13 +89,13 @@ public class BankServiceManager {
 			if(a != null) {
 				a.setDtuId(customerId);
 				paymentRepository.createAccount(a);
-				channel.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"VERIFIED".getBytes() );
+				channel.basicPublish("", PAYMENT_CUSTOMER_REGISTRATION, null,"VERIFIED".getBytes() );
 			}else {
-				channel.basicPublish("", PAYMENT_CUSTOMER_REGITRATION, null,"ERROR".getBytes() );
+				channel.basicPublish("", PAYMENT_CUSTOMER_REGISTRATION, null,"ERROR".getBytes() );
 			}
 			
 		};
-		channel.basicConsume(CUSTOMER_PAYMENT_REGITRATION, true, deliverCallback, consumerTag -> {
+		channel.basicConsume(CUSTOMER_PAYMENT_REGISTRATION, true, deliverCallback, consumerTag -> {
 		});		
 	}
 
