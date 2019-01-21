@@ -18,6 +18,7 @@ import com.rabbitmq.client.DeliverCallback;
 import beijing.bankservice.exception.BankServiceException;
 import beijing.bankservice.model.Account;
 import beijing.bankservice.model.Transaction;
+import beijing.bankservice.model.User;
 import beijing.bankservice.repository.IPaymentRepository;
 import beijing.bankservice.soap.BankService;
 import beijing.bankservice.soap.BankServiceServiceLocator;
@@ -44,6 +45,16 @@ public class BankServiceManager {
 		
 	public BankServiceManager(IPaymentRepository _prepository) throws IOException, TimeoutException {
 		paymentRepository = _prepository;
+		
+		
+        String t1 = bankService.getAccountByCprNumber("123987").getId();
+        String t2 = bankService.getAccountByCprNumber("789456").getId();
+        Transaction[] t = null;
+        Transaction[] tv = null; 
+        Account cusA = new Account(new BigDecimal(100),t1, t, new User("123987", "John", "John"));
+        cusA.setDtuId("123");
+        Account merA = new Account(new BigDecimal(100),t2, tv,new User("789456", "Mon", "Mon"));
+        merA.setDtuId("321");
 		
 		try {
 			bankService = new BankServiceServiceLocator().getBankServicePort();
