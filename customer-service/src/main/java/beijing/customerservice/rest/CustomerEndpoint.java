@@ -32,11 +32,11 @@ public class CustomerEndpoint {
 	@Produces("application/json")
 	public Response createCustomer(@FormParam("name") String name, @FormParam("cpr") String cpr) {
 		try {
-			
-			if (customerManager.addCustomer(cpr, name)) {
-				return Response.ok(customerManager.getCustomerByCpr(cpr), "application/json").build();
+			Customer c = customerManager.addCustomer(cpr, name);
+			if (c != null) {
+				return Response.ok(c, "application/json").build();
 			}
-			return Response.status(500).entity("RequestRejected for addCustomer").build();
+			return Response.status(404).entity("RequestRejected for addCustomer").build();
 		} catch (RequestRejected e) {
 			return Response.status(404).entity("RequestRejected").build();
 		} catch (IOException e) {

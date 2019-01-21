@@ -74,7 +74,7 @@ public class CustomerManager {
 	
 
 	// Add customer
-	public boolean addCustomer(String name, String cpr)
+	public Customer addCustomer(String name, String cpr)
 			throws RequestRejected, IOException, TimeoutException, CustomerNotFoundException {
 		String id = UUID.randomUUID().toString();
 		
@@ -82,9 +82,9 @@ public class CustomerManager {
 			throw new RequestRejected("The customer " + cpr + " is already in the system!");
         } else {
 		
-			customer = new Customer(id, name, cpr, new ArrayList<String>(), AccStatus.UNVERIFIED);
+			Customer  c = new Customer(id, name, cpr, new ArrayList<String>(), AccStatus.UNVERIFIED);
 			
-			channel.basicPublish("", CUSTOMER_PAYMENT_REGITRATION, null, customer.getCpr().getBytes());
+			channel.basicPublish("", CUSTOMER_PAYMENT_REGITRATION, null, c.getCpr().getBytes());
 			
 //			
 //					
@@ -122,7 +122,7 @@ public class CustomerManager {
 			channel.close();
 			connection.close();
 			
-			return customerRepository.createCustomer(customer);
+			return c;
         }
 		
 	}

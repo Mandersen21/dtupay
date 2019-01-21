@@ -36,7 +36,9 @@ public class TestBank {
 //		System.out.println(bank.getAccountByCprNumber("123987").getBalance());
 //		System.out.println(bank.getAccounts().length);
 //		assertEquals(test.getBalance(), new BigDecimal(100));
-//		bank.retireAccount(test.getId());
+//		
+//		
+////		bank.retireAccount(test.getId());
 //		
 ////		Account ty = bank.getAccountByCprNumber("123987");
 //		//System.out.println("Test 3 " + bank.getAccount(t));
