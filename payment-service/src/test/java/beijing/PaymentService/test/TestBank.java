@@ -2,8 +2,10 @@ package beijing.PaymentService.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
+import java.util.concurrent.TimeoutException;
 
 import javax.xml.rpc.ServiceException;
 
@@ -69,7 +71,7 @@ public class TestBank {
 	
 	
 	@Test
-	public void rabbitMQTest() {
+	public void rabbitMQTest() throws IOException, TimeoutException {
 		PaymentRepository res = new PaymentRepository();
 		BankServiceManager man = new BankServiceManager(res);
         
