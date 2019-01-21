@@ -119,6 +119,9 @@ public class CustomerManager {
 //			}
 //		
 //			channel.basicCancel(ctag);
+			
+			customerRepository.createCustomer(c);
+			
 				
 			channel.close();
 			connection.close();

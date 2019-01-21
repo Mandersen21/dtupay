@@ -32,7 +32,7 @@ public class CustomerEndpoint {
 	@Produces("application/json")
 	public Response createCustomer(@FormParam("name") String name, @FormParam("cpr") String cpr) {
 		try {
-			Customer c = customerManager.addCustomer(cpr, name);
+			Customer c = customerManager.addCustomer( name,cpr);
 			if (c != null) {
 				return Response.ok(c, "application/json").build();
 			}
