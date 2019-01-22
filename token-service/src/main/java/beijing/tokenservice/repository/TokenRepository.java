@@ -52,8 +52,14 @@ public class TokenRepository implements ITokenRepository {
     }
 
 	public boolean deleteTokens(String customerId) {
-		tokenList = new ArrayList<Token>();
-		return true;
+		if (customerId != null) {
+			tokenList = tokenList.stream().filter(t -> !t.getCustomerId().contentEquals(customerId)).collect(Collectors.toList());
+			return true;
+		}
+		else {
+			tokenList = new ArrayList<Token>();
+			return true;
+		}
 	}
 
 }
