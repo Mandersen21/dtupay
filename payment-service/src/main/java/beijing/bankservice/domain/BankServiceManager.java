@@ -75,6 +75,9 @@ public class BankServiceManager {
 		factory.setHost("02267-bejing.compute.dtu.dk");
 		connection = factory.newConnection();
 		channel = connection.createChannel();
+		
+		channel.queueDeclare("queue-test", false, false, false, null);
+		
 //		channel2 = connection.createChannel();
 		setupMerchantRPC();
 //		setupCustomerVerification();
