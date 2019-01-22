@@ -25,6 +25,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 @Path("/merchants")
 public class MerchantsEndpoint {
@@ -57,9 +58,9 @@ public class MerchantsEndpoint {
 	@PUT
 	@Produces("application/json")
 	public Response requestTransaction(
-			@FormParam("merchantId") String merchantId, 
-			@FormParam("tokenId") String tokenId,
-			@FormParam("amount") String amount) {
+			@QueryParam("merchantId") String merchantId, 
+			@QueryParam("tokenId") String tokenId,
+			@QueryParam("amount") String amount) {
 		TransactionObject to;
 		try {
 			to = controller.requestTransaction(merchantId, tokenId, amount, "DTU Pay Service");
