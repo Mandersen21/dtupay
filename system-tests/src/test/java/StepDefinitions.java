@@ -61,6 +61,7 @@ public class StepDefinitions {
 		TokenSimulator tokenSimulator = new TokenSimulator();
 		DTUPayResponse result = tokenSimulator.getTokenId("123");
 		System.out.println(result.getResponseCode());
+		System.out.println(result.getResponseText());
 		
 	}
 
