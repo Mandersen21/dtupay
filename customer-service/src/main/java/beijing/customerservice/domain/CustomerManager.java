@@ -85,9 +85,8 @@ public class CustomerManager {
 			Customer  c = new Customer(id, name, cpr, new ArrayList<String>(), AccountStatus.UNVERIFIED);
 			String message = c.getId()+","+c.getCpr();
 			
-//			channel.basicPublish("", CUSTOMER_PAYMENT_REGITRATION, null, message.getBytes());
-			channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
 			customerRepository.createCustomer(c);
+			channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, c.getId().getBytes());
 				
 			channel.close();
 			connection.close();
