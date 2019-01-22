@@ -28,7 +28,6 @@ public class CustomerManager {
 	private Customer customer;
 
 	public static ICustomerRepository customerRepository;
-//	public static IPaymentRepository paymentRepository;
 
 	public CustomerManager(ICustomerRepository _repository) throws IOException, TimeoutException  {
 		customerRepository =_repository;
@@ -36,7 +35,9 @@ public class CustomerManager {
 		setupMessageQueue();
 		
 		// Cucumber user story 1
-		Customer c = new Customer("123456", "john john", "1234567890", null, AccountStatus.VERIFIED);
+		List<String> tokenList = new ArrayList<String>();
+		tokenList.add("123");
+		Customer c = new Customer("123456", "john john", "1234567890", tokenList, AccountStatus.VERIFIED);
 		customerRepository.createCustomer(c);
 	}
 	
