@@ -1,37 +1,22 @@
-
-
-import cucumber.api.PendingException;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import beijing.CreateAccountRequest;
-import beijing.CreateBankClientRequest;
 import beijing.CustomerSimulator;
 import beijing.CustomerValueHolder;
-import beijing.DTUPayJsonResponse;
 import beijing.DTUPayResponse;
 import beijing.DTUPayTokenResponse;
-import beijing.MerchantSimulator;
 import beijing.TokenSimulator;
 import beijing.TokenValueHolder;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.List;
-
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import dtu.ws.fastmoney.*;
 
-public class tokenStepDefinition {
+public class TokenStepDefinition {
 	
 	private static final String appUrl = "http://02267-bejing.compute.dtu.dk:3002/customers";
 	
@@ -107,9 +92,5 @@ public class tokenStepDefinition {
 		System.out.println("result for tokenRequest: "+responseCode);
 		assertEquals(406,responseCode);
 	}
-	
-	
-	
-	
 	
 }

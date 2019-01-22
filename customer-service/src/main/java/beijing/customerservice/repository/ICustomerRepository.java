@@ -3,6 +3,14 @@ package beijing.customerservice.repository;
 import java.util.List;
 import beijing.customerservice.domain.Customer;
 
+/**
+ * 
+ * The ICustomerRepository interface allows the fulfillment of high-cohesion and low-coupling design features (making our code more like
+ * open for improvements, but close for changes).
+ * @author BotezatuCristian
+ *
+ */
+
 public interface ICustomerRepository {
 
 	public boolean createCustomer(Customer customer);

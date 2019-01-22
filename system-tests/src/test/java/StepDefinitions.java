@@ -1,24 +1,10 @@
-
-
-import cucumber.api.PendingException;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import beijing.CreateAccountRequest;
-import beijing.CreateBankClientRequest;
 import beijing.CustomerSimulator;
 import beijing.DTUPayResponse;
 import beijing.MerchantSimulator;
 import beijing.TokenSimulator;
-
 import com.google.gson.Gson;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
 import static junit.framework.TestCase.assertEquals;
-
 import java.math.BigDecimal;
-
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -99,6 +85,5 @@ public class StepDefinitions {
 		assertEquals(newMerBalance, merchantBalance.add(amount));	
 		
 	}
-	
 
 }

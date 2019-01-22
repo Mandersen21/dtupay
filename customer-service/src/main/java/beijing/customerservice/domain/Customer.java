@@ -2,6 +2,12 @@ package beijing.customerservice.domain;
 
 import java.util.List;
 
+/**
+ * Customer class contains mostly the getters and setters for customer. 
+ * The feature of interest are id, name, cpr, tokenList assigned to the customer and the status of the customer.
+ * @author BotezatuCristian
+ *
+ */
 public class Customer {
     private String id;
     private String name;
