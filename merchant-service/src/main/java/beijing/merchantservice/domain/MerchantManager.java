@@ -30,7 +30,7 @@ public class MerchantManager {
 
 	private static IMerchantRepository repository;
 
-	private final static String TOKENID_TO_MERCHANTSERVICE_QUEUE = "tokenid_to_merchantservice";
+//	private final static String TOKENID_TO_MERCHANTSERVICE_QUEUE = "tokenid_to_merchantservice";
 	private final static String MERCHANTSERVICE_TO_TOKENID_QUEUE = "merchantservice_to_tokenid";
 	private final static String RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE = "rpc_merchantservice_to_paymentservice";
 	private final static String MERCHANSERVICE_TO_PAYMENTSERVICE_REGISTRATION_QUEUE = "merchantservice_to_paymentservice_registration_queue";
@@ -197,7 +197,7 @@ public class MerchantManager {
 		} else {
 //			String[] resultSplit = result.split(",");
 			System.out.print(result);
-			to = new TransactionObject(merchantId, "123", amount, Calendar.getInstance().getTime());
+			to = new TransactionObject(merchantId, UUID.randomUUID().toString(), amount, Calendar.getInstance().getTime());
 //			to = new TransactionObject(merchantId, resultSplit[0], amount, new Date(Date.parse(resultSplit[1])));
 		}
 		channel.basicCancel(ctag);
@@ -251,21 +251,21 @@ public class MerchantManager {
 		connection = factory.newConnection();
 		channel = connection.createChannel();
 		
-		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
-		channel.queueDeclare(MERCHANTSERVICE_TO_TOKENID_QUEUE, false, false, false, null);
+//		channel.queueDeclare(TOKENID_TO_MERCHANTSERVICE_QUEUE, false, false, false, null);
+//		channel.queueDeclare(MERCHANTSERVICE_TO_TOKENID_QUEUE, false, false, false, null);
 		channel.queueDeclare(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
 		
-		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-			String message = new String(delivery.getBody(), "UTF-8");
-			try {
-				receiveNewTokens(message);
-			} catch (DataAccessException e) {
-				e.printStackTrace();
-			}
-		};
-		channel.basicConsume(TOKENID_TO_MERCHANTSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
-			
-		});
+//		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+//			String message = new String(delivery.getBody(), "UTF-8");
+//			try {
+//				receiveNewTokens(message);
+//			} catch (DataAccessException e) {
+//				e.printStackTrace();
+//			}
+//		};
+//		channel.basicConsume(TOKENID_TO_MERCHANTSERVICE_QUEUE, true, deliverCallback, consumerTag -> {
+//			
+//		});
 	}
 
 

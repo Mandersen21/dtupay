@@ -37,7 +37,7 @@ public class CustomerManager {
 		// Cucumber user story 1
 		List<String> tokenList = new ArrayList<String>();
 		tokenList.add("123");
-		Customer c = new Customer("123456", "john john", "1234567890", tokenList, AccountStatus.VERIFIED);
+		Customer c = new Customer("123456", "john john", "0101010101", tokenList, AccountStatus.VERIFIED);
 		customerRepository.createCustomer(c);
 	}
 	
