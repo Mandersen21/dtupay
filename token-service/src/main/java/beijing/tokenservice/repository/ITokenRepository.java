@@ -9,6 +9,7 @@ public interface ITokenRepository {
 	public Token getToken(String tokenId);
 	public boolean createToken(Token token);
 	public boolean updateToken(Token token);
+	public boolean deleteTokens(String customerId);
 	public List<Token> getTokens();
 	public List<Token> getTokensForCustomerId(String customerId);
 }

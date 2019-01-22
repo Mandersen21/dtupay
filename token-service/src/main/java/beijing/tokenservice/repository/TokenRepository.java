@@ -51,4 +51,9 @@ public class TokenRepository implements ITokenRepository {
         return tokenList.stream().filter(t -> t.getCustomerId() == customerId && t.getValidationStatus() == true && t.getStatus().equals("ACTIVE")).collect(Collectors.toList());
     }
 
+	public boolean deleteTokens(String customerId) {
+		tokenList = new ArrayList<Token>();
+		return true;
+	}
+
 }
