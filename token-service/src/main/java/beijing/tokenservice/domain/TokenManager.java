@@ -215,56 +215,56 @@ public class TokenManager {
 		return Integer.toString(m + new Random().nextInt(9 * m));
 	}
 
-	public File generateToken(String msg, String path) {
-		File file = new File(path);
-		try {
-			generate(msg, new FileOutputStream(file));
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-		return file;
-	}
-
-	public byte[] generate(String msg) {
-		ByteArrayOutputStream ous = new ByteArrayOutputStream();
-		generate(msg, ous);
-		return ous.toByteArray();
-	}
-
-	public void generate(String msg, OutputStream ous) {
-		if (StringUtils.isEmpty(msg) || ous == null) {
-			return;
-		}
-
-		Code39Bean bean = new Code39Bean();
-
-		// accuracy
-		final int dpi = 150;
-		// module width
-		final double moduleWidth = UnitConv.in2mm(1.0f / dpi);
-
-		// configuration object
-		bean.setModuleWidth(moduleWidth);
-		bean.setWideFactor(3);
-		bean.doQuietZone(false);
-
-		String format = "image/png";
-
-		try {
-
-			// output to the stream
-			BitmapCanvasProvider canvas = new BitmapCanvasProvider(ous, format, dpi, BufferedImage.TYPE_BYTE_BINARY,
-					false, 0);
-
-			// Generate a bar-code
-			bean.generateBarcode(canvas, msg);
-
-			// end drawing
-			canvas.finish();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	public File generateToken(String msg, String path) {
+//		File file = new File(path);
+//		try {
+//			generate(msg, new FileOutputStream(file));
+//		} catch (FileNotFoundException e) {
+//			throw new RuntimeException(e);
+//		}
+//		return file;
+//	}
+//
+//	public byte[] generate(String msg) {
+//		ByteArrayOutputStream ous = new ByteArrayOutputStream();
+//		generate(msg, ous);
+//		return ous.toByteArray();
+//	}
+//
+//	public void generate(String msg, OutputStream ous) {
+//		if (StringUtils.isEmpty(msg) || ous == null) {
+//			return;
+//		}
+//
+//		Code39Bean bean = new Code39Bean();
+//
+//		// accuracy
+//		final int dpi = 150;
+//		// module width
+//		final double moduleWidth = UnitConv.in2mm(1.0f / dpi);
+//
+//		// configuration object
+//		bean.setModuleWidth(moduleWidth);
+//		bean.setWideFactor(3);
+//		bean.doQuietZone(false);
+//
+//		String format = "image/png";
+//
+//		try {
+//
+//			// output to the stream
+//			BitmapCanvasProvider canvas = new BitmapCanvasProvider(ous, format, dpi, BufferedImage.TYPE_BYTE_BINARY,
+//					false, 0);
+//
+//			// Generate a bar-code
+//			bean.generateBarcode(canvas, msg);
+//
+//			// end drawing
+//			canvas.finish();
+//		} catch (IOException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 
 	public boolean deleteTokens(String customerId) {
 		return tokenRepository.deleteTokens(customerId);

@@ -61,6 +61,7 @@ public class TokenManagerTest {
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
+	
 
 	@Test(expected = RequestRejected.class)
 	public void requestTokensDeniedTest() throws RequestRejected, TokenNotFoundException, DataAccessException, IOException, TimeoutException, CustomerNotFoundException {
@@ -90,5 +91,50 @@ public class TokenManagerTest {
 		tRepository.updateToken(token);
 		assertEquals(tokenManager.isTokenInvalid(token.getTokenId()), true);
 	}
+	
+	@Rule
+	public ExpectedException exception1 = ExpectedException.none();
+	
+	@Test(expected = TokenNotFoundException.class)
+	public void tokenNotValidTest() throws TokenNotFoundException {
+		assertEquals(tokenManager.isTokenValid("NotValid"), true);
+	}
+	
+	@Test(expected = TokenNotFoundException.class)
+	public void tokenIsValidTest() throws TokenNotFoundException {
+		assertEquals(tokenManager.isTokenValid("NotValid"), true);
+	}
+	
+	@Test()
+	public void deleteBasedOnCusId() {
+		tokenManager.deleteTokens(null);
+		token = new Token("848484", "test", true, Status.ACTIVE, "");
+		tRepository.createToken(token);
+		token = new Token("858585", UUID.randomUUID().toString(), true, Status.ACTIVE, "");
+		tRepository.createToken(token);
+		token = new Token("868686", UUID.randomUUID().toString(), true, Status.ACTIVE, "");
+		tRepository.createToken(token);
+		assertEquals(tokenManager.getAllTokens(null).size(), 3);
+		assertEquals(tokenManager.getAllTokens("test").size(), 1);
+		tokenManager.deleteTokens("test");
+		assertEquals(tokenManager.getAllTokens(null).size(), 2);
+		tokenManager.deleteTokens(null);
+		assertEquals(tokenManager.getAllTokens(null).size(), 0);
+	}
+	
+	@Test()
+	public void updateTokenTest() throws TokenNotFoundException {
+		tokenManager.deleteTokens(null);
+		token = new Token("848484", "test", true, Status.ACTIVE, "");
+		tRepository.createToken(token);
+		token = new Token("858585", "test1", true, Status.ACTIVE, "");
+		tRepository.createToken(token);
+		assertEquals(tokenManager.getAllTokens(null).size(), 2);
+		assertEquals(true, tokenManager.updateToken("848484", false, Status.INVALID));
+		Token token = tokenManager.getToken("848484");
+		assertEquals(token.getStatus(), Status.INVALID);
+		assertEquals(token.getValidationStatus(), false);
+	}
+	
 
 }
