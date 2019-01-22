@@ -23,12 +23,31 @@ public class CustomerManagerTest {
 	private CustomerManager customerManager;
 	private Customer customer;
 
+	/**
+	 * 
+	 * The CutomerManager is setup with the customerRepository.
+	 * @throws IOException
+	 * @throws TimeoutException
+	 * @throws ConnectionException
+	 * 
+	 */
+	
 	@Before
 	public void setUp() throws IOException, TimeoutException, ConnectionException {
 		customerManager = new CustomerManager(repository);
 	}
 
-	// Add tests
+	/**
+	 * 
+	 * Test the addition of a customer.
+	 * @throws ConnectionException
+	 * @throws IOException
+	 * @throws TimeoutException
+	 * @throws RequestRejected
+	 * @throws CustomerNotFoundException
+	 * 
+	 */
+	
 	@Test()
 	public void addCustomerExistingTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
 
@@ -48,7 +67,17 @@ public class CustomerManagerTest {
 		
 	}
 	
-	// Remove tests
+	/**
+	 * 
+	 * Test the deletion of a customer.
+	 * @throws ConnectionException
+	 * @throws IOException
+	 * @throws TimeoutException
+	 * @throws RequestRejected
+	 * @throws CustomerNotFoundException
+	 * 
+	 */
+	
 	@Test()
 	public void removeCustomerExistingTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
 		
@@ -69,7 +98,17 @@ public class CustomerManagerTest {
 		
 	}
 	
-	// Id tests
+	/**
+	 * 
+	 * Test the functionality of getting a customer by id.
+	 * @throws ConnectionException
+	 * @throws IOException
+	 * @throws TimeoutException
+	 * @throws RequestRejected
+	 * @throws CustomerNotFoundException
+	 * 
+	 */
+	
 	@Test()
 	public void getCustomerExistingByIdTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
 
@@ -88,7 +127,17 @@ public class CustomerManagerTest {
 		
 	}
 	
-	// Cpr tests
+	/**
+	 * 
+	 * Test the functionality of getting a customer by cpr.
+	 * @throws ConnectionException
+	 * @throws IOException
+	 * @throws TimeoutException
+	 * @throws RequestRejected
+	 * @throws CustomerNotFoundException
+	 * 
+	 */
+	
 	@Test()
 	public void getCustomerExistingByCprTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
 
@@ -104,7 +153,17 @@ public class CustomerManagerTest {
 		
 	}
 	
-	// AllCustomer test
+	/**
+	 * 
+	 * Test the functionality of getting all the customers.
+	 * @throws ConnectionException
+	 * @throws IOException
+	 * @throws TimeoutException
+	 * @throws RequestRejected
+	 * @throws CustomerNotFoundException
+	 * 
+	 */
+	
 	@Test()
 	public void getAllCustomersTest() throws ConnectionException, IOException, TimeoutException, RequestRejected, CustomerNotFoundException {
 

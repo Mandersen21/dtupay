@@ -17,6 +17,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * 
+ * The connection via REST web-service is assured by the CustomerEndpoint class.
+ * POST (for adding a customer), GET (a customer or all the customers) and DELETE (a customer at a time) is implemented.
+ * @author BotezatuCristian
+ *
+ */
+
 @Path("/customers")
 public class CustomerEndpoint {
 
