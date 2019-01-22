@@ -1,4 +1,13 @@
 eclipse.preferences.version=1
+encoding//src/main/java/dtu/ws/fastmoney/Account.java=UTF-8
+encoding//src/main/java/dtu/ws/fastmoney/AccountInfo.java=UTF-8
+encoding//src/main/java/dtu/ws/fastmoney/BankService.java=UTF-8
+encoding//src/main/java/dtu/ws/fastmoney/BankServiceException.java=UTF-8
+encoding//src/main/java/dtu/ws/fastmoney/BankServiceService.java=UTF-8
+encoding//src/main/java/dtu/ws/fastmoney/BankServiceServiceLocator.java=UTF-8
+encoding//src/main/java/dtu/ws/fastmoney/BankServiceServiceSoapBindingStub.java=UTF-8
+encoding//src/main/java/dtu/ws/fastmoney/Transaction.java=UTF-8
+encoding//src/main/java/dtu/ws/fastmoney/User.java=UTF-8
 encoding//src/test/java=UTF-8
 encoding//src/test/resources=UTF-8
 encoding/<project>=UTF-8

@@ -48,17 +48,20 @@ public class TestBank {
 //		
 //	}
 	
-//	@Test
-//	public void makeAccounts() throws ServiceException, BankServiceException, RemoteException {
-//		BankService bank = new BankServiceServiceLocator().getBankServicePort();
-//		
-//		BigDecimal balance = new BigDecimal(100);
-//		
-//		String cus = bank.createAccountWithBalance(new User("123987", "John", "John"), balance);
-//		String mer = bank.createAccountWithBalance(new User("789456", "Mon", "Mon"), balance);
-//		System.out.println(bank.getAccounts().length);
-//
-//	}
+	@Test
+	public void makeAccounts() throws ServiceException, BankServiceException, RemoteException {
+		BankService bank = new BankServiceServiceLocator().getBankServicePort();
+		
+		BigDecimal balance = new BigDecimal(100000000);
+		
+		String cus = bank.createAccountWithBalance(new User("0101010101", "jacob", "customer"), balance);
+		String mer = bank.createAccountWithBalance(new User("0202020202", "John", "merchant"), balance);
+		System.out.println(bank.getAccounts().length);
+		System.out.println("merchant: "+mer);
+		System.out.println("customer: "+cus);
+		
+
+	}
 	
 //	@Test
 //	public void deleteTestAccounts() throws ServiceException, BankServiceException, RemoteException {
@@ -95,5 +98,7 @@ public class TestBank {
 //        BankServiceManager man = new BankServiceManager(res);
 //        
 //    }
+	
+
 }
 

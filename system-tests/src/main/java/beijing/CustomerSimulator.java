@@ -1,6 +1,8 @@
 package beijing;
 
+import com.google.gson.JsonObject;
 import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -29,6 +31,15 @@ public class CustomerSimulator {
 		return new DTUPayCustomerResponse(result.getStatus(), result.getBody());
 		
 	}
+	
+	public DTUPayCustomerResponse getCustomer(String custId) throws UnirestException {
+		HttpResponse<JsonNode> result = Unirest.get(dtupayUrl + ":3002/"+custId)
+				.header("Accept", "application/json").asJson();
+		return new DTUPayCustomerResponse(result.getStatus(), result.getBody().toString());
+		
+	}
+	
+	
 
 
 	public DTUPayCustomerResponse getToken(String custId) throws UnirestException {

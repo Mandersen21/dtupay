@@ -56,7 +56,9 @@ public class MerchantsEndpoint {
 	 */
 	@PUT
 	@Produces("application/json")
-	public Response requestTransaction(@FormParam("merchantId") String merchantId, @FormParam("tokenId") String tokenId,
+	public Response requestTransaction(
+			@FormParam("merchantId") String merchantId, 
+			@FormParam("tokenId") String tokenId,
 			@FormParam("amount") String amount) {
 		TransactionObject to;
 		try {
