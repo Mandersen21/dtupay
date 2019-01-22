@@ -35,16 +35,9 @@ public class CustomerManager {
 
 		setupMessageQueue();
 		
-		
-		
-		/// Cucumber user story 1
+		// Cucumber user story 1
 		Customer c = new Customer("123456", "john john", "1234567890", null, AccountStatus.VERIFIED);
 		customerRepository.createCustomer(c);
-		
-		
-		
-		
-		
 	}
 	
 	
@@ -56,30 +49,30 @@ public class CustomerManager {
 		factory.setHost("02267-bejing.compute.dtu.dk");
 		connection = factory.newConnection();
 		
-		
 		channel = connection.createChannel();
 		channel.queueDeclare(CUSTOMERID_TO_TOKENSERVICE_QUEUE, false, false, false, null);
 		channel.queueDeclare(CUSTOMER_PAYMENT_REGITRATION, false, false, false, null);
 		channel.queueDeclare(PAYMENT_CUSTOMER_REGITRATION, false, false, false, null);
 		
-//		Listen for payment service that creates the account for the created customer
-		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-			String message = new String(delivery.getBody());
-			String[] paymentvalues = message.split(",");
-			String customerId = paymentvalues[0];
-			AccountStatus accountStatus = paymentvalues[1].equals("VERIFIED") ? AccountStatus.VERIFIED : AccountStatus.ERROR;
-			
-			Customer customer = customerRepository.getCustomerById(customerId);
-			customer.setStatus(accountStatus);
-			customerRepository.updateCustomer(customer);
-			
-			if(accountStatus.equals(AccountStatus.VERIFIED)) {	
-				channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
-			}
-		};
-		channel.basicConsume(PAYMENT_CUSTOMER_REGITRATION, true, deliverCallback, consumerTag -> {
-		});		
+		// Listen for payment service that creates the account for the created customer
+//		DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+//			String message = new String(delivery.getBody());
+//			String[] paymentvalues = message.split(",");
+//			String customerId = paymentvalues[0];
+//			AccountStatus accountStatus = paymentvalues[1].equals("VERIFIED") ? AccountStatus.VERIFIED : AccountStatus.ERROR;
+//			
+//			Customer customer = customerRepository.getCustomerById(customerId);
+//			customer.setStatus(accountStatus);
+//			customerRepository.updateCustomer(customer);
+//			
+//			if(accountStatus.equals(AccountStatus.VERIFIED)) {	
+//				channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, customer.getId().getBytes());
+//			}
+//		};
+//		channel.basicConsume(PAYMENT_CUSTOMER_REGITRATION, true, deliverCallback, consumerTag -> {
+//		});		
 	}
+	
 	// Add customer
 	public Customer addCustomer(String name, String cpr)
 			throws RequestRejected, IOException, TimeoutException, CustomerNotFoundException {
@@ -92,18 +85,13 @@ public class CustomerManager {
 			Customer  c = new Customer(id, name, cpr, new ArrayList<String>(), AccountStatus.UNVERIFIED);
 			String message = c.getId()+","+c.getCpr();
 			
-			channel.basicPublish("", CUSTOMER_PAYMENT_REGITRATION, null, message.getBytes());
-					
-			
 			customerRepository.createCustomer(c);
-			
+			channel.basicPublish("", CUSTOMERID_TO_TOKENSERVICE_QUEUE, null, c.getId().getBytes());
 				
 			channel.close();
 			connection.close();
-			
 			return c;
         }
-		
 	}
 
 	// Remove customer
