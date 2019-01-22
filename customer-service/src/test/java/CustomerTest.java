@@ -1,7 +1,6 @@
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
 import beijing.customerservice.domain.AccountStatus;
 import beijing.customerservice.domain.Customer;
 
@@ -22,6 +21,9 @@ public class CustomerTest {
 		
 		Stephen.setTokenList(null);
 		assertEquals(Stephen.getTokenList(), null);
+		
+		Stephen.setStatus(AccountStatus.VERIFIED);
+		assertEquals(Stephen.getStatus(), AccountStatus.VERIFIED);
 		
 	}
 }

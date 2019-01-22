@@ -54,8 +54,8 @@ public class TestBank {
 //		
 //		BigDecimal balance = new BigDecimal(100000000);
 //		
-//		String cus = bank.createAccountWithBalance(new User("0101010101", "jacob", "customer"), balance);
-//		String mer = bank.createAccountWithBalance(new User("0202020202", "John", "merchant"), balance);
+//		String cus = bank.createAccountWithBalance(new User("01010101010", "jacob", "customer"), balance);
+//		String mer = bank.createAccountWithBalance(new User("02020202020", "John", "merchant"), balance);
 //		System.out.println(bank.getAccounts().length);
 //		System.out.println("merchant: "+mer);
 //		System.out.println("customer: "+cus);
@@ -89,9 +89,9 @@ public class TestBank {
 //        merA.setDtuId("321");
 //        res.createAccount(cusA);
 //        res.createAccount(merA);
-        
-        System.out.println("Customer: " + bankService.getAccountByCprNumber("0101010101").getBalance());
-        System.out.println("Merchant: " + bankService.getAccountByCprNumber("0202020202").getBalance());
+		bankService.transferMoneyFromTo("cff05540-a04a-4056-97e1-bf7c969a1473", "acba8917-d211-4b53-b745-731b156ea54d", BigDecimal.TEN, "Hello");
+        System.out.println("Customer: " + bankService.getAccountByCprNumber("01010101010").getBalance());
+        System.out.println("Merchant: " + bankService.getAccountByCprNumber("02020202020").getBalance());
         
         
         
