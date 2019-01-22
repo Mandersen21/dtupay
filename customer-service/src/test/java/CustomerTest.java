@@ -7,6 +7,10 @@ import beijing.customerservice.domain.Customer;
 public class CustomerTest {
 	Customer Stephen = new Customer("123", "Stephen", "123102", null, AccountStatus.UNVERIFIED);
 	
+	/**
+	 * Test the getters and setters for the Customer class.
+	 */
+	
 	@Test
 	public void getSetUserDetails() {
 		
