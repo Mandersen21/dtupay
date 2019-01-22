@@ -1,5 +1,6 @@
 
 
+import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import beijing.CreateAccountRequest;
@@ -16,13 +17,14 @@ import static junit.framework.TestCase.assertEquals;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import dtu.ws.fastmoney.*;
 
 public class StepDefinitions {
 	
 	private static final String appUrl = "http://02267-bejing.compute.dtu.dk:3002/customers";
 	
 	private static final Gson jsonLib = new Gson();
-	private String customerCpr = "12345678";
+	private String customerCpr = "123987";
 	private String customerBankId;
 	private double customerFunds = 10000.0;
 	private String merchantCpr = "213412";
@@ -30,9 +32,11 @@ public class StepDefinitions {
 	private String amount;
 	private String token;
 	
-//	@Before()
+	private String customerCPR = "123987";
+	private String merchantCVR = "1234567890";
+	
+//	@Before("@pay")
 //	public void beforeScenario() throws Exception {
-//		
 //		String firstName = "John";
 //		String lastName = "John";
 //		
@@ -82,8 +86,8 @@ public class StepDefinitions {
 //				.asString();
 //		assertEquals(200, createMerchantDtuPayResponse.getStatus());
 //	}
-	
-//	@After()
+//	
+//	@After("@pay")
 //	public void afterScenario() throws Exception {
 //		if (customerBankId != null && !customerBankId.isEmpty() ) {
 //			HttpResponse<String> removeBankResponse = Unirest
@@ -119,55 +123,61 @@ public class StepDefinitions {
 //			assertEquals(200, removeDtuPayResponse.getStatus());
 //		}
 //	}
+//	
 	
-	@Given("a registered customer with a bank account")
+	@Given("^a registered customer with a bank account$")
 	public void a_registered_customer_with_a_bank_account() throws Exception {
-		
+		BankService bs =  new BankServiceServiceLocator().getBankServicePort();
+		Account a = bs.getAccountByCprNumber(customerCPR);
+	    
 		CustomerSimulator customerSimulator = new CustomerSimulator();		
-		DTUPayResponse result = customerSimulator.getToken(customerCpr);
-		assertEquals(200, result.getResponseCode());
+		DTUPayResponse result = customerSimulator.getCustomer(customerCpr);
+		assertEquals(a.getUser().getCprNumber(), customerCPR);
 		
 	}
 
-//	@Given("a registered merchant with a bank account$")
-//	public void a_registered_merchant_with_a_bank_account() throws Exception {
-//		
-//		MerchantSimulator merchantSimulator = new MerchantSimulator();
-//		
-//	}
+	@Given("^a registered merchant with a bank account$")
+	public void a_registered_merchant_with_a_bank_account() throws Exception {
+		System.out.println("nicolaj was here");
+		BankService bs =  new BankServiceServiceLocator().getBankServicePort();
+		Account a = bs.getAccountByCprNumber(merchantCVR);
+	    
+		CustomerSimulator customerSimulator = new CustomerSimulator();		
+		DTUPayResponse result = customerSimulator.getCustomer(merchantCVR);
+		assertEquals(a.getUser().getCprNumber(), merchantCVR);
+		
+	}
 
-//	@Given("the customer has one unused token$")
-//	public void the_customer_has_one_unused_token() throws Exception {
-//	    
-//		
-//		
-//	}
+	@Given("^the customer has one unused token$")
+	public void the_customer_has_one_unused_token() throws Exception {
+	    
+		
+	}
 
-//	@When("the merchant scans the token$")
-//	public void the_merchant_scans_the_token(String arg1) throws Exception {
-//	    
-//		
-//		
-//	}
+	@When("^the merchant scans the token$")
+	public void the_merchant_scans_the_token(String arg1) throws Exception {
+	    
+		
+	}
 
-//	@When("requests payment for (\\d+) kroner using the token$")
-//	public void requests_payment_for_kroner_using_the_token(String arg1) throws Exception {
-//	    
-//		amount = arg1;
-//		
-//	}
+	@When("^requests payment for (\\d+) kroner using the token$")
+	public void requests_payment_for_kroner_using_the_token(String arg1) throws Exception {
+	    
+		amount = arg1;
+		
+	}
 
-//	@Then("the payment succeeds$")
-//	public void the_payment_succeeds() throws Exception {
-//	   
-//		
-//		
-//	}
+	@Then("^the payment succeeds$")
+	public void the_payment_succeeds() throws Exception {
+	   
+		
+		
+	}
 
-//	@Then("the money is transferred from the customer bank account to the merchant bank account$")
-//	public void the_money_is_transferred_from_the_customer_bank_account_to_the_merchant_bank_account() throws Exception {
-//	   
-//		
-//		
-//	}
+	@Then("^the money is transferred from the customer bank account to the merchant bank account$")
+	public void the_money_is_transferred_from_the_customer_bank_account_to_the_merchant_bank_account() throws Exception {
+	   
+		
+		
+	}
 }

@@ -48,20 +48,20 @@ public class TestBank {
 //		
 //	}
 	
-	@Test
-	public void makeAccounts() throws ServiceException, BankServiceException, RemoteException {
-		BankService bank = new BankServiceServiceLocator().getBankServicePort();
-		
-		BigDecimal balance = new BigDecimal(100000000);
-		
-		String cus = bank.createAccountWithBalance(new User("0101010101", "jacob", "customer"), balance);
-		String mer = bank.createAccountWithBalance(new User("0202020202", "John", "merchant"), balance);
-		System.out.println(bank.getAccounts().length);
-		System.out.println("merchant: "+mer);
-		System.out.println("customer: "+cus);
-		
-
-	}
+//	@Test
+//	public void makeAccounts() throws ServiceException, BankServiceException, RemoteException {
+//		BankService bank = new BankServiceServiceLocator().getBankServicePort();
+//		
+//		BigDecimal balance = new BigDecimal(100000000);
+//		
+//		String cus = bank.createAccountWithBalance(new User("0101010101", "jacob", "customer"), balance);
+//		String mer = bank.createAccountWithBalance(new User("0202020202", "John", "merchant"), balance);
+//		System.out.println(bank.getAccounts().length);
+//		System.out.println("merchant: "+mer);
+//		System.out.println("customer: "+cus);
+//		
+//
+//	}
 	
 //	@Test
 //	public void deleteTestAccounts() throws ServiceException, BankServiceException, RemoteException {
