@@ -17,7 +17,7 @@
 ## (Comments)
 #Sample Feature Definition Template
 @tag
-Feature: Token generator
+Feature: Token feature
  generate tokens for customer
 
   @tag1

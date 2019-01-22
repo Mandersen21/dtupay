@@ -17,7 +17,7 @@
 ## (Comments)
 #Sample Feature Definition Template
 @tag
-Feature: Title of your feature
+Feature: Payment feature
   I want to use this template for my feature file
 
   @tag1
