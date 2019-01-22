@@ -47,6 +47,11 @@ public class TokenManager {
 		tokenRepository = _tRepository;
 		customerRepository = _cRepository;
 
+		// Cucumber user story 1
+		Token token = new Token("123", "123456", true, Status.ACTIVE, null);
+		customerRepository.addCustomer("123456");
+		tokenRepository.createToken(token);
+		
 		setupMessageQueue();
 	}
 
