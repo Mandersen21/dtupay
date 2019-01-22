@@ -73,35 +73,34 @@ public class TestBank {
 //		String mer = bank.createAccountWithBalance(new User("789456", "Mon", "Mon"), balance);
 //		System.out.println(bank.getAccounts().length);
 //	}
-	
-
-	
-	
-	@Test
-	public void rabbitMQTest() throws IOException, TimeoutException, ServiceException {
-		bankService =  new BankServiceServiceLocator().getBankServicePort();
-		res = new PaymentRepository();
-		BigDecimal balance = new BigDecimal(100);
-		Transaction[] t = null;
-        Transaction[] tv = null;       
-        String t1 = bankService.getAccountByCprNumber("123987").getId();
-        String t2 = bankService.getAccountByCprNumber("789456").getId();
-        
-        
-		Account cusA = new Account(balance,t1, t, new User("123987", "John", "John"));
-		cusA.setDtuId("123");
-		Account merA = new Account(balance,t2, tv,new User("789456", "Mon", "Mon"));
-		merA.setDtuId("321");
-		res.createAccount(cusA);
-		res.createAccount(merA);
-		
-		System.out.println("Customer: " + bankService.getAccountByCprNumber("123987").getBalance());
-		System.out.println("Merchant: " + bankService.getAccountByCprNumber("789456").getBalance());
-		
-		
-		
-		man = new BankServiceManager(res);
-		
-	}
+//	
+//
+//	
+//	
+//	@Test
+//	public void rabbitMQTest() throws IOException, TimeoutException, ServiceException {
+//		bankService =  new BankServiceServiceLocator().getBankServicePort();
+//		res = new PaymentRepository();
+//		BigDecimal balance = new BigDecimal(100);
+//		Transaction[] t = null;
+//        Transaction[] tv = null;       
+//        Account merA = bankService.getAccountByCprNumber("0202020202");
+//        Account cusA = bankService.getAccountByCprNumber("0101010101");
+//        
+//        
+//        
+//		cusA.setDtuId("123456");
+//		merA.setDtuId("98765");
+//		res.createAccount(cusA);
+//		res.createAccount(merA);
+//		
+//		System.out.println("Customer: " + bankService.getAccountByCprNumber("0101010101").getBalance());
+//		System.out.println("Merchant: " + bankService.getAccountByCprNumber("0202020202").getBalance());
+//		
+//		
+//		
+//		man = new BankServiceManager(res);
+//		
+//	}
 }
 

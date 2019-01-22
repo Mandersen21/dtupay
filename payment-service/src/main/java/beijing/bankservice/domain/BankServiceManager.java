@@ -168,6 +168,7 @@ public class BankServiceManager {
 	
 	private void setupMerchantRPC() throws IOException {
 		channel.queueDeclare(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
+		channel.queueDeclare("TEST_QUEUE", false, false, false, null);
 		channel.queuePurge(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE);
 		channel.basicQos(1);
 		
@@ -260,8 +261,6 @@ public class BankServiceManager {
 		t.setTime(Calendar.getInstance());
 		System.out.println("14");
 			// getid refers to the account id which is given by the bank 
-		String t1 = bankService.getAccountByCprNumber("123987").getId();
-        String t2 = bankService.getAccountByCprNumber("789456").getId();
         System.out.println("15");
         
         
