@@ -1,14 +1,11 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import beijing.customerservice.domain.Customer;
 import beijing.customerservice.domain.CustomerManager;
 import beijing.customerservice.exception.ConnectionException;
