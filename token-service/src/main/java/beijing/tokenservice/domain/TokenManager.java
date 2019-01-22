@@ -263,4 +263,8 @@ public class TokenManager {
 		}
 	}
 
+	public boolean deleteTokens(String customerId) {
+		return tokenRepository.deleteTokens(customerId);
+	}
+
 }

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
@@ -78,6 +79,13 @@ public class TokensEndpoint {
 			return Response.status(500).entity("Internal server error").build();
 		}
 		return Response.ok(tokens, "application/json").build();
+	}
+	
+	@DELETE
+	@Produces("application/json")
+	public Response deleteTokens(@QueryParam("customerId") String customerId) {
+		boolean response = tokenManager.deleteTokens(customerId);
+		return Response.ok(Response.status(200),"application/json").build();
 	}
 	
 }
