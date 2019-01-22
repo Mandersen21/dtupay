@@ -1,5 +1,6 @@
 package beijing.tokenservice.repository;
 
+import beijing.tokenservice.domain.Status;
 import beijing.tokenservice.domain.Token;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class TokenRepository implements ITokenRepository {
     }
 
     public List<Token> getTokensForCustomerId(String customerId) {
-        return tokenList.stream().filter(t -> t.getCustomerId() == customerId && t.getValidationStatus() == true && t.getStatus().equals("ACTIVE")).collect(Collectors.toList());
+        return tokenList.stream().filter(t -> t.getCustomerId().contentEquals(customerId) && t.getValidationStatus() && t.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList());
     }
 
 	public boolean deleteTokens(String customerId) {

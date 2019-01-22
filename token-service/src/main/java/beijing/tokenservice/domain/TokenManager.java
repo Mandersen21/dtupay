@@ -70,6 +70,9 @@ public class TokenManager {
 			throw new RequestRejected("Your request was rejected due to requesting less than 1 or more than 5 tokens");
 		}
 
+		System.out.println("Number of tokens on customer: " + t.size());
+		
+		
 		if (t.size() > 1) {
 			throw new RequestRejected("Your request was rejected due to having more than one valid token left");
 		}
