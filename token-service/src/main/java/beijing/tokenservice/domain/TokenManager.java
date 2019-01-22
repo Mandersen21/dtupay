@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 public class TokenManager {
 
@@ -51,7 +52,7 @@ public class TokenManager {
 		Token token = new Token("123", "123456", true, Status.ACTIVE, null);
 		customerRepository.addCustomer("123456");
 		tokenRepository.createToken(token);
-		
+
 		setupMessageQueue();
 	}
 
@@ -109,14 +110,15 @@ public class TokenManager {
 		return token.getValidationStatus() == true;
 	}
 
-	public List<TokenRepresentation> getAllTokens() {
-		List<TokenRepresentation> tokens = new ArrayList<TokenRepresentation>();
+	public List<Token> getAllTokens(String customerId) {
 		List<Token> list;
 		list = tokenRepository.getTokens();
-		for (Token t : list) {
-			tokens.add(new TokenRepresentation(t.getTokenId(), t.getPath()));
+
+		if (customerId != null) {
+			return list.stream().filter(t -> t.getCustomerId().contentEquals(customerId)).collect(Collectors.toList());
+		} else {
+			return list;
 		}
-		return tokens;
 	}
 
 	public boolean isTokenInvalid(String tokenId) {
@@ -181,7 +183,7 @@ public class TokenManager {
 		DeliverCallback deliverCallbackMerchant = (consumerTag, delivery) -> {
 			String message = new String(delivery.getBody(), "UTF-8");
 			String[] resultSplit = message.split(",");
-			
+
 			String id = resultSplit[0];
 			boolean valid = resultSplit[1] == "PAID" || resultSplit[1] == "INVALID" ? false : true;
 			Status status = Status.ACTIVE;
@@ -194,11 +196,11 @@ public class TokenManager {
 			if (resultSplit[1] == "PENDING") {
 				status = Status.PENDING;
 			}
-			
+
 			try {
 				updateToken(id, valid, status);
 			} catch (TokenNotFoundException e) {
-				
+
 			}
 		};
 		channel.basicConsume(MERCHANTSERVICE_TO_TOKENID_QUEUE, true, deliverCallbackMerchant, consumerTag -> {

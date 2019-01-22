@@ -50,10 +50,10 @@ public class TokensEndpoint {
 	
 	@GET
 	@Produces("application/json")
-	public Response getAllTokens() throws IOException, TimeoutException {
-		List<TokenRepresentation> tokens = null;
+	public Response getAllTokens(@QueryParam("customerId") String customerId) throws IOException, TimeoutException {
+		List<Token> tokens = null;
 		try {
-			tokens = tokenManager.getAllTokens();
+			tokens = tokenManager.getAllTokens(customerId);
 		} catch (Exception e) {
 			return Response.status(406).entity("Request has been rejected").build();
 		}
