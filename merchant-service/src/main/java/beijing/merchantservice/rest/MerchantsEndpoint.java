@@ -41,7 +41,7 @@ public class MerchantsEndpoint {
 	public MerchantsEndpoint() {
 		controller = new MerchantManager(repository);
 		try {
-			controller.receiveNewTokens("123,123");
+			controller.receiveNewTokens("123,123456");
 		} catch (DataAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
