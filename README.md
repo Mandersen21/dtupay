@@ -1,64 +1,13 @@
 # dtupay
-Dtupay application
+DTUPay Application
 
-Token-service:
-- domain/Token (TokenId(String), Valid(Boolean), CustomerId(String), Status(Enum))
-- domain/TokenManager
-  
-- rest/TokensEndpoint
-- rest/RestApplication
+Done by:
+1. Cristian Botezatu (s164571@student.dtu.dk)
+2. Mads Bjørn Wehlast Hansen (s136638@student.dtu.dk)
+3. Mikkel Bilgrav Andersen (s103652@student.dtu.dk)
+4. Nicolaj Stald Pedersen (s127527@student.dtu.dk)
+5. Tór Dam Joensen (s155470@student.dtu.dk)
+6. Wenhao Li (s134620@student.dtu.dk)
 
-- exception/
-
-- repository/ITokenRepositry 
-- repository/TokenRepositry
-
-Customer-service:
-- domain/Customer (CustomerId(String), CprNumber(String), Name, List<Token>)
-- domain/Token (TokenId(String))
-- domain/CustomerController
-  
-- rest/CustomersEndpoint
-- rest/RestApplication
-
-- exception/
-
-- repository/ICustomerRepositry 
-- repository/CustomerRepositry
-
-
-
-Payment-service:
-- domain/BankAccount (AccountId(String), UserId(String), Balance(double))
-- domain/PaymentController)
-  - Transaction(MerchantId(String), CustomerId(String), Amount(Int),  )
-  
-- rest/?
-- rest/?
-
-- exception/
-
-- repository/IBankAccountRepositry 
-- repository/BankAccountRepositry
-
-
-
-Merchant-service:
-- domain/Merchant (MerchantId(String), CvrNumber(String), Name)
-- domain/MerchantController)
-  - RequestTransaction(MerchantId(String), TokenId(String), Amount(int))
-  - 
-
-- rest/MerchantsEndpoint
-- rest/RestApplication
-
-- exception/
-
-- repository/IMerchantRepositry 
-- repository/MerchantRepositry
-
-
-
-EVERYBODY SHOULD WORK ON THIS FOR TOMORROW, PLEASE DO UNIT TESTING, (NOT CUCUMBER TESTING)
 Best regards
-Mikkel, Mads, Cristian, Tör
+Cristian, Mads, Mikkel, Nicolaj, Tor, Wenhao
