@@ -17,7 +17,7 @@
 ## (Comments)
 #Sample Feature Definition Template
 @tag
-Feature: Payment
+Feature: Payment feature
   I want to use this template for my feature file
 
   @tag1
@@ -27,4 +27,3 @@ Feature: Payment
 	And the customer has one unused token
 	When the merchant scans the token and requests payment for 1 kroner using the token
 	Then the payment succeeds and the money is transferred from the customer bank account to the merchant bank account
-	
