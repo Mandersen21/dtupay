@@ -58,9 +58,9 @@ public class MerchantsEndpoint {
 	@PUT
 	@Produces("application/json")
 	public Response requestTransaction(
-			@FormParam("merchantId") String merchantId, 
-			@FormParam("tokenId") String tokenId,
-			@FormParam("amount") String amount) {
+			@QueryParam("merchantId") String merchantId, 
+			@QueryParam("tokenId") String tokenId,
+			@QueryParam("amount") String amount) {
 		TransactionObject to;
 		try {
 			to = controller.requestTransaction(merchantId, tokenId, amount, "DTU Pay Service");
