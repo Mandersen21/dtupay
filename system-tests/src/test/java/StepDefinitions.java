@@ -60,32 +60,20 @@ public class StepDefinitions {
 			
 		TokenSimulator tokenSimulator = new TokenSimulator();
 		DTUPayResponse result = tokenSimulator.getTokenId("123");
-		System.out.println(result.getResponseCode());
-		System.out.println(result.getResponseText());
+		assertEquals(200, result.getResponseCode());
 		
 	}
 
-	@When("^the merchant scans the token$")
-	public void the_merchant_scans_the_token(String arg1) throws Exception {
+	@When("^the merchant scans the token and requests payment for (\\d+) kroner using the token$")
+	public void requests_payment_for_kroner_using_the_token(String amount) throws Exception {
 	    
+		MerchantSimulator merchantSimulator = new MerchantSimulator();
+		DTUPayResponse result = merchantSimulator.intiateTransaction("98765", "123", amount);
+		assertEquals(200, result.getResponseCode());
 		
 	}
 
-	@When("^requests payment for (\\d+) kroner using the token$")
-	public void requests_payment_for_kroner_using_the_token(String arg1) throws Exception {
-	    
-		
-		
-	}
-
-	@Then("^the payment succeeds$")
-	public void the_payment_succeeds() throws Exception {
-	   
-		
-		
-	}
-
-	@Then("^the money is transferred from the customer bank account to the merchant bank account$")
+	@Then("^the payment succeeds and the money is transferred from the customer bank account to the merchant bank account$")
 	public void the_money_is_transferred_from_the_customer_bank_account_to_the_merchant_bank_account() throws Exception {
 	   
 		

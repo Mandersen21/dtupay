@@ -22,7 +22,7 @@ public class TokenSimulator {
 	
 	public DTUPayTokenResponse getTokenId(String tokenId) throws UnirestException {
 		
-		HttpResponse<String> result = Unirest.put(dtupayUrl + ":3000/tokens/" + tokenId).header("Content-Type", "application/x-wwww-form-urlencoded")
+		HttpResponse<String> result = Unirest.get(dtupayUrl + ":3000/tokens/" + tokenId).header("Content-Type", "application/x-wwww-form-urlencoded")
 				.header("Accept", "application/json").asString();
 		return new DTUPayTokenResponse(result.getStatus(), result.getBody());
 	}

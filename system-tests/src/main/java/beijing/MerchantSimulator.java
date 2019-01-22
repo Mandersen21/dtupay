@@ -22,8 +22,8 @@ public class MerchantSimulator {
 	
 	public DTUPayMerchantResponse intiateTransaction(String mechId, String tokenId, String amount) throws UnirestException {
 		
-		HttpResponse<String> result = Unirest.put(dtupayUrl + ":3002/customers").header("Content-Type", "application/x-wwww-form-urlencoded")
-				.header("Accept", "application/json").queryString("mechId", mechId).field("tokenId", tokenId).field("amount", amount).asString();
+		HttpResponse<String> result = Unirest.put(dtupayUrl + ":3001/merchants").header("Content-Type", "application/x-wwww-form-urlencoded")
+				.header("Accept", "application/json").body("{\"merchantId\":\"" + mechId + "\", \"tokenId\":\"" + tokenId + "\", \"amount\":\"\"" + amount + "\"}").asString();
 		return new DTUPayMerchantResponse(result.getStatus(), result.getBody());
 	}
 	
