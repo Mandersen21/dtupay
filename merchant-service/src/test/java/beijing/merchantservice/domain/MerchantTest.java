@@ -2,35 +2,40 @@ package beijing.merchantservice.domain;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeoutException;
-
 import org.junit.Test;
-import beijing.merchantservice.domain.Merchant;
-import beijing.merchantservice.domain.TokenValidation;
-import beijing.merchantservice.exception.CorruptedTokenException;
-import beijing.merchantservice.exception.DataAccessException;
-import beijing.merchantservice.exception.RequestRejected;
-import beijing.merchantservice.repository.MerchantRepository;
-
 
 
 public class MerchantTest {
-	Merchant Stephen = new Merchant("123456", "123456", "BurgerBar");
 	
 
-	//Test if merchant can receive a payment
-	@Test()
-	public void requestTokensSuccesTest() throws IOException, TimeoutException, RequestRejected, DataAccessException, CorruptedTokenException  {
-//		MerchantManager con = new MerchantManager(new MerchantRepository());
-//		List<TokenValidation> t = new ArrayList<>();
-//		con.receiveNewTokens("1234,123456");
-//		
-//		con.requestTransaction("123","123","100","descrption");
-//		
-		
-		//assertEquals(tokens.size(), 1);
+	@Test
+	public void constructorNotNullTest() {
+		Merchant mer = new Merchant("122987", "123456789", "Burger shop");
+		assertNotNull(mer);
 	}
+	
+	@Test
+	public void getCVRTest() {
+		Merchant mer = new Merchant("122987", "123456789", "Burger shop");
+		String actual = mer.getCvrNumber();
+		String expected = "123456789";
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void getNameTest() {
+		Merchant mer = new Merchant("122987", "123456789", "Burger shop");
+		String actual = mer.getName();
+		String expected = "Burger shop";
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void getMerchantIdTest() {
+		Merchant mer = new Merchant("122987", "123456789", "Burger shop");
+		String actual = mer.getMerchantId();
+		String expected = "122987";
+		assertEquals(expected, actual);
+	}
+	
 }
