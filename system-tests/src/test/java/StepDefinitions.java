@@ -100,10 +100,5 @@ public class StepDefinitions {
 		
 	}
 	
-	@After
-	public void clearTokenList() throws UnirestException {
-		TokenSimulator ts = new TokenSimulator();
-		ts.deleteTokens();
-		
-	}
+
 }
