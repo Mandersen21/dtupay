@@ -13,6 +13,7 @@ import beijing.TokenSimulator;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -96,6 +97,13 @@ public class StepDefinitions {
 		BigDecimal newMerBalance = bs.getAccountByCprNumber(merchantCVR).getBalance();
 		assertEquals(newCusBalance,customerBalance.subtract(amount));
 		assertEquals(newMerBalance, merchantBalance.add(amount));	
+		
+	}
+	
+	@After
+	public void clearTokenList() throws UnirestException {
+		TokenSimulator ts = new TokenSimulator();
+		ts.deleteTokens();
 		
 	}
 }

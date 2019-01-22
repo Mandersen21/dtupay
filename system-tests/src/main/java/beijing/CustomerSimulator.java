@@ -33,9 +33,9 @@ public class CustomerSimulator {
 	}
 	
 	public DTUPayCustomerResponse getCustomer(String custId) throws UnirestException {
-		HttpResponse<JsonNode> result = Unirest.get(dtupayUrl + ":3002/"+custId)
-				.header("Accept", "application/json").asJson();
-		return new DTUPayCustomerResponse(result.getStatus(), result.getBody().toString());
+		HttpResponse<String> result = Unirest.get(dtupayUrl + ":3002/customers/"+custId)
+				.header("Accept", "application/json").asString();
+		return new DTUPayCustomerResponse(result.getStatus(), result.getBody());
 		
 	}
 	
