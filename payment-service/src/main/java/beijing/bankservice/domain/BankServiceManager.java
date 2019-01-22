@@ -76,8 +76,8 @@ public class BankServiceManager {
 		connection = factory.newConnection();
 		channel = connection.createChannel();
 //		channel2 = connection.createChannel();
-//		setupMerchantRPC();
-		setupCustomerVerification();
+		setupMerchantRPC();
+//		setupCustomerVerification();
 //		setupSignupRPCChannel(RPC_CUSTOMER_PAYMENT_REGITRATION);
 //		setupSignupRPCChannel(RPC_MERCHANT_PAYMENT_REGITRATION);
 //		
