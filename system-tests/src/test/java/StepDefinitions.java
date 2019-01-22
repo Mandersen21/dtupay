@@ -25,21 +25,23 @@ public class StepDefinitions {
 	private static final String appUrl = "http://02267-bejing.compute.dtu.dk:3002/customers";
 	
 	private static final Gson jsonLib = new Gson();
-	private String customerCpr = "123987";
 	
-	private String customerCPR = "123987";
-	private String merchantCVR = "1234567890";
+	private String customerCpr = "0101010101";
+	private String merchantCVR = "0202020202";
+	private String tokeId = "123";
+	private String merchantId = "98765";
+	private String customerId = "123456";
 	
 	
 	@Given("^a registered customer with a bank account$")
 	public void a_registered_customer_with_a_bank_account() throws Exception {
 		
 		BankService bs =  new BankServiceServiceLocator().getBankServicePort();
-		Account a = bs.getAccountByCprNumber(customerCPR);
+		Account a = bs.getAccountByCprNumber(customerCpr);
 	    
 		CustomerSimulator customerSimulator = new CustomerSimulator();		
 		DTUPayResponse result = customerSimulator.getCustomer(customerCpr);
-		assertEquals(a.getUser().getCprNumber(), customerCPR);
+		assertEquals(a.getUser().getCprNumber(), customerCpr);
 		
 	}
 
@@ -59,7 +61,7 @@ public class StepDefinitions {
 	public void the_customer_has_one_unused_token() throws Exception {
 			
 		TokenSimulator tokenSimulator = new TokenSimulator();
-		DTUPayResponse result = tokenSimulator.getTokenId("123");
+		DTUPayResponse result = tokenSimulator.getTokenId(tokeId);
 		assertEquals(200, result.getResponseCode());
 		
 	}
@@ -68,7 +70,7 @@ public class StepDefinitions {
 	public void requests_payment_for_kroner_using_the_token(String amount) throws Exception {
 	    
 		MerchantSimulator merchantSimulator = new MerchantSimulator();
-		DTUPayResponse result = merchantSimulator.intiateTransaction("98765", "123", amount);
+		DTUPayResponse result = merchantSimulator.intiateTransaction(merchantId, tokeId, amount);
 		assertEquals(200, result.getResponseCode());
 		
 	}

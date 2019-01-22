@@ -46,18 +46,18 @@ public class BankServiceManager {
 	public BankServiceManager(IPaymentRepository _prepository) throws IOException, TimeoutException {
 		paymentRepository = _prepository;
 		
-		
-        String t1 = bankService.getAccountByCprNumber("123987").getId();
-        String t2 = bankService.getAccountByCprNumber("789456").getId();
-        Transaction[] t = null;
-        Transaction[] tv = null; 
-        Account cusA = new Account(new BigDecimal(100),t1, t, new User("123987", "John", "John"));
-        cusA.setDtuId("123");
-        Account merA = new Account(new BigDecimal(100),t2, tv,new User("789456", "Mon", "Mon"));
-        merA.setDtuId("321");
-		
 		try {
 			bankService = new BankServiceServiceLocator().getBankServicePort();
+			
+			// user story 1
+			Account customer = bankService.getAccountByCprNumber("0101010101");
+			Account merchant = bankService.getAccountByCprNumber("0202020202");
+			customer.setDtuId("123456");
+	        merchant.setDtuId("98765");
+	        
+	        paymentRepository.createAccount(merchant);
+	        paymentRepository.createAccount(customer);
+	        
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}

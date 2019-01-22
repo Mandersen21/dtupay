@@ -72,9 +72,9 @@ public class TestBank {
 //		System.out.println(bank.getAccounts().length);
 //	}
 //	
-//	@Test
-//	public void rabbitMQTest() throws IOException, TimeoutException, ServiceException {
-//		BankService bankService =  new BankServiceServiceLocator().getBankServicePort();
+	@Test
+	public void rabbitMQTest() throws IOException, TimeoutException, ServiceException {
+		BankService bankService =  new BankServiceServiceLocator().getBankServicePort();
 //        PaymentRepository res = new PaymentRepository();
 //        BigDecimal balance = new BigDecimal(100);
 //        Transaction[] t = null;
@@ -89,15 +89,15 @@ public class TestBank {
 //        merA.setDtuId("321");
 //        res.createAccount(cusA);
 //        res.createAccount(merA);
-//        
-//        System.out.println("Customer: " + bankService.getAccountByCprNumber("123987").getBalance());
-//        System.out.println("Merchant: " + bankService.getAccountByCprNumber("789456").getBalance());
-//        
-//        
-//        
+        
+        System.out.println("Customer: " + bankService.getAccountByCprNumber("0101010101").getBalance());
+        System.out.println("Merchant: " + bankService.getAccountByCprNumber("0202020202").getBalance());
+        
+        
+        
 //        BankServiceManager man = new BankServiceManager(res);
-//        
-//    }
+        
+    }
 	
 
 }

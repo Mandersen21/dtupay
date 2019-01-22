@@ -58,10 +58,10 @@ public class MerchantManager {
 		}
 		
 		
-		Merchant m = new Merchant("98765", "98765432", "Cucumber Aps");
+		Merchant m = new Merchant("98765", "0202020202", "Cucumber Aps");
 		try {
 			this.repository.createMerchant(m);
-			this.repository.addToken(new TokenValidation(true,"123", "123987"));
+			this.repository.addToken(new TokenValidation(true,"123", "123456"));
 		} catch (DataAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
