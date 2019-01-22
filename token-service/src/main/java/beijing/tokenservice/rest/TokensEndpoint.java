@@ -36,6 +36,11 @@ public class TokensEndpoint {
 		tokenManager = new TokenManager(tRepository, cRepository);
 	}
 	
+	/**
+	 * 
+	 * @param tokenId
+	 * @return A token based on a given path param "tokenId".
+	 */
 	@GET
 	@Path("/{tokenId}") 
 	@Produces("application/json")
@@ -49,6 +54,13 @@ public class TokensEndpoint {
 		return Response.ok(token, "application/json").build();
 	}
 	
+	/**
+	 * 
+	 * @param customerId
+	 * @return Get all tokens based on customerId, or if not provided, it will return every token.
+	 * @throws IOException
+	 * @throws TimeoutException
+	 */
 	@GET
 	@Produces("application/json")
 	public Response getAllTokens(@QueryParam("customerId") String customerId) throws IOException, TimeoutException {
@@ -61,6 +73,12 @@ public class TokensEndpoint {
 		return Response.ok(tokens, "application/json").build();
 	}
 	
+	/**
+	 * 
+	 * @param customerId
+	 * @param tokenAmount
+	 * @return Request tokens based on the provided customerId and the amount of tokens 1-5.
+	 */
 	@POST
 	@Produces("application/json")
 	public Response getTokens(@QueryParam("customerId") String customerId, @QueryParam("tokenAmount") int tokenAmount) {
@@ -81,6 +99,11 @@ public class TokensEndpoint {
 		return Response.ok(tokens, "application/json").build();
 	}
 	
+	/**
+	 * 
+	 * @param customerId
+	 * @return Delete tokens based on the provided customerId, or if not provided deletes every token.
+	 */
 	@DELETE
 	@Produces("application/json")
 	public Response deleteTokens(@QueryParam("customerId") String customerId) {

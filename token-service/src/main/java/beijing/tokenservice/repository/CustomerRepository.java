@@ -11,7 +11,9 @@ public class CustomerRepository implements ICustomerRepository {
 		customerList = new ArrayList<String>();
 	}
 
-	@Override
+	/**
+	 * Add customer to the customer list
+	 */
 	public boolean addCustomer(String customerId) {
 		if (getCustomer(customerId) != null) {
 			return false;
@@ -21,12 +23,16 @@ public class CustomerRepository implements ICustomerRepository {
 		}
 	}
 
-	@Override
+	/**
+	 * Get every customers
+	 */
 	public List<String> getCustomers() {
 		return customerList;
 	}
 
-	@Override
+	/**
+	 * Get customer based on provided customerId, returns null if not found.
+	 */
 	public String getCustomer(String customerId) {
 		for (String c : customerList) {
             if (c.contentEquals(customerId)) {
