@@ -6,6 +6,7 @@ package beijing.customerservice.domain;
  * @author BotezatuCristian
  *
  */
+
 public enum AccountStatus {
 	UNVERIFIED, VERIFIED, ERROR
 }
