@@ -30,7 +30,7 @@ Feature: Title of your feature
   @tag2
   Scenario: merchant gets list of Transactions
 	Given a registered merchant with a bank account
-	Given that the merchant has perfomed transactions
+	Given that the merchant has ben involved in transactions
 	When the merchant request for a list of transactions
 	Then DTUPay replies with a list of transactions
 	

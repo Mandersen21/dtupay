@@ -57,7 +57,7 @@ public class MerchantStepDefinition {
 	}
 	
 	
-	@Given("^that the merchant has perfomed transactions$")
+	@Given("^that the merchant has ben involved in transactions$")
 	public void that_the_merchant_has_perfomed_transactions() throws Exception {
 		List<TransactionValueHolder> resultList = jsonLib.fromJson(ms.getAllTransactions().getResponseText(),type);
 		boolean result = false;
