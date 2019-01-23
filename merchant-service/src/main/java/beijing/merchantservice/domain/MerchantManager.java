@@ -58,18 +58,8 @@ public class MerchantManager {
 			e.printStackTrace();
 		}
 		
-		
-		Merchant m = new Merchant("98765", "0202020202", "Cucumber Aps");
-		try {
-			this.repository.createMerchant(m);
-			this.repository.addToken(new TokenValidation(true,"123", "123456"));
-		} catch (DataAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CorruptedTokenException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		forTesting();
+
 		
 	}
 
@@ -199,10 +189,7 @@ public class MerchantManager {
 		if (result.equalsIgnoreCase("500")) {
 			throw new RequestRejected("The payment transaction failed");
 		} else {
-//			String[] resultSplit = result.split(",");
-			System.out.print(result);
 			to = new TransactionObject(merchantId,customerId, UUID.randomUUID().toString(), amount, Calendar.getInstance().getTime());
-//			to = new TransactionObject(merchantId, resultSplit[0], amount, new Date(Date.parse(resultSplit[1])));
 		}
 		channel.basicCancel(ctag);
 		return to;
@@ -216,7 +203,6 @@ public class MerchantManager {
 	 * @throws DataAccessException
 	 */
 	public void receiveNewTokens(String message) throws DataAccessException {
-		System.out.println(" [x] Received '" + message + "'");
 		String[] tokenMessage = message.split(",");
 	
 		try {
@@ -302,6 +288,18 @@ public class MerchantManager {
 	 */
 	public List<TransactionObject> getTransactions() throws DataAccessException{
 		return repository.getAllTransactions();
+	}
+	
+	private void forTesting() {
+		Merchant m = new Merchant("98765", "0202020202", "Cucumber Aps");
+		try {
+			this.repository.createMerchant(m);
+			this.repository.addToken(new TokenValidation(true,"123", "123456"));
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		} catch (CorruptedTokenException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

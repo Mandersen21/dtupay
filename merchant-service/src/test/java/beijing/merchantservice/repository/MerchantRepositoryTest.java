@@ -33,8 +33,9 @@ public class MerchantRepositoryTest {
 	}
 	@Test
 	public void getMerchantsTest() throws DataAccessException {
-		repository.createMerchant(new Merchant("111","122","Impo"));
-		assertNotNull(repository.getMerchants());
+		IMerchantRepository repository2 = new MerchantRepository();
+		repository2.createMerchant(new Merchant("111","122","Impo"));
+		assertEquals(repository.getMerchants().size(),1);
 	}
 	@Test
 	public void getTokenByIdTest() throws DataAccessException, CorruptedTokenException {
@@ -45,12 +46,14 @@ public class MerchantRepositoryTest {
 	}
 	@Test
 	public void getTransactionsTest() throws DataAccessException, CorruptedTokenException {
-		repository.createTransaction(new TransactionObject("123987","222666", "123123", "100", new Date()));
-		assertNotNull(repository.getTransactions("123987"));
+		IMerchantRepository repository2 = new MerchantRepository();
+		repository2.createTransaction(new TransactionObject("123987","222666", "123123", "100", new Date()));	
+		assertEquals(repository2.getTransactions("123987").size(),1);
 	}
 	@Test
 	public void getTokenValidationsTest() throws DataAccessException, CorruptedTokenException {
-		repository.addToken(new TokenValidation(true, "567", "987"));
-		assertNotNull(repository.getTokenValidations());	
+		IMerchantRepository repository2 = new MerchantRepository();
+		repository2.addToken(new TokenValidation(true, "567", "987"));
+		assertEquals(repository2.getTokenValidations().size(),1);	
 	}
 }
