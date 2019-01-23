@@ -105,6 +105,12 @@ public class TokenManager {
 		return tokens;
 	}
 
+    /**
+     * 
+     * @param msg
+     * @param path
+     * @return Starts the process of generating a token image (barcode).
+     */
 	public boolean isTokenValid(String tokenId) throws TokenNotFoundException {
 		token = tokenRepository.getToken(tokenId);
 		if (token == null) {
