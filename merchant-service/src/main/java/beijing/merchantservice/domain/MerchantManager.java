@@ -292,10 +292,16 @@ public class MerchantManager {
 	 */
 	public List<TransactionObject> getTransactionsById(String userId) throws DataAccessException{
 		return repository.getTransactions(userId);
-		
-		
 	}
 	
-	
+	/**
+	 * returns the full list of all transactions
+	 * @param userId
+	 * @return
+	 * @throws DataAccessException 
+	 */
+	public List<TransactionObject> getTransactions() throws DataAccessException{
+		return repository.getAllTransactions();
+	}
 	
 }

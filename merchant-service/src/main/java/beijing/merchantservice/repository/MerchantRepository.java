@@ -99,7 +99,7 @@ public class MerchantRepository implements IMerchantRepository {
 	 */
 	public List<TransactionObject> getTransactions(String userId) throws DataAccessException {
 		List<TransactionObject> merchantTrasactions = transactionsList.stream()
-				.filter(m -> m.getMerchantId().contentEquals(userId)|| m.getCustomerId().contentEquals(userId) ).collect(Collectors.toList());
+				.filter(m -> m.getMerchantId().equals(userId)|| m.getCustomerId().equals(userId) ).collect(Collectors.toList());
 		return merchantTrasactions;
 	}
 
@@ -123,11 +123,16 @@ public class MerchantRepository implements IMerchantRepository {
 	@Override
 	public Merchant getMerchantByCVR(String cvrNumber) throws DataAccessException {
 		List<Merchant> resultmerchant = merchantList.stream()
-				.filter(m -> m.getCvrNumber().contentEquals(cvrNumber)).collect(Collectors.toList());
+				.filter(m -> m.getCvrNumber().equals(cvrNumber)).collect(Collectors.toList());
 		if(resultmerchant.isEmpty()) {
 			return null;
 		}
 		return resultmerchant.get(0);
+	}
+
+	@Override
+	public List<TransactionObject> getAllTransactions() throws DataAccessException {
+		return transactionsList;
 	}
 	
 	

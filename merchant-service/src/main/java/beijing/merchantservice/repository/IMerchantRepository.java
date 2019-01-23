@@ -68,12 +68,19 @@ public interface IMerchantRepository {
 	List<Merchant> getMerchants()throws DataAccessException;
 	
 	/**
-	 * gets all transactions requested by the merchant with the given id
-	 * @param merchantUid
+	 * gets all transactions requested by the user with the given id
+	 * @param userID
 	 * @return
 	 * @throws DataAccessException
 	 */
-	List<TransactionObject> getTransactions(String merchantUid)throws DataAccessException;
+	List<TransactionObject> getTransactions(String userID)throws DataAccessException;
+	
+	/**
+	 * get the full list of all transactions
+	 * @return
+	 * @throws DataAccessException
+	 */
+	List<TransactionObject> getAllTransactions()throws DataAccessException;
 	
 	/**
 	 * get the complete list of tokens in the repository
