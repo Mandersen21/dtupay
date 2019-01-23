@@ -31,7 +31,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import dtu.ws.fastmoney.*;
 
-public class tokenStepDefinition {
+public class TokenStepDefinition {
 	
 	private static final String appUrl = "http://02267-bejing.compute.dtu.dk:3002/customers";
 	
