@@ -43,6 +43,13 @@ public class BankServiceManager {
 	
 	private BankService bankService;
 		
+	/**
+	 * creates a new instance of the BankServiceManager, that contains the 
+	 * business logic for the bank-service.
+	 * @param _prepository
+	 * @throws IOException
+	 * @throws TimeoutException
+	 */
 	public BankServiceManager(IPaymentRepository _prepository) throws IOException, TimeoutException {
 		paymentRepository = _prepository;
 		
@@ -65,7 +72,12 @@ public class BankServiceManager {
 		setupMessageQueue();	 
 	}
 	
-	
+	/**
+	 * sets up the message queue with predefined values
+	 * and continues on to declare the relevant channels
+	 * @throws IOException
+	 * @throws TimeoutException
+	 */
 	private void setupMessageQueue() throws IOException, TimeoutException {
 		
 		// Connect to RabbitMQ
@@ -87,7 +99,13 @@ public class BankServiceManager {
 		
 	}
 	
-	
+	/**
+	 * sels up the message queue channel related to the customer 
+	 * registration. this channel communicates between the bank-service and the customer-service.
+	 * the bank-service receives a message to verify the existance of an account in the bank.
+	 * and responds with a result.
+	 * @throws IOException
+	 */
 	private void setupCustomerVerification() throws IOException {
 		channel.queueDeclare(PAYMENT_CUSTOMER_REGISTRATION, false, false, false, null);
 		channel.queueDeclare(CUSTOMER_PAYMENT_REGISTRATION, false, false, false, null);
@@ -115,6 +133,12 @@ public class BankServiceManager {
 	}
 
 	
+	/**
+	 * sets up the message queue channel related to transfer of money.
+	 * these requests coms from the merchant-service. to request a transfer of money
+	 * from a verified customer to the merchant for a given amount.
+	 * @throws IOException
+	 */
 	private void setupMerchantRPC() throws IOException {
 		channel.queueDeclare(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE, false, false, false, null);
 		channel.queuePurge(RPC_MERCHANTSERVICE_TO_PAYMENTSERVICE_QUEUE);
@@ -165,6 +189,13 @@ public class BankServiceManager {
 	}
 
 	
+	/**
+	 * verifies that the customer with the given cpr has an
+	 * account in the bank. and returns the finding with a boolean.
+	 * @param cpr
+	 * @param dtuId
+	 * @return found an account with given cpr
+	 */
 	public boolean verifyAccount(String cpr,String dtuId)  {
 		boolean status = true;
 		
@@ -189,6 +220,17 @@ public class BankServiceManager {
 	}
 
 	
+	/**
+	 * contacts the bank to transfer money from the customers account to the mercchants account
+	 * and stores the transaction in the repository
+	 * @param merchantId
+	 * @param customerId
+	 * @param amount
+	 * @param description
+	 * @return
+	 * @throws BankServiceException
+	 * @throws RemoteException
+	 */
 	public String initiateTransfer(String merchantId, String customerId,String amount, String description) throws BankServiceException, RemoteException {
 		// get Account finds the account based on the id given by the DTU Pay service
 		Account merchant = paymentRepository.getAccount(merchantId); 

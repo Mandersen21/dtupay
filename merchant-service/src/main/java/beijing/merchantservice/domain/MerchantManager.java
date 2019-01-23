@@ -41,7 +41,8 @@ public class MerchantManager {
 	private Consumer consumer;
 
 	/**
-	 * 
+	 * Merchant manager is responsible for the business logic of the merchant-service
+	 * and keeps track of the repository and message queues.
 	 * @param repository
 	 */
 	public MerchantManager(IMerchantRepository _repository) {
@@ -74,7 +75,9 @@ public class MerchantManager {
 
 
 	/**
-	 * 
+	 * do initial verifications before continuing on eith the 
+	 * process to call 
+	 * {@link #requestPayment(String, String, String, String)}
 	 * @param merchantid
 	 * @param tokenid
 	 * @param amount
@@ -111,7 +114,7 @@ public class MerchantManager {
 	}
 
 	/**
-	 * creates a new merchant and adds him to the database.
+	 * creates a new merchant and stores the data in the repository.
 	 * @param merchantId
 	 * @param cvrNumber
 	 * @param name
@@ -158,7 +161,8 @@ public class MerchantManager {
 	}
 	
 	/**
-	 * 
+	 * contacts the payment-service through message queue tp request a 
+	 * payment between merhcants and customer for the given amount.
 	 * @param merchantId
 	 * @param customerId
 	 * @param amount
@@ -206,6 +210,7 @@ public class MerchantManager {
 	
 	/**
 	 * converts message into an object of TokenValidation
+	 * and stores the token in the repository.
 	 * and stores the object in the database.
 	 * @param message
 	 * @throws DataAccessException
@@ -224,7 +229,7 @@ public class MerchantManager {
 
 
 	/**
-	 * 
+	 * find and retrieve the repository for a merchant with given id.
 	 * @param id
 	 * @return
 	 * @throws DataAccessException
@@ -239,7 +244,8 @@ public class MerchantManager {
 
 	
 	/**
-	 * 
+	 * sets up the message queue with predefined values and
+	 * opens declares the needed channels
 	 * @throws IOException
 	 * @throws TimeoutException
 	 */
@@ -268,9 +274,13 @@ public class MerchantManager {
 //		});
 	}
 
-
+	/**
+	 * gets the complete list of merchants from the repository
+	 * @return
+	 * @throws DataAccessException
+	 */
 	public List<Merchant> getAllMerhcants() throws DataAccessException {
-		return repository.getMerchantList();
+		return repository.getMerchants();
 	}
 	
 	

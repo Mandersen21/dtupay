@@ -7,7 +7,8 @@ public class Merchant {
 	private String Name;
 
 	/**
-	 * 
+	 * Merchant is a model class that contains the values accociated with 
+	 * a merchant
 	 * @param merchantID
 	 * @param CvrNumber
 	 * @param Name
@@ -19,15 +20,15 @@ public class Merchant {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * gets the merchants id
+	 * @return merchantId
 	 */
 	public String getMerchantId() {
 		return merchantId;
 	}
 
 	/**
-	 * 
+	 * sets the merchants id
 	 * @param merchantID
 	 */
 	public void setMerchantID(String merchantID) {
@@ -35,15 +36,15 @@ public class Merchant {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * gets the merchants CVR number
+	 * @return merchantCVR
 	 */
 	public String getCvrNumber() {
 		return CvrNumber;
 	}
 
 	/**
-	 * 
+	 * sets the merhcant CVR number
 	 * @param cvrNumber
 	 */
 	public void setCvrNumber(String cvrNumber) {
@@ -51,15 +52,15 @@ public class Merchant {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * gets the merchant name
+	 * @return bane of merchant
 	 */
 	public String getName() {
 		return Name;
 	}
 
 	/**
-	 * 
+	 * sets the name of the merchant
 	 * @param name
 	 */
 	public void setName(String name) {

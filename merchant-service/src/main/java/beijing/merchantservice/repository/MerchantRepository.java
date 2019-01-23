@@ -125,13 +125,6 @@ public class MerchantRepository implements IMerchantRepository {
 		}
 		return resultmerchant.get(0);
 	}
-
-
-
-	@Override
-	public List<Merchant> getMerchantList() throws DataAccessException {
-		return merchantList;
-	}
 	
 	
 }

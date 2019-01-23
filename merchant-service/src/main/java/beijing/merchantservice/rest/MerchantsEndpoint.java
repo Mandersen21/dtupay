@@ -34,7 +34,8 @@ public class MerchantsEndpoint {
 	protected MerchantManager controller;
 
 	/**
-	 * 
+	 * creates the Endpoint for the merchat-service
+	 * instaciates the MerchantManager with a given repository
 	 * @throws IOException
 	 * @throws TimeoutException
 	 */
@@ -49,7 +50,8 @@ public class MerchantsEndpoint {
 	}
 
 	/**
-	 * 
+	 * requests transaction from the owner of token to the merchant
+	 * for the given amount
 	 * @param merchantId
 	 * @param tokenId
 	 * @param amount
@@ -80,7 +82,7 @@ public class MerchantsEndpoint {
 	}
 
 	/**
-	 * 
+	 * creates a new merchant and stores it in the repository.
 	 * @param merhcantId
 	 * @param CVR
 	 * @param name
@@ -108,7 +110,7 @@ public class MerchantsEndpoint {
 	}
 
 	/**
-	 * 
+	 * retrieves a merchant from the repository with the given id
 	 * @param id
 	 * @return
 	 */
@@ -129,6 +131,10 @@ public class MerchantsEndpoint {
 		return Response.ok(merchant, "application/json").build();
 	}
 
+	/**
+	 * Retrieves a list of all merchants stored in the database.
+	 * @return
+	 */
 	@GET
 	@Produces("application/json")
 	public Response getAllMerhcants() {

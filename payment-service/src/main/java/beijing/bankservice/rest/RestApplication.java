@@ -16,6 +16,10 @@ public class RestApplication extends Application {
 	private static IPaymentRepository repository = new PaymentRepository();
 	private BankServiceManager manager;
 	
+	/**
+	 * instantiate the bank-service 
+	 * with a predefined  BankServiceManager and repository.
+	 */
 	public RestApplication() {
 		try {
 			manager = new BankServiceManager(repository);

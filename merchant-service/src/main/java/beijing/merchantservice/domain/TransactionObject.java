@@ -10,7 +10,8 @@ public class TransactionObject {
     private Date timeOfTransaction;
 
     /**
-     * 
+     * creates a transaction object the contains the values related to 
+     * a transaction for a merchant.
      * @param merchantId
      * @param trasactionId
      * @param amount
@@ -24,15 +25,15 @@ public class TransactionObject {
     }
 
     /**
-     * 
-     * @return
+     * gets the merchant id
+     * @return merchant id
      */
     public String getMerchantId() {
         return merchantId;
     }
 
     /**
-     * 
+     * sets the merchant id
      * @param merchantId
      */
     public void setMerchantId(String merchantId) {
@@ -40,15 +41,15 @@ public class TransactionObject {
     }
 
     /**
-     * 
-     * @return
+     * gets the transaction id
+     * @returntransaction id
      */
     public String getTrasactionId() {
         return trasactionId;
     }
 
     /**
-     * 
+     * sets the transaction id
      * @param trasactionId
      */
     public void setTrasactionId(String trasactionId) {
@@ -56,15 +57,15 @@ public class TransactionObject {
     }
 
     /**
-     * 
-     * @return
+     * gets the amount transferred 
+     * @return amount
      */
     public String getAmount() {
         return amount;
     }
 
     /**
-     * 
+     * sets the amount transferred
      * @param amount
      */
     public void setAmount(String amount) {
@@ -72,7 +73,7 @@ public class TransactionObject {
     }
 
     /**
-     * 
+     * gets the time of transaction
      * @return
      */
     public Date getTimeOfTransaction() {
@@ -80,7 +81,7 @@ public class TransactionObject {
     }
 
     /**
-     * 
+     * sets the time of transaction
      * @param timeOfTransaction
      */
     public void setTimeOfTransaction(Date timeOfTransaction) {
