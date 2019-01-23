@@ -7,24 +7,47 @@ public class TransactionObject {
     private String merchantId;
     private String trasactionId;
     private String amount;
+    private String customerId;
     private Date timeOfTransaction;
 
     /**
      * creates a transaction object the contains the values related to 
      * a transaction for a merchant.
      * @param merchantId
+     * @param customerId
      * @param trasactionId
      * @param amount
      * @param timeOfTransaction
      */
-    public TransactionObject(String merchantId, String trasactionId, String amount, Date timeOfTransaction) {
+    public TransactionObject(String merchantId, String customerId, String trasactionId, String amount, Date timeOfTransaction) {
         this.merchantId = merchantId;
+        this.customerId = customerId;
         this.trasactionId = trasactionId;
         this.amount = amount;
         this.timeOfTransaction = timeOfTransaction;
     }
+    
+    
+    /**
+     * gets the customerId
+     * @return customerId
+     */
+    public String getCustomerId() {
+		return customerId;
+	}
+
 
     /**
+     * sets the customer Id
+     * @param customerId
+     */
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+
+
+	/**
      * gets the merchant id
      * @return merchant id
      */

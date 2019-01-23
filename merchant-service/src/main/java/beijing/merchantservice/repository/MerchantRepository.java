@@ -17,6 +17,10 @@ public class MerchantRepository implements IMerchantRepository {
 	List<TokenValidation> tokenList;
 
 
+	/**
+	 * this merchant repository keeps a list of merchants, transactions and token-representations.
+	 * the data is stored in memory.
+	 */
 	public MerchantRepository() {
 		merchantList = new ArrayList<>();
 		transactionsList = new ArrayList<>();
@@ -93,9 +97,9 @@ public class MerchantRepository implements IMerchantRepository {
 	 * 
 	 * @return
 	 */
-	public List<TransactionObject> getTransactions(String merchantUid) throws DataAccessException {
+	public List<TransactionObject> getTransactions(String userId) throws DataAccessException {
 		List<TransactionObject> merchantTrasactions = transactionsList.stream()
-				.filter(m -> m.getMerchantId().contentEquals(merchantUid)).collect(Collectors.toList());
+				.filter(m -> m.getMerchantId().contentEquals(userId)|| m.getCustomerId().contentEquals(userId) ).collect(Collectors.toList());
 		return merchantTrasactions;
 	}
 

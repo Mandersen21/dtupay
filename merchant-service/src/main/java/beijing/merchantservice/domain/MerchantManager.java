@@ -201,7 +201,7 @@ public class MerchantManager {
 		} else {
 //			String[] resultSplit = result.split(",");
 			System.out.print(result);
-			to = new TransactionObject(merchantId, UUID.randomUUID().toString(), amount, Calendar.getInstance().getTime());
+			to = new TransactionObject(merchantId,customerId, UUID.randomUUID().toString(), amount, Calendar.getInstance().getTime());
 //			to = new TransactionObject(merchantId, resultSplit[0], amount, new Date(Date.parse(resultSplit[1])));
 		}
 		channel.basicCancel(ctag);
@@ -281,6 +281,19 @@ public class MerchantManager {
 	 */
 	public List<Merchant> getAllMerhcants() throws DataAccessException {
 		return repository.getMerchants();
+	}
+	
+	/**
+	 * returns a list of transactions where the user was involved
+	 * the user can represent both customer and merchant.
+	 * @param userId
+	 * @return
+	 * @throws DataAccessException 
+	 */
+	public List<TransactionObject> getTransactionsById(String userId) throws DataAccessException{
+		return repository.getTransactions(userId);
+		
+		
 	}
 	
 	

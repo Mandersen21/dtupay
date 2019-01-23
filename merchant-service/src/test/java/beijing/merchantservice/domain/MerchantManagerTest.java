@@ -2,9 +2,11 @@ package beijing.merchantservice.domain;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
@@ -81,6 +83,12 @@ public class MerchantManagerTest {
 	public void getAllMerhcantsTest() throws DataAccessException {
 		repository.createMerchant(new Merchant("12332","12332","toy store 2"));	
 		assertNotNull(man.getAllMerhcants());
+	}
+	
+	@Test
+	public void getAllTransactionstest() throws DataAccessException {
+		repository.createTransaction(new TransactionObject("12332", "222666", UUID.randomUUID().toString(), "100", new Date(System.currentTimeMillis())));
+		assertNotNull(man.getTransactionsById("12332"));
 	}
 	
 }
