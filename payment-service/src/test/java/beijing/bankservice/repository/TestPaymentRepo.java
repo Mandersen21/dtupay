@@ -1,4 +1,4 @@
-package beijing.PaymentService.test;
+package beijing.bankservice.repository;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -19,7 +19,9 @@ public class TestPaymentRepo {
 	}
 	
 	@Test
-	public void testGetAccount() {
+	public void testGetAccount(){
+		
+		//System.out.println(pRepo.accounts.size());
 		assertEquals(pRepo.getAccount(id),null);
 	}
 	
@@ -30,12 +32,12 @@ public class TestPaymentRepo {
 	
 	@Test
 	public void testStoreTransaction() {
-		assertEquals(pRepo.storeTransaction(ta),null);
+		assertEquals(pRepo.storeTransaction(ta),true);
 	}
 	
 	@Test
 	public void testGetTransactions() {
-		assertEquals(pRepo.getTransactions(id),null);
+		assertEquals(pRepo.getTransactions(id).size(),0);
 	}
 	
 	
