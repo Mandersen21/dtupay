@@ -40,6 +40,7 @@ public class CustomerManager {
 	 * 
 	 */
 	
+	
 	public CustomerManager(ICustomerRepository _repository) throws IOException, TimeoutException  {
 		customerRepository =_repository;
 
