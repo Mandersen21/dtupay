@@ -35,7 +35,7 @@ public class MerchantRepositoryTest {
 	public void getMerchantsTest() throws DataAccessException {
 		IMerchantRepository repository2 = new MerchantRepository();
 		repository2.createMerchant(new Merchant("111","122","Impo"));
-		assertEquals(repository.getMerchants().size(),1);
+		assertEquals(repository2.getMerchants().size(),1);
 	}
 	@Test
 	public void getTokenByIdTest() throws DataAccessException, CorruptedTokenException {
