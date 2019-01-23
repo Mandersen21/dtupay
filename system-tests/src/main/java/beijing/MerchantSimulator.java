@@ -1,6 +1,7 @@
 package beijing;
 
 import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -26,5 +27,19 @@ public class MerchantSimulator {
 				.asString();
 		return new DTUPayMerchantResponse(result.getStatus(), result.getBody());
 	}
+	
+	public DTUPayMerchantResponse getAllTransactions() throws UnirestException {
+		HttpResponse<String> result = Unirest.get(dtupayUrl + ":3001/merchants/transactions")
+				.header("Accept", "application/json").asString();
+		return new DTUPayMerchantResponse(result.getStatus(), result.getBody());
+	}
+	
+	public DTUPayMerchantResponse getCustomerTransactions(String custId) throws UnirestException {
+		HttpResponse<String> result = Unirest.get(dtupayUrl + ":3001/merchants/transactions?merchantId="+custId)
+				.header("Accept", "application/json").asString();
+		return new DTUPayMerchantResponse(result.getStatus(), result.getBody());
+	}
+	
+	
 	
 }
