@@ -178,7 +178,6 @@ public class MerchantsEndpoint {
 	@Produces("application/json")
 	public Response getFullTransactionList() {
 		List<TransactionObject> transactionList = null;
-
 		try {
 			transactionList = controller.getTransactions();
 		} catch (DataAccessException e) {
