@@ -146,5 +146,29 @@ public class MerchantsEndpoint {
 		}
 		return Response.ok(merchantList, "application/json").build();
 	}
+	
+	/**
+	 * retrieves a merchant from the repository with the given id
+	 * @param id
+	 * @return
+	 */
+	@GET
+	@Path("/transactions/{userId}") 
+	@Produces("application/json")
+	public Response getTransactionList(@PathParam("userId") String userId) {
+		List<TransactionObject> transactionList = null;
+
+		try {
+			transactionList = controller.getTransactionsById(userId);
+		} catch (DataAccessException e) {
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.ok(transactionList, "application/json").build();
+	}
+	
+	
 
 }

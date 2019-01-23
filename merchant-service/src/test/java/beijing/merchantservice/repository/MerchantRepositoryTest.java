@@ -45,7 +45,7 @@ public class MerchantRepositoryTest {
 	}
 	@Test
 	public void getTransactionsTest() throws DataAccessException, CorruptedTokenException {
-		repository.createTransaction(new TransactionObject("123987", "123123", "100", new Date()));
+		repository.createTransaction(new TransactionObject("123987","222666", "123123", "100", new Date()));
 		assertNotNull(repository.getTransactions("123987"));
 	}
 	@Test
