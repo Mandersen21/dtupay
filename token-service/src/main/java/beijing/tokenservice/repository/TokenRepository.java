@@ -14,7 +14,10 @@ public class TokenRepository implements ITokenRepository {
     public TokenRepository() {
         tokenList = new ArrayList<Token>();
     }
-
+    
+    /**
+     * Get token
+     */
     public Token getToken(String tokenId) {
         for (Token c : tokenList) {
             if (c.getTokenId().contentEquals(tokenId)) {
@@ -23,7 +26,10 @@ public class TokenRepository implements ITokenRepository {
         }
         return null;
     }
-
+    
+    /**
+     * Create token based on provided token, returns null if token was already created.
+     */
     public boolean createToken(Token token) {
         if (getToken(token.getTokenId()) != null) {
             return false;
@@ -33,6 +39,9 @@ public class TokenRepository implements ITokenRepository {
         }
     }
 
+    /**
+     * Updates token based on provided token
+     */
     public boolean updateToken(Token token) {
         for (Token c : tokenList) {
             if (c.getTokenId().contentEquals(token.getTokenId())) {
@@ -44,14 +53,24 @@ public class TokenRepository implements ITokenRepository {
         return false;
     }
 
+    /**
+     * Get every tokens created
+     */
     public List<Token> getTokens() {
         return tokenList;
     }
-
+    
+    /**
+     * Get tokens based on customerId as a list.
+     */
     public List<Token> getTokensForCustomerId(String customerId) {
         return tokenList.stream().filter(t -> t.getCustomerId().contentEquals(customerId) && t.getValidationStatus() && t.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList());
     }
 
+    
+    /**
+     * Delete tokens based on customer id, will delete every tokens on the customer.
+     */
 	public boolean deleteTokens(String customerId) {
 		if (customerId != null) {
 			tokenList = tokenList.stream().filter(t -> !t.getCustomerId().contentEquals(customerId)).collect(Collectors.toList());

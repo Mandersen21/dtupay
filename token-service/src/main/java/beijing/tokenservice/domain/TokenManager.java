@@ -55,7 +55,19 @@ public class TokenManager {
 
 		setupMessageQueue();
 	}
-
+	
+    /**
+     * 
+     * @param customerId
+     * @param tokenAmount
+     * @return Request tokens which will return a list of TokenRepresetation of the new tokens generated based on the logic presented. 
+     * @throws RequestRejected
+     * @throws TokenNotFoundException
+     * @throws DataAccessException
+     * @throws IOException
+     * @throws TimeoutException
+     * @throws CustomerNotFoundException
+     */
 	public List<TokenRepresentation> requestToken(String customerId, int tokenAmount) throws RequestRejected,
 			TokenNotFoundException, DataAccessException, IOException, TimeoutException, CustomerNotFoundException {
 		List<Token> t = new ArrayList<Token>();
@@ -107,9 +119,9 @@ public class TokenManager {
 
     /**
      * 
-     * @param msg
-     * @param path
-     * @return Starts the process of generating a token image (barcode).
+     * @param tokenId
+     * @return Checks weather a token is valid or not
+     * @throws TokenNotFoundException
      */
 	public boolean isTokenValid(String tokenId) throws TokenNotFoundException {
 		token = tokenRepository.getToken(tokenId);
@@ -118,7 +130,12 @@ public class TokenManager {
 		}
 		return token.getValidationStatus() == true;
 	}
-
+    
+    /**
+     * 
+     * @param customerId
+     * @return Get every tokens based on a customerId or not. If customerId is not provided, every token will be returned as a list of tokens.
+     */
 	public List<Token> getAllTokens(String customerId) {
 		List<Token> list;
 		list = tokenRepository.getTokens();
@@ -129,12 +146,27 @@ public class TokenManager {
 			return list;
 		}
 	}
-
-	public boolean isTokenInvalid(String tokenId) {
+    
+    /**
+     * 
+     * @param tokenId
+     * @return Checks weather a token is invalid
+     * @throws TokenNotFoundException 
+     */
+    public boolean isTokenInvalid(String tokenId) throws TokenNotFoundException {
 		token = tokenRepository.getToken(tokenId);
+        if (token == null) {
+            throw new TokenNotFoundException("Could not find the token based on tokenId");
+        }
 		return token.getValidationStatus() == false;
 	}
 
+    /**
+     * 
+     * @param tokenId
+     * @return Returns token based on the provided tokenId
+     * @throws TokenNotFoundException
+     */
 	public Token getToken(String tokenId) throws TokenNotFoundException {
 		Token token = tokenRepository.getToken(tokenId);
 		if (token == null) {
@@ -143,6 +175,14 @@ public class TokenManager {
 		return token;
 	}
 
+    /**
+     * 
+     * @param tokenId
+     * @param validationStatus
+     * @param status
+     * @return Updates a token based on a tokenId, only validation status and Status are allowed to be updated.
+     * @throws TokenNotFoundException
+     */
 	public boolean updateToken(String tokenId, Boolean validationStatus, Status status) throws TokenNotFoundException {
 		boolean response;
 		try {
@@ -166,7 +206,13 @@ public class TokenManager {
 
 		return false;
 	}
-
+   
+	/**
+     * Sets up message queue connection to RabbitMq as well as consuming the customer id from customer service each time a new customer is created.
+     * Furthermore, it listen for token updates from merchant service, and updates status to paid, invalid and so on.
+     * @throws IOException
+     * @throws TimeoutException
+     */
 	private void setupMessageQueue() throws IOException, TimeoutException {
 		// Connect to RabbitMQ
 		factory = new ConnectionFactory();
@@ -215,12 +261,23 @@ public class TokenManager {
 		channel.basicConsume(MERCHANTSERVICE_TO_TOKENID_QUEUE, true, deliverCallbackMerchant, consumerTag -> {
 		});
 	}
-
+    
+	/**
+     * 
+     * @param length
+     * @return Generates random token number based on the length provided.
+     */
 	public String generateRandomTokenNumber(int length) {
 		int m = (int) Math.pow(10, length - 1);
 		return Integer.toString(m + new Random().nextInt(9 * m));
 	}
 
+    /**
+     * 
+     * @param msg
+     * @param path
+     * @return Starts the process of generating a token image (barcode).
+     */
 	public File generateToken(String msg, String path) {
 		File file = new File(path);
 		try {
@@ -237,6 +294,11 @@ public class TokenManager {
 		return ous.toByteArray();
 	}
 
+    /**
+     * Generates the barcode token as an images using the barcode4j module
+     * @param msg
+     * @param ous
+     */
 	public void generate(String msg, OutputStream ous) {
 		if (StringUtils.isEmpty(msg) || ous == null) {
 			return;
@@ -271,7 +333,12 @@ public class TokenManager {
 			throw new RuntimeException(e);
 		}
 	}
-
+    
+	/**
+     * Delete tokens based on the provided customerId, or if not provided deletes every token.
+     * @param customerId
+     * @return
+     */
 	public boolean deleteTokens(String customerId) {
 		return tokenRepository.deleteTokens(customerId);
 	}
