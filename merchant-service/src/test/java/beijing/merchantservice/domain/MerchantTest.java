@@ -38,4 +38,31 @@ public class MerchantTest {
 		assertEquals(expected, actual);
 	}
 	
+	@Test
+	public void setCVRTest() {
+		Merchant mer = new Merchant("122987", "123456789", "Burger shop");
+		mer.setCvrNumber("54545");
+		String actual = mer.getCvrNumber();
+		String expected = "54545";
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void setNameTest() {
+		Merchant mer = new Merchant("122987", "123456789", "Burger shop");
+		mer.setName("Ping");
+		String actual = mer.getName();
+		String expected = "Ping";
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void setMerchantIdTest() {
+		Merchant mer = new Merchant("122987", "123456789", "Burger shop");
+		 mer.setMerchantID("99999");
+		String actual = mer.getMerchantId();
+		String expected = "99999";
+		assertEquals(expected, actual);
+	}
+	
 }

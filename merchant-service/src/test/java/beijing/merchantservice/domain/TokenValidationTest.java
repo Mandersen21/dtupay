@@ -37,4 +37,31 @@ public class TokenValidationTest {
 		assertEquals(expected, actual);
 	}
 	
+	@Test
+	public void setCustomerIdTest() {
+		TokenValidation tokenVal = new TokenValidation(true, "123", "123456");
+		tokenVal.setCustomerId("3333");
+		String actual = tokenVal.getCustomerId();
+		String expected = "3333";
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void setTokenIdTest() {
+		TokenValidation tokenVal = new TokenValidation(true, "123", "123456");
+		tokenVal.setTokenId("777");
+		String actual = tokenVal.getTokenId();
+		String expected = "777";
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void setValidTest() {
+		TokenValidation tokenVal = new TokenValidation(true, "123", "123456");
+		tokenVal.setValid(false);
+		boolean actual = tokenVal.isValid();
+		boolean expected = false;
+		assertEquals(expected, actual);
+	}
+	
 }

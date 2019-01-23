@@ -81,14 +81,28 @@ public class MerchantManagerTest {
 	
 	@Test
 	public void getAllMerhcantsTest() throws DataAccessException {
-		repository.createMerchant(new Merchant("12332","12332","toy store 2"));	
-		assertNotNull(man.getAllMerhcants());
+		IMerchantRepository repository2 = new MerchantRepository();
+		MerchantManager man2 = new MerchantManager(repository2);
+		assertEquals(man.getAllMerhcants().size(),1);
 	}
 	
 	@Test
 	public void getAllTransactionstest() throws DataAccessException {
 		repository.createTransaction(new TransactionObject("12332", "222666", UUID.randomUUID().toString(), "100", new Date(System.currentTimeMillis())));
-		assertNotNull(man.getTransactionsById("12332"));
+		assertEquals(man.getTransactions().size(),1);
+	}
+	
+	@Test(expected = RequestRejected.class)
+	public void requestTransactionTest() throws CorruptedTokenException, DataAccessException, RequestRejected, IOException {
+		man.receiveNewTokens("123456,789465");
+		repository.getTokenById("123456").setValid(false);
+		man.requestTransaction("123", "123456", "100", "Pay");	
+	}
+	@Test
+	public void getTransactionsByIdTest() throws DataAccessException {
+		repository.createTransaction(new TransactionObject("123", "1234", "12345", "100", new Date(1)));
+		assertEquals(man.getTransactionsById("123").size(),1);
+		
 	}
 	
 }
