@@ -2,6 +2,14 @@ package beijing.customerservice.domain;
 
 import java.util.List;
 
+/**
+ * Customer class contains mostly the getters and setters for customer. The
+ * feature of interest are id, name, cpr, tokenList assigned to the customer and
+ * the status of the customer.
+ * 
+ * @author BotezatuCristian
+ *
+ */
 public class Customer {
     private String id;
     private String name;
@@ -9,23 +17,23 @@ public class Customer {
     private List<String> tokenList;
     private AccountStatus status;
 
-    public Customer(String id, String name, String cpr, List<String> list,AccountStatus status) {
-    	this.id = id;
-    	this.name = name;
-    	this.cpr = cpr;
-    	this.tokenList = list;
-    	this.status = status;
+    public Customer(String id, String name, String cpr, List<String> list, AccountStatus status) {
+        this.id = id;
+        this.name = name;
+        this.cpr = cpr;
+        this.tokenList = list;
+        this.status = status;
     }
 
     public AccountStatus getStatus() {
-		return status;
-	}
+        return status;
+    }
 
-	public void setStatus(AccountStatus status) {
-		this.status = status;
-	}
+    public void setStatus(AccountStatus status) {
+        this.status = status;
+    }
 
-	public void setId(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -56,6 +64,5 @@ public class Customer {
     public List<String> getTokenList() {
         return tokenList;
     }
-    
-    
+
 }
