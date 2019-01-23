@@ -52,23 +52,7 @@ public class BankServiceManager {
 	 */
 	public BankServiceManager(IPaymentRepository _prepository) throws IOException, TimeoutException {
 		paymentRepository = _prepository;
-		
-		try {
-			bankService = new BankServiceServiceLocator().getBankServicePort();
-			
-			// user story 1
-			Account customer = bankService.getAccountByCprNumber("0101010101");
-			Account merchant = bankService.getAccountByCprNumber("0202020202");
-			customer.setDtuId("123456");
-	        merchant.setDtuId("98765");
-	        
-	        paymentRepository.createAccount(merchant);
-	        paymentRepository.createAccount(customer);
-	        
-		} catch (ServiceException e) {
-			e.printStackTrace();
-		}
-		
+		forTesting();
 		setupMessageQueue();	 
 	}
 	
@@ -249,5 +233,23 @@ public class BankServiceManager {
 		paymentRepository.storeTransaction(t);
 		
 		return "Transfer completed";
+	}
+	
+	public void forTesting() throws BankServiceException, RemoteException {
+		try {
+			bankService = new BankServiceServiceLocator().getBankServicePort();
+			
+			// user story 1
+			Account customer = bankService.getAccountByCprNumber("0101010101");
+			Account merchant = bankService.getAccountByCprNumber("0202020202");
+			customer.setDtuId("123456");
+	        merchant.setDtuId("98765");
+	        
+	        paymentRepository.createAccount(merchant);
+	        paymentRepository.createAccount(customer);
+	        
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
 	}
 }
