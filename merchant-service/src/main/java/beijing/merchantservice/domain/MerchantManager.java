@@ -207,7 +207,6 @@ public class MerchantManager {
 	
 		try {
 			repository.addToken(new TokenValidation(true, tokenMessage[0], tokenMessage[1]));
-			System.out.println(repository.getTokenValidations());
 		} catch (CorruptedTokenException e) {
 			e.printStackTrace();
 		}
