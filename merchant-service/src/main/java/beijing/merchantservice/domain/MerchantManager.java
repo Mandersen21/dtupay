@@ -189,7 +189,7 @@ public class MerchantManager {
 		if (result.equalsIgnoreCase("500")) {
 			throw new RequestRejected("The payment transaction failed");
 		} else {
-			to = new TransactionObject(merchantId,customerId, UUID.randomUUID().toString(), amount, Calendar.getInstance().getTime());
+			to = new TransactionObject(merchantId,customerId, UUID.randomUUID().toString(), amount, System.currentTimeMillis());
 		}
 		channel.basicCancel(ctag);
 		return to;
