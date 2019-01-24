@@ -8,7 +8,7 @@ public class TransactionObject {
     private String trasactionId;
     private String amount;
     private String customerId;
-    private Date timeOfTransaction;
+    private long timeOfTransaction;
 
     /**
      * creates a transaction object the contains the values related to 
@@ -19,7 +19,7 @@ public class TransactionObject {
      * @param amount
      * @param timeOfTransaction
      */
-    public TransactionObject(String merchantId, String customerId, String trasactionId, String amount, Date timeOfTransaction) {
+    public TransactionObject(String merchantId, String customerId, String trasactionId, String amount, long timeOfTransaction) {
         this.merchantId = merchantId;
         this.customerId = customerId;
         this.trasactionId = trasactionId;
@@ -99,7 +99,7 @@ public class TransactionObject {
      * gets the time of transaction
      * @return
      */
-    public Date getTimeOfTransaction() {
+    public long getTimeOfTransaction() {
         return timeOfTransaction;
     }
 
@@ -107,7 +107,7 @@ public class TransactionObject {
      * sets the time of transaction
      * @param timeOfTransaction
      */
-    public void setTimeOfTransaction(Date timeOfTransaction) {
+    public void setTimeOfTransaction(long timeOfTransaction) {
         this.timeOfTransaction = timeOfTransaction;
     }
 }

@@ -92,13 +92,15 @@ public class MerchantManagerTest {
 	
 	@Test
 	public void getTransactionstest() throws DataAccessException {
-		repository.createTransaction(new TransactionObject("12332", "222666", UUID.randomUUID().toString(), "100", new Date(System.currentTimeMillis())));
+		long l = System.currentTimeMillis();
+		repository.createTransaction(new TransactionObject("12332", "222666", UUID.randomUUID().toString(), "100",l ));
 		assertNotNull(man.getTransactionsById("12332"));
 	}
 	
 	@Test
 	public void getAllTransactionstest() throws DataAccessException {
-		repository.createTransaction(new TransactionObject("12332", "222666", UUID.randomUUID().toString(), "700", new Date(System.currentTimeMillis())));
+		long l = System.currentTimeMillis();
+		repository.createTransaction(new TransactionObject("12332", "222666", UUID.randomUUID().toString(), "700", l));
 		assertTrue(!man.getTransactions().isEmpty());
 	}
 	
