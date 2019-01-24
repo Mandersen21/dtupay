@@ -2,11 +2,19 @@ package beijing.bankservice.repository;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.rmi.RemoteException;
+
+import javax.xml.rpc.ServiceException;
+
 import org.junit.Test;
 
+import beijing.bankservice.domain.BankServiceManager;
+import beijing.bankservice.exception.BankServiceException;
 import beijing.bankservice.model.Account;
 import beijing.bankservice.model.Transaction;
 import beijing.bankservice.repository.PaymentRepository;
+import beijing.bankservice.soap.BankService;
+import beijing.bankservice.soap.BankServiceServiceLocator;
 public class TestPaymentRepo {
 	PaymentRepository pRepo= new PaymentRepository();
 	Account acc = new Account();
@@ -39,7 +47,7 @@ public class TestPaymentRepo {
 	public void testGetTransactions() {
 		assertEquals(pRepo.getTransactions(id).size(),0);
 	}
-	
+
 	
 	
 }
