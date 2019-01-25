@@ -48,9 +48,6 @@ public class MerchantStepDefinition {
 	    assertTrue(!customerTransactionList.isEmpty());
 	}
 	
-	
-	
-
 	@Then("^DTUPay replies with a list of transactions$")
 	public void dtupay_replies_with_a_list_of_transactions() throws Exception {
 		assertTrue(customerTransactionList != null);
